@@ -364,6 +364,23 @@ var test = function(){
 			return buttons;
 		};
 		
+		//get the click function for a button (or other element)
+		var get_click_function	= function(elt_type){
+			var click_function = null;
+			
+			if(elt_type == DIRECT_INPUT){
+				click_function = function(){
+					quizz.validate($('#'+DIRECT_INPUT_ID));
+				};
+			}
+			else if(elt_type == MULTIPLE_ANSWERS){
+				click_function	= function(){
+					quizz.validate($(this).attr('value'));
+				};
+			}
+			return click_function;
+		};
+		
 		//set the click function and content of validation buttons
 		var initialize_validation_button	= function(buttons,data_list){
 			var button 			= null;
@@ -376,17 +393,13 @@ var test = function(){
 				$(ANSWER_DIV).append(create_direct_input());
 				$(ANSWER_DIV).after(buttons[0]);
 				
-				click_function = function(){
-					quizz.validate($('#'+DIRECT_INPUT_ID));
-				};
-				
+				click_function = get_click_function(DIRECT_INPUT);
+
 				$('#quizz_button').click(click_function);
 			}
 			else if(input_method === MULTIPLE_ANSWERS){
 				//get click function				
-				click_function	= function(){
-					quizz.validate($(this).attr('value'));
-				};
+				click_function = get_click_function(MULTIPLE_ANSWERS);
 				
 				if(buttons.length == data_list.length){
 					for(var i = 0; i<buttons.length; i++){
