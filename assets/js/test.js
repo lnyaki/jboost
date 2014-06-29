@@ -159,6 +159,7 @@ var test = function(){
 					tab[i]	= $('<button/>',{
 						name	: 'ans'+i
 						,text : 'totoans'+(i+1)
+						,class	: 'qButton'
 					});
 				}
 			}
@@ -374,8 +375,13 @@ var test = function(){
 				};
 			}
 			else if(elt_type == MULTIPLE_ANSWERS){
+				var sound	= new Audio();
+				sound.src	= "beep2.mp3";
+				
 				click_function	= function(){
 					quizz.validate($(this).attr('value'));
+					sound.play();
+					//alert(document.location.pathname);
 				};
 			}
 			return click_function;
@@ -568,6 +574,14 @@ var test = function(){
 				,{id	: 9, item	: 'け', answer 	: 'ke'}
 				,{id	: 10, item	: 'こ', answer 	: 'ko'}
 		);
+		
+		var sound	= new Audio();
+		sound.src	= "beep2Test.mp3";
+		
+		console.log("ATTENTION : Le son ");
+		console.log(sound);
+		sound.play();
+		console.log("Ca joue");
 		
 		var used_items	 = new Array();
 		

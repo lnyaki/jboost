@@ -26,14 +26,15 @@
 		$fieldset_direct_input		= array('id' => 'menu_direct_input');
 		
 		$chk_input1 	= array('name' 	=> 'input_type',
-								'value'	=> 'multiple_answers');
-		$chk_input2 	= array('name' 		=> 'input_type',
-								'value'		=> 'direct_input',
+								'value'	=> 'multiple_answers',
 								'checked'	=> true);
+		$chk_input2 	= array('name' 		=> 'input_type',
+								'value'		=> 'direct_input');
 		$mult_answ3 	= array('name'	=> 'mult_answ',
 								'value'	=> '3');
 		$mult_answ6 	= array('name'	=> 'mult_answ',
-								'value'	=> '6');
+								'value'	=> '6',
+								'checked'	=> true);
 		$mult_answ9 	= array('name'	=> 'mult_answ',
 								'value'	=> '9');						
 		//radio buttons for time options
@@ -106,12 +107,16 @@
 		//echo form_button($button_data);
 		echo form_close();
 	?>
+		
+	</div>
+	<div id="quizz_data">
 		<div>Points      : <span id="points"></span></div>
 		<div>Answer	     : <span id="answer_label"></span></div>
 		<div>Time        : <span id="time_label"></span></div>
 		<div>Repetitions : <span id="repetitions_label"></span></div>
 		<div>Type        : <span id="type_label"></span></div>
 	</div>
+	
 	<div id="quizz_end_screen">
 		<h3>End screen</h3>
 	<?php
