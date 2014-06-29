@@ -768,6 +768,7 @@ var test = function(){
 			$('#quizz_input').children().remove();
 			$('#quizz_button').remove();
 			
+			
 		};
 		
 		var answer_validated	= function(){
