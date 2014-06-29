@@ -1,0 +1,4 @@
+create view core_tb_fields_v as
+SELECT t.id as table_id, t.name as table_name, f.name as field, fo.name as format, fo.size, fp.name as type, fo.ref_encoding
+FROM core_tb_tables as t, core_tb_fields as f, core_tb_format as fo, core_tb_format_param as fp
+WHERE t.id = f.ref_table AND f.ref_format = fo.id AND fo.ref_format_param = fp.id 
