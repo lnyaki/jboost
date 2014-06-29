@@ -767,6 +767,7 @@ var test = function(){
 			//remove the buttons or/and input element
 			$('#quizz_input').children().remove();
 			$('#quizz_button').remove();
+			
 		};
 		
 		var answer_validated	= function(){
