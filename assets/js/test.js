@@ -213,9 +213,13 @@ var test = function(){
 					tmp1				= list[boundary1];
 					list[boundary1]		= tmp2;
 					
-					list[i]				= tmp1;
+					if(boundary1 > i){
+						list[i]				= tmp1;
+					}
+					
 					
 					boundary2--;
+					console.log(elt.item+" faisait partie de la blacklist");
 				}
 				
 				boundary1--;
@@ -249,10 +253,11 @@ var test = function(){
 				if(elt.item == element.item){
 					sortie = true;
 					answer = true;
+					console.log("Item "+element.item+" == "+elt.item);
 				}
 				else{
 					i++;
-
+					console.log("Item "+element.item+" <> "+elt.item);
 					if(i == max){
 						sortie = true;
 					}
