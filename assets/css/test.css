@@ -45,6 +45,7 @@ footer{
 	border-style	: solid;
 	border-width	: 3px;
 	border-color	: red;
+	transition		: 0.5s ease;
 }
 
 #quizz_input{
@@ -55,7 +56,6 @@ footer{
 	border-style	: solid;
 	border-width	: 0.1em;
 	border-color	: grey;
-	float: right;	
 }
 
 .qButton{
@@ -65,10 +65,20 @@ footer{
 	margin-bottom	: 0.5em;
 	font-size		: 1.5em;
 	text-align		: center;
-	background-color: blue;
+	/*background 		:  linear-gradient(blue , black);*/
+	background 	 	: black;
 	color			: yellow;
-	
+	clear 			: both;
 	border-style 	: solid;
-	border-color	: red;
+	border-color	: #81BEF7;
+	transition		: color 1s, background 0.5s, -webkit-transform 0.1s;
 	
+}
+
+.qButton:hover{
+	color			: white;
+	border-color	: #2E2EFE;
+	/*background		: linear-gradient(#2EFE2E,#82FA58);*/
+	background : green;
+	-webkit-transform : scale(1.5);
 }
