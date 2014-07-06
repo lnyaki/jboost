@@ -8,10 +8,6 @@ var test = function(){
 	var Kana		= function(){};
 	var Ajax		= function(){};
 	var Quizz		= function(){};
-	var Maths		= function(element){
-		this.element = element;
-	};
-
 	var List_Item	= function(item){};
 	var List		= function(){};
 	
@@ -49,38 +45,6 @@ var test = function(){
 		//**********************************************
 		//          INITIALIZATION FUNCTIONS
 		//**********************************************
-		//initialize the values and structure of the flashcard.
-		//input_method and multiple_answers_num should be set beforehand.
-		//TODO : use constants
-		var create_card			= function(){
-			/*
-			//create the right validation button(s) depending on the input method
-			//set_validation_button(input_method, answers_number);
-			create_validation_button();
-			initialize_validation_button();
-			
-			
-			
-			var tmp = null;
-			if(input_method == DIRECT_INPUT){
-				console.log('*create_card : create direct input');
-				console.log('input method : '+ input_method);
-				$(ANSWER_DIV).append(create_direct_input());
-			}
-			else if(input_method == MULTIPLE_ANSWERS){
-				tmp = create_multiple_answers($(ANSWER_DIV),answers_number);
-				console.log('*create_card : create multiple answers');
-				console.log('*create_card : answers ['+tmp.length+']');
-				console.log(tmp);
-				console.log('test');
-			}
-			else{
-				//output error
-				console.log('* Unknown input method : [' + input_method+']');
-			}
-			*/
-			
-		};
 		
 		//create the textfield for direct input
 		var create_direct_input		= function(){
@@ -478,8 +442,7 @@ var test = function(){
 		};
 		
 		return {
-			 create_card					: create_card
-			,answer_validated				: answer_validated
+			answer_validated				: answer_validated
 			,validate						: validate
 			,set_points						: set_points
 			,set_answer_result				: set_answer_result
@@ -635,7 +598,6 @@ var test = function(){
 			$('#type_label').text(input_method);
 			$('#repetitions_label').text(review_size);
 			//build_card();
-			//current_card.create_card();
 		};
 		
 		//TODO : use constants instead of hard coded values.
@@ -742,7 +704,6 @@ var test = function(){
 				console.log("*** Buttons is undefined ***");
 				exit();
 			}
-			
 			
 			//initialize button text and values
 			buttons = current_card.initialize_validation_button(buttons, item_list, func);
@@ -911,9 +872,6 @@ var test = function(){
 		
 		//display the next item by giving the dom parent element
 		var set_next_item	= function(item){
-			
-			//current_card.set_item(next_item());
-			//var item = next_random_item();
 			current_card.set_item(item);
 			remaining_elts --;
 			console.log('********************* Next random Item : '+item.item);
@@ -951,14 +909,6 @@ var test = function(){
 			return items;
 		};
 		
-		
-		//get a set of possible answers (for multiple choice cards)
-		var get_possible_answers	= function(real_item, anwers_number){
-			var answers	= null;
-			
-			
-			
-		};
 		
 		var get_item_list	= function(items){
 			var list_size 	= items.length;
@@ -1011,16 +961,6 @@ var test = function(){
 			,initialize_quizz_variables	: initialize_quizz_variables
 			,reset_html_quizz_elements	: reset_html_quizz_elements
 		};
-	})();
-	
-//****************************************************************************
-//                             MATHS
-//
-//****************************************************************************
-	Maths.prototype	=(function(){
-		var constructor	= Maths;
-		
-		
 	})();
 	
 //****************************************************************************
@@ -1150,17 +1090,6 @@ var test = function(){
 			this.next		= null;
 		};
 		
-		//push a bare element, not a list_item element
-		/*var push	= function(item){
-			
-			if(this.next === null){
-				var elt = new List_Item(item);
-				this.set_next(elt);
-			}
-			else{
-				this.next.push(item);
-			}
-		};*/
 		
 		var pop		= function(){
 			if(this.next === null){
@@ -1189,8 +1118,7 @@ var test = function(){
 			set_reference	: set_reference,
 			insert_after	: insert_after,
 			remove			: remove,
-		//	pop				: pop
-		//	push			: push
+
 		};
 
 	})();
