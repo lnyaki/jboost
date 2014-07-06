@@ -54,28 +54,6 @@ var test = function(){
 			});
 		};
 		
-		//create an array of empty buttons for the multiple answers (without any answer in them)
-		var create_multiple_answers	= function(element, quantity){
-			/*var tab = get_multiple_answers_buttons(quantity);
-			var max = tab.length;
-			var buttons	= '';
-			var elt;
-			var button_value;
-			var answer_list		= get_multiple_answers_list(quantity);
-			console.log("* Multiple answers arrray : "+ tab.length);
-			console.log("* Answer list arrray : "+ answer_list.length);
-			console.log(tab);
-			for(var i = 0; i<max; i++){
-			//initialize each button
-				elt		= get_initialized_element(tab[i], answer_list[i]);
-			//append the button to their parent
-				$(element).append(tab[i]);
-			}
-			
-			
-			return buttons;*/
-		};
-		
 		
 		//**********************************************
 		//          PROCESSING FUNCTIONS
@@ -227,27 +205,11 @@ var test = function(){
 					}
 				}
 			}	
-		/*	if(answer){
-				console.log('//// Element found : '+elt.item);
-			}
-			else {
-				console.log('//// Element NOT found : '+elt.item);
-			}*/
+
 			return answer;
 		};
 
 
-		// When creating a multiple answer button, it needs to be correctly
-		// initialized
-		var get_initialized_element			= function(item, button_value){
-			/*//give the name attribute
-			$(item).attr("name",MULT_ANS_GROUP);
-			//give the value
-			$(item).text(button_value);	
-			//set the click function
-			//$(elt).click(click_radio);*/
-		};
-		
 		//return the buttons for multiple answers
 		var get_existing_buttons 	= function(){
 			return $(ANSWER_DIV).children('button');
