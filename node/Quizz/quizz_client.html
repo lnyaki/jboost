@@ -19,24 +19,48 @@
         <script>
             var user = 'Storm';
             var socket = io.connect('http://localhost:8080');
+            var counter = 0;
             //var pseudo = prompt('Quel est votre pseudo ?');
-			socket.emit('petit_nouveau', 'pseudo');
+			socket.emit('new_user', user,0);
             
              socket.on('message', function(message) {
         		alert('Le serveur a un message pour vous : ' + message);
    			 });
    			 
    			 socket.on('lobby_info',function(lobby_data){
+   			 	counter++;
+   			 	console.log("----- Compteur : "+counter);
+   			 	
    			 	/*lobby_data.foreach(function(elt){
    			 		$('#lobby').append('<a>'+elt+'</a>');
    			 	});*/
    			 	var list = $('<ul>');
+   			 	var sublist;
+   			 	var players;
+   			 	var list2;
+   			 	var lobby_elt;
    			 	for(var elt in lobby_data){
-   			 		$(list).append('<li><a>'+lobby_data[elt]+'</a></li>');
+   			 		sublist = $('<li>');
+   			 		lobby_elt = lobby_data[elt];
+   			 		$(sublist).append('<a>'+lobby_elt.lobby+'</a>');
+   			 		console.log("HTML : Lobby data : ");
+   			 		console.log(lobby_elt);
+   			 		players = lobby_elt.players;
+   			 		
+   			 		if(players.length > 0){
+   			 			list2 = $('<ul>');
+   			 			for(var i = 0; i<players.length;i++){
+   			 				$(list2).append('<li>'+players[i]+'</li>');
+   			 			}
+   			 			$(sublist).append(list2);
+   			 		}
+   			 		$(list).append(sublist);
    			 	}
-   			 	$('#lobby').append(list);
+   			 	//$('#lobby').append(list);
+   			 	$('#lobby').html(list);
    			 	
    			 	$('#lobby a').on('click',function(){
+   			 	//ENTER LOBBY
    			 		socket.emit('enter_lobby',{user : user, lobby : $(this).text()});
    			 		console.log("CLICK");
    			 	});

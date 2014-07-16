@@ -9,12 +9,16 @@
 	var Server 			= new quizz_module.Quizz_Server();	
 	var Lobby1 			= new quizz_module.Lobby("Lobby 1");
 	var Lobby2			= new quizz_module.Lobby("Lobby 2");
-	
-	
+
 	//initialize server
 	Server.initialize_server(PORT);
-	console.log("ok dans le prog");
-	
+	console.log('');
+	console.log('');
+	console.log('');
+	console.log("*********************************************");
+	console.log("*****          SERVER STARTING         ******");
+	console.log("*********************************************");
+
 	Server.create_lobby(Lobby1);
 	Server.create_lobby(Lobby2);
 	
