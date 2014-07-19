@@ -38,12 +38,7 @@
    			 });
    			 
    			 socket.on('lobby_info',function(lobby_data){
-   			 	counter++;
-   			 	console.log("----- Compteur : "+counter);
-   			 	
-   			 	/*lobby_data.foreach(function(elt){
-   			 		$('#lobby').append('<a>'+elt+'</a>');
-   			 	});*/
+
    			 	var list = $('<ul>');
    			 	var sublist;
    			 	var players;
@@ -78,7 +73,7 @@
    
    			 	console.log("longueur du selecteur : "+$('#lobby a').length);
    			 	
-   			 	console.log("reçoit lobby info");
+   			 	console.log("############## reçoit lobby info ################");
    			 	console.log(lobby_data);
    			 });
    			 
