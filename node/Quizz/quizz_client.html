@@ -6,9 +6,13 @@
     </head>
  
     <body>
-        <h1>Communication avec socket.io ! My wife?</h1>
+        <h1>Communication avec socket.io !</h1>
 
-		<p><input type="button" value="Get lobby" id="poke" /></p>
+		<h2 id='connected'></h2>
+		<p>
+			<input type="button" value="Get lobby" id="poke" />
+			<input type="button" value ="Log In" id="loggin"/>
+		</p>
 		
 		<fieldset id='lobby'>
 			<legend style='border :2px solid black;'>Lobby</legend>
@@ -17,11 +21,17 @@
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            var user = 'Storm';
+            var user;
             var socket = io.connect('http://localhost:8080');
             var counter = 0;
-            //var pseudo = prompt('Quel est votre pseudo ?');
-			socket.emit('new_user', user,0);
+            
+            //on click, create a promt to record the name of the user
+            $('#loggin').click(function(){
+            	user = prompt("Enter your username");
+            	$('#connected').html(user);
+            });
+            
+			
             
              socket.on('message', function(message) {
         		alert('Le serveur a un message pour vous : ' + message);
@@ -42,7 +52,7 @@
    			 	for(var elt in lobby_data){
    			 		sublist = $('<li>');
    			 		lobby_elt = lobby_data[elt];
-   			 		$(sublist).append('<a>'+lobby_elt.lobby+'</a>');
+   			 		$(sublist).append('<a>'+lobby_elt.lobby+'</a><input type="button" id="'+lobby_elt.lobby+'" value="Enter "'+lobby_elt.lobby+'/>');
    			 		console.log("HTML : Lobby data : ");
    			 		console.log(lobby_elt);
    			 		players = lobby_elt.players;
@@ -59,11 +69,13 @@
    			 	//$('#lobby').append(list);
    			 	$('#lobby').html(list);
    			 	
-   			 	$('#lobby a').on('click',function(){
-   			 	//ENTER LOBBY
+   			 	$('#lobby input[type="button"]').click(function(){
    			 		socket.emit('enter_lobby',{user : user, lobby : $(this).text()});
-   			 		console.log("CLICK");
+   			 		socket.emit('new_user', user,$(this).attr("id"));
+   			 		console.log(user+" enters lobby "+$(this).attr("id"));
    			 	});
+   			 	
+   
    			 	console.log("longueur du selecteur : "+$('#lobby a').length);
    			 	
    			 	console.log("reçoit lobby info");
