@@ -30,11 +30,10 @@
             	user = prompt("Enter your username");
             	$('#connected').html(user);
             });
-            
-			
-            
+
+
              socket.on('message', function(message) {
-        		alert('Le serveur a un message pour vous : ' + message);
+        		console.log('* Message du serveur: ' + message);
    			 });
    			 
    			 socket.on('lobby_info',function(lobby_data){
@@ -48,8 +47,6 @@
    			 		sublist = $('<li>');
    			 		lobby_elt = lobby_data[elt];
    			 		$(sublist).append('<a>'+lobby_elt.lobby+'</a><input type="button" id="'+lobby_elt.lobby+'" value="Enter "'+lobby_elt.lobby+'/>');
-   			 		console.log("HTML : Lobby data : ");
-   			 		console.log(lobby_elt);
    			 		players = lobby_elt.players;
    			 		
    			 		if(players.length > 0){
@@ -65,16 +62,11 @@
    			 	$('#lobby').html(list);
    			 	
    			 	$('#lobby input[type="button"]').click(function(){
-   			 		socket.emit('enter_lobby',{user : user, lobby : $(this).text()});
+   			 		socket.emit('enter_lobby',{user : user, lobby : $(this).attr("id")});
    			 		socket.emit('new_user', user,$(this).attr("id"));
-   			 		console.log(user+" enters lobby "+$(this).attr("id"));
    			 	});
    			 	
-   
-   			 	console.log("longueur du selecteur : "+$('#lobby a').length);
-   			 	
-   			 	console.log("############## reçoit lobby info ################");
-   			 	console.log(lobby_data);
+
    			 });
    			 
    			 socket.on('test2',function(message){
