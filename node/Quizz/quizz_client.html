@@ -18,6 +18,12 @@
 			<legend style='border :2px solid black;'>Lobby</legend>
 		</fieldset>
 
+		<fieldset>
+			<legend style='border :2px solid black;'>Games </legend>
+			<input type="button" value="Create Game" id="create_game" />
+			<input type="button" value="Game start" id="game_start" />
+			<input type="button" value="Answer" id="answer"/>
+		</fieldset>
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
@@ -25,16 +31,45 @@
             var socket = io.connect('http://localhost:8080');
             var counter = 0;
             
+            socket.on('message', function(message) {
+        		console.log('* Message du serveur: ' + message);
+   			 });
+   			 
             //on click, create a promt to record the name of the user
             $('#loggin').click(function(){
             	user = prompt("Enter your username");
             	$('#connected').html(user);
             });
+            
+            
+            $('#create_game').click(function(){
+            	console.log("creating a game");
+            	socket.emit('create game',{user_ref : user});
+            });
 
+			$('#game_start').click(function(){
+            	console.log("Starting the game");
+            	socket.emit('game start',{user_ref : user});
+            });
 
-             socket.on('message', function(message) {
-        		console.log('* Message du serveur: ' + message);
-   			 });
+            $('#game_start').click(function(){
+            	console.log("Starting the game");
+            	socket.emit('game start',{user_ref : user});
+            });
+            
+            $('#answer').click(function(){
+            	var answer	= prompt("Answer");
+            	console.log("Answer : "+answer);
+            	socket.emit('QUIZZ',{user_ref : user
+            		,action:'answer'
+            		,answer: answer
+            		,user_ref : user});
+            });
+   			 
+   			socket.on('validation',function(validation){
+   				console.log("Validation :");
+   				console.log(validation);
+   			});
    			 
    			 socket.on('lobby_info',function(lobby_data){
 
@@ -62,23 +97,13 @@
    			 	$('#lobby').html(list);
    			 	
    			 	$('#lobby input[type="button"]').click(function(){
-   			 		socket.emit('enter_lobby',{user : user, lobby : $(this).attr("id")});
-   			 		socket.emit('new_user', user,$(this).attr("id"));
+   			 	//	socket.emit('enter_lobby',{user : user, lobby : $(this).attr("id")});
+   			 		socket.emit('new_user', user,user,$(this).attr("id"));
    			 	});
-   			 	
 
    			 });
    			 
-   			 socket.on('test2',function(message){
-   			 	console.log(message);
-   			 });
-   			 
-   			 $('#poke').click(function () {
-                
-                socket.emit('test','test du fuck my wife');
-                
-                socket.emit('love','i love you');
-           });
+   		
         </script>
     </body>
 </html>
