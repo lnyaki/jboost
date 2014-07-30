@@ -23,11 +23,14 @@
 			<input type="button" value="Create Game" id="create_game" />
 			<input type="button" value="Game start" id="game_start" />
 			<input type="button" value="Answer" id="answer"/>
+			<h3 id='gref'></h3>
+			<h3 id='validation'></h3>
 		</fieldset>
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
             var user;
+            var game;
             var socket = io.connect('http://localhost:8080');
             var counter = 0;
             
@@ -49,26 +52,29 @@
 
 			$('#game_start').click(function(){
             	console.log("Starting the game");
-            	socket.emit('game start',{user_ref : user});
-            });
-
-            $('#game_start').click(function(){
-            	console.log("Starting the game");
-            	socket.emit('game start',{user_ref : user});
+            	socket.emit('QUIZZ',{uref : user
+            					,gref : 'Game1'
+            					,action:'game_start'});
             });
             
             $('#answer').click(function(){
             	var answer	= prompt("Answer");
             	console.log("Answer : "+answer);
-            	socket.emit('QUIZZ',{user_ref : user
+            	socket.emit('QUIZZ',{uref : user
             		,action:'answer'
             		,answer: answer
-            		,user_ref : user});
+            		,gref : user});
             });
    			 
    			socket.on('validation',function(validation){
    				console.log("Validation :");
    				console.log(validation);
+   				$('#validation').html(validation);
+   			});
+   			
+   			socket.on('game_reference',function(reference){
+   				game_reference = reference;
+   				$('#gref').html(reference);
    			});
    			 
    			 socket.on('lobby_info',function(lobby_data){
