@@ -3,9 +3,6 @@
 	quizz_module.Lobby	= require('Lobby').Lobby;
 	quizz_module.Game	= require('Game').Game;
 	
-	
-	//quizz_module.lobby = Lobby.Lobby;
-	console.log(quizz_module);
 	//console.log(Lobby);
 	var Server 			= new quizz_module.Quizz_Server();	
 	var Lobby1 			= new quizz_module.Lobby("Lobby 1");

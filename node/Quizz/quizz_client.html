@@ -30,7 +30,7 @@
         <script src="/socket.io/socket.io.js"></script>
         <script>
             var user;
-            var game;
+            var game_reference;
             var socket = io.connect('http://localhost:8080');
             var counter = 0;
             
@@ -47,13 +47,13 @@
             
             $('#create_game').click(function(){
             	console.log("creating a game");
-            	socket.emit('create game',{user_ref : user});
+            	socket.emit('create game',{uref : user});
             });
 
 			$('#game_start').click(function(){
             	console.log("Starting the game");
             	socket.emit('QUIZZ',{uref : user
-            					,gref : 'Game1'
+            					,gref : game_reference
             					,action:'game_start'});
             });
             
@@ -63,7 +63,7 @@
             	socket.emit('QUIZZ',{uref : user
             		,action:'answer'
             		,answer: answer
-            		,gref : user});
+            		,gref : game_reference});
             });
    			 
    			socket.on('validation',function(validation){
@@ -73,8 +73,8 @@
    			});
    			
    			socket.on('game_reference',function(reference){
-   				game_reference = reference;
-   				$('#gref').html(reference);
+   				game_reference = reference.gref;
+   				$('#gref').html("Game reference : "+reference.gref);
    			});
    			 
    			 socket.on('lobby_info',function(lobby_data){
@@ -103,7 +103,6 @@
    			 	$('#lobby').html(list);
    			 	
    			 	$('#lobby input[type="button"]').click(function(){
-   			 	//	socket.emit('enter_lobby',{user : user, lobby : $(this).attr("id")});
    			 		socket.emit('new_user', user,user,$(this).attr("id"));
    			 	});
 
