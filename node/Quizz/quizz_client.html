@@ -34,6 +34,9 @@
             var socket = io.connect('http://localhost:8080');
             var counter = 0;
             
+            var item;
+            var item_id;
+            
             socket.on('message', function(message) {
         		console.log('* Message du serveur: ' + message);
    			 });
@@ -61,9 +64,10 @@
             	var answer	= prompt("Answer");
             	console.log("Answer : "+answer);
             	socket.emit('QUIZZ',{uref : user
-            		,action:'answer'
-            		,answer: answer
-            		,gref : game_reference});
+            		,action		:'answer'
+            		,answer		: answer
+            		,item_id	: item_id
+            		,gref 		: game_reference});
             });
    			 
    			socket.on('validation',function(validation){
@@ -77,19 +81,26 @@
    				$('#gref').html("Game reference : "+reference.gref);
    			});
    			 
+			socket.on('quizz_item',function(data){
+				item 		= data.item;
+				item_id 	= data.id;
+			});
+   			 
    			 socket.on('lobby_info',function(lobby_data){
-
+				console.log(lobby_data);
    			 	var list = $('<ul>');
    			 	var sublist;
    			 	var players;
-   			 	var list2;
+   			 	var list2,list3;
    			 	var lobby_elt;
+   			 	var games,game_player;
    			 	for(var elt in lobby_data){
    			 		sublist = $('<li>');
    			 		lobby_elt = lobby_data[elt];
    			 		$(sublist).append('<a>'+lobby_elt.lobby+'</a><input type="button" id="'+lobby_elt.lobby+'" value="Enter "'+lobby_elt.lobby+'/>');
    			 		players = lobby_elt.players;
    			 		
+   			 		//building the list of users
    			 		if(players.length > 0){
    			 			list2 = $('<ul>');
    			 			for(var i = 0; i<players.length;i++){
@@ -97,6 +108,31 @@
    			 			}
    			 			$(sublist).append(list2);
    			 		}
+   			 		
+   			 		games = lobby_elt.games;
+   			 		
+   			 		//building the list of games of this lobby
+   			 		if(games.length > 0){
+   			 			var temp;
+   			 			list3 = $('<ul>');
+   			 			for(var i = 0; i<games.length; i++){
+   			 				temp = $('<li> Game '+games[i].name+'('+games[i].total_players+')</li>');
+   			 				
+   			 				//building the list of players in the game
+   			 				
+   			 				var list4 = $('<ul>');
+   			 				game_players = games[i].players;
+   			 				console.log('--- Game players ----');
+   			 				console.log(game_players);
+   			 				for(var j = 0; j < game_players.length;j++){
+   			 					$(list4).append('<li>'+game_players[j]+'</li>');
+   			 				}
+   			 				$(temp).append(list4);
+   			 				$(list3).append(temp);
+   			 			}
+   			 			$(sublist).append(list3);
+   			 		}
+   			 		
    			 		$(list).append(sublist);
    			 	}
    			 	//$('#lobby').append(list);
