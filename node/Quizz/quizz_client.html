@@ -69,6 +69,14 @@
             		,item_id	: item_id
             		,gref 		: game_reference});
             });
+            
+            $(".join_game").click(function(){
+            	socket.emit('QUIZZ',{
+            					action 	: join_game
+            					,uref 	: user
+            					,gref 	: $(this).attr(id)
+            					});
+            });
    			 
    			socket.on('validation',function(validation){
    				console.log("Validation :");
@@ -93,7 +101,7 @@
    			 	var players;
    			 	var list2,list3;
    			 	var lobby_elt;
-   			 	var games,game_player;
+   			 	var games,game_players;
    			 	for(var elt in lobby_data){
    			 		sublist = $('<li>');
    			 		lobby_elt = lobby_data[elt];
@@ -116,12 +124,13 @@
    			 			var temp;
    			 			list3 = $('<ul>');
    			 			for(var i = 0; i<games.length; i++){
-   			 				temp = $('<li> Game '+games[i].name+'('+games[i].total_players+')</li>');
+   			 				game_players = games[i].players;
+   			 				temp = $('<li> Game '+games[i].name+'('+game_players.length+')<input type ="button" class="join_game" id ="'+games[i].gref+'" value = "Join game '+games[i].name+'"/></li>');
    			 				
    			 				//building the list of players in the game
    			 				
    			 				var list4 = $('<ul>');
-   			 				game_players = games[i].players;
+   			 				
    			 				console.log('--- Game players ----');
    			 				console.log(game_players);
    			 				for(var j = 0; j < game_players.length;j++){
