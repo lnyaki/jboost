@@ -71,14 +71,7 @@
             		,gref 		: game_reference});
             });
             
-            $(".join_game").click(function(){
-            	socket.emit('QUIZZ',{
-            					action 	: join_game
-            					,uref 	: user
-            					,gref 	: $(this).attr(id)
-            					});
-            });
-            
+       
             $('#leave_game').click(function(){
             	socket.emit('QUIZZ',{action: 'leave_game'
             							,gref : game_reference
@@ -114,7 +107,7 @@
    			 	for(var elt in lobby_data){
    			 		sublist = $('<li>');
    			 		lobby_elt = lobby_data[elt];
-   			 		$(sublist).append('<a>'+lobby_elt.lobby+'</a><input type="button" id="'+lobby_elt.lobby+'" value="Enter "'+lobby_elt.lobby+'/>');
+   			 		$(sublist).append('<a>'+lobby_elt.lobby+'</a><input type="button" id="'+lobby_elt.lobby+'" class="lobby" value="Enter "'+lobby_elt.lobby+'/>');
    			 		players = lobby_elt.players;
    			 		
    			 		//building the list of users
@@ -148,17 +141,30 @@
    			 				$(temp).append(list4);
    			 				$(list3).append(temp);
    			 			}
+   			 			
    			 			$(sublist).append(list3);
    			 		}
    			 		
    			 		$(list).append(sublist);
    			 	}
-   			 	//$('#lobby').append(list);
+   			 	
+   			 	//set the generated html in the page
    			 	$('#lobby').html(list);
    			 	
-   			 	$('#lobby input[type="button"]').click(function(){
+   			 	$('#lobby input[type="button"].lobby').click(function(){
    			 		socket.emit('new_user', user,user,$(this).attr("id"));
    			 	});
+
+				$(".join_game").attr("test","ok");
+   			 	$(".join_game").click(function(){
+            		console.log("Entering game : "+$(this).attr("id"));
+            		socket.emit('QUIZZ',{
+            					action 	: 'join_game'
+            					,uref 	: user
+            					,gref 	: $(this).attr("id")
+            		});
+            	});
+
 
    			 });
    			 
