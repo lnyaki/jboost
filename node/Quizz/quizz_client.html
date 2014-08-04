@@ -23,6 +23,7 @@
 			<input type="button" value="Create Game" id="create_game" />
 			<input type="button" value="Game start" id="game_start" />
 			<input type="button" value="Answer" id="answer"/>
+			<input type="button" value="Leave Game" id="leave_game"/>
 			<h3 id='gref'></h3>
 			<h3 id='validation'></h3>
 		</fieldset>
@@ -77,6 +78,13 @@
             					,gref 	: $(this).attr(id)
             					});
             });
+            
+            $('#leave_game').click(function(){
+            	socket.emit('QUIZZ',{action: 'leave_game'
+            							,gref : game_reference
+            							,uref : user
+            							});
+            });
    			 
    			socket.on('validation',function(validation){
    				console.log("Validation :");
@@ -87,6 +95,7 @@
    			socket.on('game_reference',function(reference){
    				game_reference = reference.gref;
    				$('#gref').html("Game reference : "+reference.gref);
+   				$('#leave_game').html("Leave Game "+game_reference);
    			});
    			 
 			socket.on('quizz_item',function(data){
