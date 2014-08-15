@@ -306,12 +306,12 @@ var test = function(){
 				};
 			}
 			else if(elt_type == MULTIPLE_ANSWERS){
-				var sound	= new Audio();
-				sound.src	= "beep2.mp3";
+				//var sound	= new Audio();
+				//sound.src	= "beep2.mp3";
 				
 				click_function	= function(){
 					quizz.validate($(this).attr('value'));
-					sound.play();
+					//sound.play();
 					//alert(document.location.pathname);
 				};
 			}
@@ -506,12 +506,12 @@ var test = function(){
 		);
 		
 		var sound	= new Audio();
-		sound.src	= "beep2Test.mp3";
+		/*sound.src	= "beep2Test.mp3";
 		
 		console.log("ATTENTION : Le son ");
 		console.log(sound);
 		sound.play();
-		console.log("Ca joue");
+		console.log("Ca joue");*/
 		
 		var used_items	 = new Array();
 		
@@ -520,16 +520,6 @@ var test = function(){
 		//                   Game initialization                      //
 		//                                                            //
 		//============================================================//
-		var initialize_quizz_variables	= function(){
-			item_index 		= 0;
-			points			= 0;
-			input_method	= '';
-			answer_quantity	= 0;
-			response_time 	= 3;
-			
-			current_card	= new Flashcard(HTML_FLASHCARD);
-		};
-		
 		var initialize	= function(){
 		//load items from db
 		//items = load_items();
@@ -562,39 +552,49 @@ var test = function(){
 			//build_card();
 		};
 		
+		var initialize_quizz_variables	= function(){
+			item_index 		= 0;
+			points			= 0;
+			input_method	= '';
+			answer_quantity	= 0;
+			response_time 	= 3;
+			
+			current_card	= new Flashcard(HTML_FLASHCARD);
+		};
+		
 		//TODO : use constants instead of hard coded values.
 		var initialize_options	= function(){
 			//get repetitions
-			var repetitions	= $('#menu_repetitions').children('[checked][name="option_repetitions"]');
+			var repetitions	= $('#menu_repetitions').find('[checked][name="option_repetitions"]');
 			review_size = $(repetitions).attr("value");
 			remaining_elts = review_size -1;
 			console.log("* Répétitions : 		" + review_size);
 			
 			//get input type			
-			var input_type	= $('#menu_input_type').children('[checked][name="input_type"]');
+			var input_type	= $('#menu_input_type').find('[checked][name="input_type"]');
 			if($(input_type).size() == 1){
 				input_method = $(input_type).attr("value");	
 				console.log("* input type : 		" + input_method);
 			}
 			else{
-				console.log("Input type : incorrect number of entries found : " + $(input_type).size());
+				console.log("ERR : [Input type] incorrect number of entries found : " + $(input_type).size());
 			}
 			
 			//get the number of multiple answers
 			if(input_method == 'multiple_answers'){
-				var num_ans 		= $('#menu_multiple_answers').children('[checked][name="mult_answ"]');	
+				var num_ans 		= $('#menu_multiple_answers').find('[checked][name="mult_answ"]');	
 				answer_quantity 	= $(num_ans).attr("value");
 			}
 			
 			
 			//get time per answer
-			var answer_time = $('#menu_time').children('[checked][name="option_time"]');
+			var answer_time = $('#menu_time').find('[checked][name="option_time"]');
 			if($(answer_time).size() == 1){
 				response_time	= $(answer_time).attr('value');
 				console.log("* Time : 			"+ response_time);
 			}
 			else{
-				console.log("Answer time : incorrect number of entries found : "+ $(answer_time).size());
+				console.log("ERR: Answer time : incorrect number of entries found : "+ $(answer_time).size());
 			}
 			
 		};

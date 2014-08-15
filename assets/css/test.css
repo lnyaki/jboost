@@ -58,6 +58,10 @@ footer{
 	border-color	: grey;
 }
 
+#quizz_options{
+	box-shadow: 5px 5px 20px #888888;
+}
+
 .qButton{
 	width			: 30%;
 	padding 		: 0.3em;
@@ -82,3 +86,5 @@ footer{
 	background : green;
 	-webkit-transform : scale(1.5);
 }
+
+

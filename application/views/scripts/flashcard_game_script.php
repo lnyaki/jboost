@@ -9,7 +9,7 @@
 	var answer			= $('#quizz_answer');
 	var answer2			= $('#quizz_input');
 	var answer3			= '#'+game.DIRECT_INPUT_ID;
-	var options			= $('#quizz_otpions');
+	var options			= $('#quizz_options');
 	var options_button 	= $('#option_button');
 	var restart			= $('#restart_button');
 	var end_screen		= $('#quizz_end_screen');
@@ -35,8 +35,6 @@
 		//ajax.ajaxPostRequest(path, data, handler);
 	}
 	
-	var test = $('fieldset');
-	console.log($(test[0]).children('input[checked]'));
 	
 	var click_option	= function(){
 		$(options).hide();
@@ -54,7 +52,6 @@
 		$(end_screen).hide();
 		
 		//reinitializing the game
-		
 		
 		//showing the start screen
 		$(options).show();

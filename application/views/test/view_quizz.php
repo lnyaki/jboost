@@ -4,87 +4,110 @@
 		$this->load->helper('form');
 	?>
 	<h3>Test du quizz</h3>
-	<div id="quizz_otpions">
-		<h1>hello quizz options</h1>
+
+	<div id="quizz_options" style="width : 35%;margin-left: auto;margin-right: auto;">
+		<h1>Quizz options</h1>
 		<?php
 		$options_button	= array('id'		=> 'option_button',
-								'content'	=> 'Play !');
-		//radio buttons for repetition options
-		$fieldset_repetitions	= array('id'	=> 'menu_repetitions');
-		$radio_10 		= array('name'		=> 'option_repetitions',
-								'value'		=> '10',
-								'checked'	=> true);
-		$radio_20 		= array('name'		=> 'option_repetitions',
-								'value'		=> '20');
-		$radio_50 		= array('name'		=> 'option_repetitions',
-								'value'		=> '50');
-		$radio_infinite	= array('name'		=> 'option_repetitions',
-								'value'		=> 'infinite');
+								'content'	=> 'Play !',
+								'type'		=> 'button',
+								'class'		=> 'btn btn-primary center-block');
+	
 		//data for 'input type' options
 		$fieldset_input_type		= array('id'	=> 'menu_input_type');
 		$fieldset_multiple_answers 	= array('id' => 'menu_multiple_answers');
 		$fieldset_direct_input		= array('id' => 'menu_direct_input');
 		
-		$chk_input1 	= array('name' 	=> 'input_type',
-								'value'	=> 'multiple_answers',
-								'checked'	=> true);
-		$chk_input2 	= array('name' 		=> 'input_type',
-								'value'		=> 'direct_input');
-		$mult_answ3 	= array('name'	=> 'mult_answ',
-								'value'	=> '3');
-		$mult_answ6 	= array('name'	=> 'mult_answ',
-								'value'	=> '6',
-								'checked'	=> true);
-		$mult_answ9 	= array('name'	=> 'mult_answ',
-								'value'	=> '9');						
+
+						
 		//radio buttons for time options
 		$fieldset_time	= array('id'=> 'menu_time');
-		$rad_time_3		= array('name'	=> 'option_time',
-								'value'	=> '3');
-		$rad_time_5		= array('name'	=> 'option_time',
-								'value'	=> '5',
-								'checked'	=> true);
-		$rad_time_10	= array('name'	=> 'option_time',
-								'value'	=> '10');
 		
+		$form_attributes	= array('role' => 'form');
 		//actual form
-		echo form_open();
-		//repetitions fieldset
-		echo form_fieldset('Repetitions',$fieldset_repetitions);
-		echo form_label('10');
-		echo form_radio($radio_10);
-		echo form_label('20');
-		echo form_radio($radio_20);
-		echo form_label('50');
-		echo form_radio($radio_50);
-		echo form_label('Inf.');
-		echo form_radio($radio_infinite);
-		echo form_fieldset_close();
-		//'Input type' fieldset
-		echo form_fieldset('Input type', $fieldset_input_type);
-		echo form_radio($chk_input1);
-		echo form_fieldset('Multiple answers', $fieldset_multiple_answers);
-		echo form_label('3');
-		echo form_radio($mult_answ3);
-		echo form_label('6');
-		echo form_radio($mult_answ6);
-		echo form_label('9');
-		echo form_radio($mult_answ9);
-		echo form_fieldset_close();
-		echo "<br/>";
-		echo form_radio($chk_input2);
-		echo form_label('Direct input', $fieldset_direct_input);
-		echo form_fieldset_close();
-		//'Time' fieldset
-		echo form_fieldset('Time', $fieldset_time);
-		echo form_label('3s');
-		echo form_radio($rad_time_3);
-		echo form_label('5s');
-		echo form_radio($rad_time_5);
-		echo form_label('10s');
-		echo form_radio($rad_time_10);
-		echo form_fieldset_close();
+		echo form_open('#',$form_attributes);
+
+
+?>
+	<fieldset id="menu_repetitions">
+		<legend>Repetitions</legend>
+		<div class="radio">
+  			<label class="radio-inline">
+    			<input type="radio" name="option_repetitions" value="10" checked>
+    			10
+ 	 		</label>
+	
+  			<label class="radio-inline">
+    			<input type="radio" name="option_repetitions" value="20">
+    			20
+ 	 		</label>
+
+  			<label class="radio-inline">
+    			<input type="radio" name="option_repetitions" value="50">
+    			50
+ 	 		</label>
+
+  			<label class="radio-inline">
+    			<input type="radio" name="option_repetitions" value="infinite">
+    			infinite
+ 	 		</label>
+		</div>
+	</fieldset>
+
+	<fieldset id="menu_input_type">
+		<legend>Input type</legend>
+		<div class="radio">
+  			<label >
+    			<input type="radio" name="input_type" value="multiple_answers" checked>
+    			Multiple answers
+ 	 		</label>
+		</div>
+
+		<fieldset id="menu_multiple_answers" style="padding-left: 3em;">
+			<legend>Multiple answers</legend>
+			<div class="radio">
+  				<label class="radio-inline">
+    				<input type="radio" name="mult_answ" value="3">
+    				3
+ 	 			</label>
+  				<label class="radio-inline">
+    				<input type="radio" name="mult_answ" value="6" checked>
+    				6
+ 	 			</label>
+  				<label class="radio-inline">
+    				<input type="radio" name="mult_answ" value="9">
+    				9
+ 	 			</label>
+			</div>
+		</fieldset>
+
+		<div class="radio">
+  			<label >
+    			<input type="radio" name="input_type" value="direct_input">
+    			Direct input
+ 			</label>
+		</div>
+	</fieldset>
+	
+	<fieldset id="menu_time">
+		<legend>Time limit</legend>
+		<div class="radio">
+  			<label class="radio-inline">
+    			<input type="radio" name="option_time" value="3" checked> 3 seconds
+ 			</label>
+  			<label class="radio-inline">
+    			<input type="radio" name="option_time" value="5"> 5 seconds
+ 			</label>
+  			<label class="radio-inline">
+    			<input type="radio" name="option_time" value="10"> 10 seconds
+ 			</label>
+		</div>
+	</fieldset>
+	<?php
 		echo form_button($options_button);
+		?>
+		</div>
+		<?php
 		echo form_close();
 		?>
 	</div>
@@ -127,4 +150,17 @@
 		echo form_close();
 	?>
 	</div>
+	<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script>
+	 var socket = io.connect('http://127.0.0.1:8080');
+	 socket.emit('message', 'Quizz adaptation : start ok!');
+	</script>
+	
+	
+	
+	
+	
+	
+	
 </div>
