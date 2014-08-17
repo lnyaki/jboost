@@ -5,7 +5,7 @@
 	?>
 	<h3>Test du quizz</h3>
 
-	<div id="quizz_options" style="width : 35%;margin-left: auto;margin-right: auto;">
+	<div id="quizz_options" class="panel panel-default" style="width : 45%;margin-left: auto;margin-right: auto;">
 		<h1>Quizz options</h1>
 		<?php
 		$options_button	= array('id'		=> 'option_button',

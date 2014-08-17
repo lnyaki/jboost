@@ -60,6 +60,7 @@ footer{
 
 #quizz_options{
 	box-shadow: 5px 5px 20px #888888;
+	padding : 1em;
 }
 
 .qButton{
