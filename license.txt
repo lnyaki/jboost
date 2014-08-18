@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Copyright (c) 2008 - 2014, EllisLab, Inc.
+=======
+Copyright (c) 2008 - 2011, EllisLab, Inc.
+>>>>>>> 5f112e84dfc153c1f660f30ff1b4494e6b1069a7
 All rights reserved.
 
 This license is a legal agreement between you and EllisLab Inc. for the use
