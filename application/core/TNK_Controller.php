@@ -25,6 +25,7 @@ class TNK_Controller extends CI_Controller{
 		$this->add_css(base_url().'assets/css/bootstrap-theme.min.css',true);
 		$this->add_css(base_url().'assets/css/bootstrap.min.css',true);
 		$this->add_css(base_url().'assets/css/style-blue.css',true);
+		$this->add_css(base_url().'assets/css/font-awesome.min.css',true);
 		$this->add_css(base_url().'assets/css/test.css',true);
 		
 		/*********************************************************

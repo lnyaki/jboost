@@ -12,10 +12,17 @@ class Test extends TNK_Controller {
 		
 	}
 	
+	public function tain(){
+		echo "<div>tain</div>";
+	}
+	
 	public function quizz(){
 		//loading views
-		$data['_content']	= $this->load->view('test/view_quizz',null,TRUE);
+		$data['_content']		= $this->load->view('test/view_quizz',null,TRUE);
+		//$data['_left_aside']	= "hello je suis toto";
+		$data['_right_aside']	= "hello je suis toto2";
 		$data['content']	= $this->load->view('templates/content.php',$data,TRUE);
+		
 	
 		//$data['content'] 	= $this->load->view('test/view_quizz',null,TRUE);
 		$this->title("Quizz page");

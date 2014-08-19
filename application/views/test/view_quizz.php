@@ -1,5 +1,5 @@
 
-<div>
+<section>
 	<?php
 		$this->load->helper('form');
 	?>
@@ -105,32 +105,11 @@
 	</fieldset>
 	<?php
 		echo form_button($options_button);
-		?>
-		</div>
-		<?php
-		echo form_close();
-		?>
-	</div>
-	<div id="card">
-		<div id="item" class="word"></div>
-	<?php
-	//initializing form elements data
-		$input_data		= array('name'	=> 'quizz_answer'
-								,'id'	=> 'quizz_answer'
-		);
-		$button_data	= array('name'		=>'b1',
-								'content'	=> 'validate',
-								'type'		=> 'button',
-								'id'		=> 'quizz_button');
-		
-		echo form_open();
-		echo "<div id='quizz_input'>";
-		//echo form_input($input_data);
-		echo "</div>";
-		//echo form_button($button_data);
 		echo form_close();
 	?>
-		
+	</div>
+	<div id="card">
+		<div id="item" class="word"></div>		
 	</div>
 	<div id="quizz_data">
 		<div>Points      : <span id="points"></span></div>
@@ -156,11 +135,4 @@
 	 var socket = io.connect('http://127.0.0.1:8080');
 	 socket.emit('message', 'Quizz adaptation : start ok!');
 	</script>
-	
-	
-	
-	
-	
-	
-	
-</div>
+</section>
