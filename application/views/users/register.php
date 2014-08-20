@@ -4,7 +4,7 @@
         <div class="panel panel-success-dark animated fadeInDown">
         	<div class="panel-heading">Register Form</div>
             	<div class="panel-body">
-                	<form role="form">
+                	<form role="form" action="/users/process/process_registration">
                     	<div class="form-group">
                         	<label for="InputUserName">User Name<sup>*</sup></label>
                             	<input type="text" class="form-control" id="InputUserName">

@@ -1,6 +1,6 @@
 <?php
 
-class TNK_Controller extends CI_Controller{
+class TNK_Controller extends MX_Controller{
 	private $default_css 	= null;
 	private $default_js		= null;
 	private $css			= null;

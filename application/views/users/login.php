@@ -1,6 +1,7 @@
 <div class="container">
 	
 <div class="center-block logig-form">
+	<?php 	echo validation_errors(); ?>
 	<h2 class="section-title no-margin-top">Are you registered?</h2>
 	<div class="panel panel-primary">
 		
