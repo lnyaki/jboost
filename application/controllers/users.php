@@ -37,16 +37,25 @@ class Users extends TNK_Controller {
 		$this->form_validation->set_rules('pass2', 'Password Confirmation', 'required');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required');
 
+			echo $this->input->post('user')."<br/>";
+			echo $this->input->post('pass1')."<br/>";
+			echo $this->input->post('pass2')."<br/>";
+			echo $this->input->post('email')."<br/>";
 		if ($this->form_validation->run() == FALSE)
 		{
-			$this->load->controller('users');
-			$this->users->register();
-			//$this->load->view('myform');
+			
+			echo "NO SUCCESS";
+			
+			//$this->load->module('users');
+			//$this->users->register();
+			$this->load->helper('url');
+			//redirect('register');
 		}
 		else
 		{
+			echo "SUCCESS";
 			//$this->load->controller('/');
-			$this->load->view('formsuccess');
+			//$this->load->view('formsuccess');
 		}
 	}
 }

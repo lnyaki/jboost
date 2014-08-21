@@ -4,10 +4,12 @@
         <div class="panel panel-success-dark animated fadeInDown">
         	<div class="panel-heading">Register Form</div>
             	<div class="panel-body">
-                	<form role="form" action="/users/process/process_registration">
+            		<?php $this->load->library('form_validation');
+            		echo validation_errors(); ?>
+                	<form method="post" role="form" action="users/process/process_registration">
                     	<div class="form-group">
                         	<label for="InputUserName">User Name<sup>*</sup></label>
-                            	<input type="text" class="form-control" id="InputUserName">
+                            	<input type="text" class="form-control" name="user" id="user">
                         </div>
                         <div class="form-group">
                              <label for="InputFirstName">First Name</label>
@@ -19,19 +21,19 @@
                         </div>
                         <div class="form-group">
                         	<label for="InputEmail">Email<sup>*</sup></label>
-                        	<input type="email" class="form-control" id="InputEmail">
+                        	<input type="email" class="form-control" name="email" id="email">
                         </div>
                         <div class="row">
                         	<div class="col-md-6">
                             	<div class="form-group">
                                 	<label for="InputPassword">Password<sup>*</sup></label>
-                                    <input type="password" class="form-control" id="InputPassword">
+                                    <input type="password" class="form-control" name="pass1" id="pass1">
                                 </div>
                             </div>
                             <div class="col-md-6">
                             	<div class="form-group">
                                 	<label for="InputConfirmPassword">Confirm Password<sup>*</sup></label>
-                                    <input type="password" class="form-control" id="InputConfirmPassword">
+                                    <input type="password" class="form-control" name="pass2" id="pass2">
                                 </div>
                             </div>
                      	</div>
