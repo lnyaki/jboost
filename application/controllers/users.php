@@ -34,12 +34,12 @@ class Users extends TNK_Controller {
 
 		$this->form_validation->set_rules('user', 'Username', 'trim|required');
 		$this->form_validation->set_rules('pass1', 'Password', 'required');
-		$this->form_validation->set_rules('pass2', 'Password Confirmation', 'required');
+		//$this->form_validation->set_rules('pass2', 'Password Confirmation', 'required');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required');
 
 			echo $this->input->post('user')."<br/>";
 			echo $this->input->post('pass1')."<br/>";
-			echo $this->input->post('pass2')."<br/>";
+			///echo $this->input->post('pass2')."<br/>";
 			echo $this->input->post('email')."<br/>";
 		if ($this->form_validation->run() == FALSE)
 		{
@@ -54,7 +54,10 @@ class Users extends TNK_Controller {
 		else
 		{
 			echo "SUCCESS";
-			//$this->load->controller('/');
+			$this->load->model('users_model');
+			echo "<br/>".$this->users_model->add_user(array('username' 	=> $this->input->post('user')
+												,'email'	=> $this->input->post('email')
+												,'password'	=> $this->input->post('pass1')));
 			//$this->load->view('formsuccess');
 		}
 	}
