@@ -1,6 +1,7 @@
 
 <header id="header" class="header-full header-full-dark hidden-xs">
 	<p>Hi! I'm the header</p>
+	<div style="float:right;"><?php echo (isset($_SESSION['id']))? 'Welcome '.$_SESSION['username']: "Welcome guest"?></div>
 </header>
 <nav class="navbar navbar-default navbar-static-top navbar-header-full navbar-dark" role="navigation">
 	<div class="container-fluid">

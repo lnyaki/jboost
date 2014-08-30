@@ -1,23 +1,23 @@
 <div class="container">
 	
 <div class="center-block logig-form">
-	<?php 	echo validation_errors(); ?>
 	<h2 class="section-title no-margin-top">Are you registered?</h2>
 	<div class="panel panel-primary">
 		
 		<div class="panel-heading">Login Form</div>
 		<div class="panel-body">
-
-		<form role="form">
+					<?php $this->load->library('form_validation');
+            		echo validation_errors(); ?>
+		<form role="form" method="post" action="users/process/process_login">
 			<div class="form-group">
 				<div class="input-group login-input">
 					<span class="input-group-addon"><i class="fa fa-user"></i></span>
-					<input type="text" class="form-control" placeholder="Username">
+					<input type="text" class="form-control" name="email" placeholder="E-mail">
 				</div>
 				<br>
 				<div class="input-group login-input">
 					<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-					<input type="password" class="form-control" placeholder="Password">
+					<input type="password" class="form-control" name="pass" placeholder="Password">
 				</div>
 				<div class="checkbox">
 					<label>

@@ -1,5 +1,7 @@
 <?php
 
+//starting the session everytime
+	session_start();
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
