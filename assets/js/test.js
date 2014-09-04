@@ -269,7 +269,7 @@ var test = function(){
 		//answers buttons (multiple answers)
 		var create_validation_button = function(input_method, answers_number){
 			var buttons = null;
-			
+			console.log("create_validation_button : ".input_method);
 			if(input_method == DIRECT_INPUT){
 				//create validation button
 				buttons = get_direct_input_button('Validate test');
@@ -291,6 +291,9 @@ var test = function(){
 				//set_button_function(buttons,func);
 				
 				//put the button in its div
+			}
+			else{
+				console.log('ERR : Unknown input method ('+input_method+')');
 			}
 			
 			return buttons;

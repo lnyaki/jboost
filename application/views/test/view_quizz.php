@@ -129,10 +129,12 @@
 		echo form_close();
 	?>
 	</div>
-	<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	
+	<?php /*<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
 	<script>
 	 var socket = io.connect('http://127.0.0.1:8080');
 	 socket.emit('message', 'Quizz adaptation : start ok!');
 	</script>
+	*/?>
 </section>

@@ -42,13 +42,14 @@
  * *******************************************************************/
 $route['login']					= 'users/login';
 $route['register']				= 'users/register';
+$route['disconnect']			= 'users/disconnect';
 $route['users/process/(:any)']	= 'users/$1';
 $route['users/(:any)']			= "users/profile/$1";
 
 /*********************************************************************
  *                        Quizz routes
  * *******************************************************************/
-$route['default_controller'] = "welcome";
+$route['default_controller'] = "test/quizz";
 $route['404_override'] = '';
 
 

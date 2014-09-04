@@ -70,6 +70,7 @@ class TNK_Controller extends MX_Controller{
 		
 	}
 	
+	//$default indicate if the js must be added to the default list of js files
 	public function add_js($js,$default = FALSE){
 		//if we must add to the default js array
 		if($default){

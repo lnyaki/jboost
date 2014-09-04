@@ -1,7 +1,17 @@
 
 <header id="header" class="header-full header-full-dark hidden-xs">
 	<p>Hi! I'm the header</p>
-	<div style="float:right;"><?php echo (isset($_SESSION['id']))? 'Welcome '.$_SESSION['username']: "Welcome guest"?></div>
+	<div style="float:right;padding : 1em;">
+		<?php if(isset($_SESSION['id'])){
+				echo 'Welcome '.$_SESSION['username'];
+				echo '<a href="'.base_url().'disconnect">Log out </a>';
+			}
+			else{
+				echo "Welcome guest".'<a href="'.base_url().'login"> Log in </a>';;
+			} 
+											
+		?>
+	</div>
 </header>
 <nav class="navbar navbar-default navbar-static-top navbar-header-full navbar-dark" role="navigation">
 	<div class="container-fluid">
@@ -25,7 +35,11 @@
             <li><a href="#">One more separated link</a></li>
           </ul>
         </li>
-        <li><a href='/users/storm'>Profile</a>
+        <?php
+        if(isset($_SESSION['id'])){
+        	echo '<li><a href='.base_url().'users/'.$_SESSION['username'].'>Profile</a>';
+        }
+        ?>
       </ul>
       
       </div>

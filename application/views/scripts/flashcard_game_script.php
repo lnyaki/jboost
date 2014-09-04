@@ -35,7 +35,6 @@
 		//ajax.ajaxPostRequest(path, data, handler);
 	}
 	
-	
 	var click_option	= function(){
 		$(options).hide();
 		quizz.initialize();

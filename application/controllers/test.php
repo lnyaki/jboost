@@ -20,7 +20,9 @@ class Test extends TNK_Controller {
 		//loading views
 		$data['_content']		= $this->load->view('test/view_quizz',null,TRUE);
 		//$data['_left_aside']	= "hello je suis toto";
-		$data['_right_aside']	= "hello je suis toto2";
+		$this->load->module("email_list");
+		$data['_right_aside']	= $this->email_list->get_widget();
+
 		$data['content']	= $this->load->view('templates/content.php',$data,TRUE);
 		
 	
@@ -28,9 +30,10 @@ class Test extends TNK_Controller {
 		$this->title("Quizz page");
 		
 		//js script
+		$this->add_js(base_url().'assets/js/test.js');
 		$data['_scripts']	= $this->load->view('scripts/flashcard_game_script', null, TRUE);
 		
-		$this->add_css(base_url().'assets/js/TOTO.css');
+		//$this->add_css(base_url().'assets/js/TOTO.css');
 		
 		$this->create_page($data);
 	}
