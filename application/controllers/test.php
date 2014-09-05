@@ -30,7 +30,7 @@ class Test extends TNK_Controller {
 		$this->title("Quizz page");
 		
 		//js script
-		//$this->add_js(base_url().'assets/js/test.js');
+		$this->add_js(base_url().'assets/js/test.js');
 		$data['_scripts']	= $this->load->view('scripts/flashcard_game_script', null, TRUE);
 		
 		//$this->add_css(base_url().'assets/js/TOTO.css');

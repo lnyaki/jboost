@@ -33,7 +33,7 @@
 		<legend>Repetitions</legend>
 		<div class="radio">
   			<label class="radio-inline">
-    			<input type="radio" name="option_repetitions" value="10" checked>
+    			<input type="radio" name="option_repetitions" value="10" checked="checked">
     			10
  	 		</label>
 	
@@ -58,7 +58,7 @@
 		<legend>Input type</legend>
 		<div class="radio">
   			<label >
-    			<input type="radio" name="input_type" value="multiple_answers" checked>
+    			<input type="radio" name="input_type" value="multiple_answers" checked="checked">
     			Multiple answers
  	 		</label>
 		</div>
@@ -71,7 +71,7 @@
     				3
  	 			</label>
   				<label class="radio-inline">
-    				<input type="radio" name="mult_answ" value="6" checked>
+    				<input type="radio" name="mult_answ" value="6" checked="checked">
     				6
  	 			</label>
   				<label class="radio-inline">
@@ -93,7 +93,7 @@
 		<legend>Time limit</legend>
 		<div class="radio">
   			<label class="radio-inline">
-    			<input type="radio" name="option_time" value="3" checked> 3 seconds
+    			<input type="radio" name="option_time" value="3" checked="checked"> 3 seconds
  			</label>
   			<label class="radio-inline">
     			<input type="radio" name="option_time" value="5"> 5 seconds

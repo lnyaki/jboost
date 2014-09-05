@@ -906,8 +906,8 @@ var test = function(){
 
 			if($(this).attr('checked') == undefined){
 				var groupName	= $(this).attr('name');
-				$(this).parent().parent().find("input[name='"+groupName+"']").removeAttr('checked');
-				$(this).attr("checked","checked");
+				$(this).parent().parent().find("input[name='"+groupName+"'][checked='checked']").removeAttr('checked');
+				//$(this).attr("checked","checked");
 				console.log(this);
 				console.log("elems trouvés ["+groupName+"]: "+$(this).parent().parent().find("input[name='"+groupName+"']").size());
 				console.log("* radio button : was not checked "+$(this).attr("value"));
