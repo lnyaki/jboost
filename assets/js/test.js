@@ -902,12 +902,14 @@ var test = function(){
 		};
 		
 		var click_radio	= function(){
-			console.log("Checked value : "+$(this).attr('checked'));
+			console.log("Checked value : "+$(this).attr('value'));
+
 			if($(this).attr('checked') == undefined){
 				var groupName	= $(this).attr('name');
-				$(this).siblings("input[name='"+groupName+"']").removeAttr('checked');
+				$(this).parent().parent().find("input[name='"+groupName+"']").removeAttr('checked');
 				$(this).attr("checked","checked");
-				console.log("elems trouvés : "+$(this).siblings("input[name='"+groupName+"']").size());
+				console.log(this);
+				console.log("elems trouvés ["+groupName+"]: "+$(this).parent().parent().find("input[name='"+groupName+"']").size());
 				console.log("* radio button : was not checked "+$(this).attr("value"));
 			}
 			else{
