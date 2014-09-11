@@ -327,9 +327,13 @@ var test = function(){
 			var click_function	= null;
 			var data 			= null;
 			
-			
+			console.log("INFO : INPUT_METHOD => "+input_method);
 			//initialize the click function of the validation button(s)
 			if(input_method === DIRECT_INPUT){
+				console.log("INFO : append le textfield");
+				console.log($(ANSWER_DIV).size());
+				console.log("buttons :");
+				console.log(buttons);
 				$(ANSWER_DIV).append(create_direct_input());
 				$(ANSWER_DIV).after(buttons[0]);
 				
@@ -568,13 +572,14 @@ var test = function(){
 		//TODO : use constants instead of hard coded values.
 		var initialize_options	= function(){
 			//get repetitions
-			var repetitions	= $('#menu_repetitions').find('[checked][name="option_repetitions"]');
+			var repetitions	= $('#menu_repetitions').find('[checked="checked"][name="option_repetitions"]');
 			review_size = $(repetitions).attr("value");
 			remaining_elts = review_size -1;
 			console.log("* Répétitions : 		" + review_size);
 			
 			//get input type			
-			var input_type	= $('#menu_input_type').find('[checked][name="input_type"]');
+			var input_type	= $('#menu_input_type').find('input[checked="checked"][name="input_type"]');
+			console.log(input_type);
 			if($(input_type).size() == 1){
 				input_method = $(input_type).attr("value");	
 				console.log("* input type : 		" + input_method);
@@ -585,13 +590,13 @@ var test = function(){
 			
 			//get the number of multiple answers
 			if(input_method == 'multiple_answers'){
-				var num_ans 		= $('#menu_multiple_answers').find('[checked][name="mult_answ"]');	
+				var num_ans 		= $('#menu_multiple_answers').find('[checked="checked"][name="mult_answ"]');	
 				answer_quantity 	= $(num_ans).attr("value");
 			}
 			
-			
+	
 			//get time per answer
-			var answer_time = $('#menu_time').find('[checked][name="option_time"]');
+			var answer_time = $('#menu_time').find('[checked="checked"][name="option_time"]');
 			if($(answer_time).size() == 1){
 				response_time	= $(answer_time).attr('value');
 				console.log("* Time : 			"+ response_time);
@@ -669,7 +674,7 @@ var test = function(){
 				console.log("*** Buttons is undefined ***");
 				exit();
 			}
-			
+			console.log("INFO : avant initialize validation button");
 			//initialize button text and values
 			buttons = current_card.initialize_validation_button(buttons, item_list, func);
 	
@@ -906,10 +911,10 @@ var test = function(){
 
 			if($(this).attr('checked') == undefined){
 				var groupName	= $(this).attr('name');
-				$(this).parent().parent().find("input[name='"+groupName+"'][checked='checked']").removeAttr('checked');
-				//$(this).attr("checked","checked");
-				console.log(this);
-				console.log("elems trouvés ["+groupName+"]: "+$(this).parent().parent().find("input[name='"+groupName+"']").size());
+
+				$('#menu_input_type').find("input[name='"+groupName+"'][checked='checked']").removeAttr('checked');
+				$(this).attr("checked","checked");
+				console.log("elems trouvés ["+groupName+"]: "+$(this).parent().parent().find("input[name='"+groupName+"'][checked='checked']").size());
 				console.log("* radio button : was not checked "+$(this).attr("value"));
 			}
 			else{

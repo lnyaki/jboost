@@ -109,7 +109,8 @@
 	?>
 	</div>
 	<div id="card">
-		<div id="item" class="word"></div>		
+		<div id="item" class="word"></div>	
+		<div id="quizz_input"></div>	
 	</div>
 	<div id="quizz_data">
 		<div>Points      : <span id="points"></span></div>
