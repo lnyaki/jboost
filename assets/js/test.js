@@ -830,14 +830,27 @@ var test = function(){
 			}
 			//END of the game, last screen
 			else{
-				$('#card').hide('slide');
+				sleep(display_endgame,1000);
+			/*	$('#card').hide('slide');
 				
 				reset_html_quizz_elements();
 				
-				$('#quizz_end_screen').show('slide');
+				$('#quizz_end_screen').show('slide');*/
 			}
 			$('#quizz_answer').val('');
 			
+		};
+		
+		var display_endgame	= function(){
+			$('#card').hide('slide');
+				
+			reset_html_quizz_elements();
+				
+			$('#quizz_end_screen').show('slide');
+		};
+		
+		var sleep			= function(callback,time){
+			setTimeout(function(){callback();}, time);
 		};
 		
 		//display the next item by giving the dom parent element
