@@ -49,8 +49,9 @@ var test = function(){
 		//create the textfield for direct input
 		var create_direct_input		= function(){
 			return $('<input/>', {
-				id		: DIRECT_INPUT_ID
-				,name 	: DIRECT_INPUT_ID
+				id				: DIRECT_INPUT_ID
+				,name 			: DIRECT_INPUT_ID
+				,autocomplete	: 'off'
 			});
 		};
 		
@@ -61,6 +62,7 @@ var test = function(){
 		var validate		= function(answer){
 			console.log('*************** Flashcard.validate *************');
 			console.log('*** answer : '+answer+'	item : '+current_item.answer);
+			console.log(current_item);
 
 			return current_item.answer == answer;
 		};
@@ -112,26 +114,31 @@ var test = function(){
 		//get 'quantity' elements from the list, but no elements that are in the blackList
 		var get_multiple_answers_list	= function(quantity, blackList){
 			var list = get_random_elements(quizz.get_items(),quantity,blackList);
-			console.log("debug : dans get_multiple_answer_list");
+			console.log("DEBUG : dans get_multiple_answer_list. List size : "+list.length);
 			return list;
 		};
 		
 		
 		//
 		var get_random_elements		= function(list,quantity, blackList){
-			var max_random 	= list.length;
-			var boundary1 	= list.length - 1;
-			var boundary2	= list.length - 1;
-			var quantity_count = quantity;
-			var i 			= 0;
-			var tmp1, tmp2	= null;
-			var elt			= null;
+			var max_random 		= list.length;
+			var boundary1 		= list.length - 1;
+			var boundary2		= list.length - 1;
+			var quantity_count 	= quantity;
+			var i 				= 0;
+			var tmp1, tmp2		= null;
+			var elt				= null;
 			
+			console.log('DEBUG : item list size : '+ list.length);
+			console.log('DEBUG : required quantity : '+quantity);
+			console.log(list);
 			while(quantity_count>0){
 				//get random elt between 0 and max_random, excluded
 				i = (Math.floor(Math.random() * (max_random)));
-
+				
 				elt = list[i];
+				
+				
 				
 				//if elt not in blackList, normal processing
 				if(!is_in(elt,blackList)){
@@ -166,12 +173,12 @@ var test = function(){
 				
 				boundary1--;
 				max_random--;
-
-
 			}
+			
 			var t1	= boundary2+1-quantity;
 			var t2 	= (boundary2+1);
 			console.log('Liste ('+t1+', '+t2+')');
+			console.log('Slice('+(boundary2+1-quantity)+', '+(boundary2+1)+')');
 			return list.slice((boundary2+1)-quantity,boundary2+1);
 		};
 
@@ -314,6 +321,10 @@ var test = function(){
 				
 				click_function	= function(){
 					quizz.validate($(this).attr('value'));
+					
+					//save the clicked item here
+			//		_.findWhere(items,{id : $(this).attr('id'), name : $(this).attr('name')});
+					
 					//sound.play();
 					//alert(document.location.pathname);
 				};
@@ -342,7 +353,7 @@ var test = function(){
 				$('#quizz_button').click(click_function);
 			}
 			else if(input_method === MULTIPLE_ANSWERS){
-				//get click function				
+				//get click function
 				click_function = get_click_function(MULTIPLE_ANSWERS);
 				
 				if(buttons.length == data_list.length){
@@ -353,6 +364,7 @@ var test = function(){
 						$(button).attr('name',data.answer);
 						$(button).attr('value',data.answer);
 						$(button).attr('type', 'button');
+						$(button).attr('id', data.id);
 						$(button).text(data.item);
 						
 						//removing previous click function, if any. Otherwise, the previous
@@ -462,75 +474,80 @@ var test = function(){
 	Quizz.prototype	=(function(){
 		var constructor = Quizz;
 		//number of elements to review
-		//var review_size		= 3;
 		var review_size;
 		var remaining_elts;
-		
 		//index of the element to review
-		//var item_index 		= 0;
 		var item_index;
-		
 		//number of points of the player
-		//var points			= 0;
 		var points;
-		
 		//input method : direct input or multiple choice questions
-		//var input_method	= '';
 		var input_method;
-		
 		//in case of multiple choice questions, this describes the number
 		//of possible answers
-		//var answer_quantity	= 0;
 		var answer_quantity;
-		
 		//allocated time for each answer
-		//var response_time 	= 3;
 		var response_time;
-		
 		//html flashcard reference
 		var HTML_FLASHCARD	= '#card';
-		
+
 		//quizz card
 		//var current_card 	= new Flashcard(HTML_FLASHCARD);
 		var current_card;
 		
 		var item_list		= null;
 		
+		var self = null;
+		
 		// when we'll be connected to a DB
-		//var items = loadItems();
 		
 		var items		= new Array(
-				 {id	: 1, item	: 'あ', answer	: 'a'}
-				,{id	: 2, item	: 'い', answer	: 'i'}
-				,{id	: 3, item	: 'う', answer	: 'u'}
-				,{id	: 4, item	: 'え', answer	: 'e'}
-				,{id	: 5, item	: 'お', answer	: 'o'}
-				,{id	: 6, item	: 'か', answer 	: 'ka'}
-				,{id	: 7, item	: 'き', answer 	: 'ki'}
-				,{id	: 8, item	: 'く', answer 	: 'ku'}
-				,{id	: 9, item	: 'け', answer 	: 'ke'}
-				,{id	: 10, item	: 'こ', answer 	: 'ko'}
+				/* {id	: 1, item	: 'あ', answer	: 'a'}*/
 		);
 		
-		var sound	= new Audio();
-		/*sound.src	= "beep2Test.mp3";
+		var sound			= new Audio();
+
+		var used_items	 	= new Array();
 		
-		console.log("ATTENTION : Le son ");
-		console.log(sound);
-		sound.play();
-		console.log("Ca joue");*/
+		var current_results	= new Array();
 		
-		var used_items	 = new Array();
-		
-		
+		var stats			= new Array();
 		//============================================================//
 		//                   Game initialization                      //
 		//                                                            //
 		//============================================================//
-		var initialize	= function(){
+		//load the items that will be used in the quizz
+		var load_items		= function(options){
+			var ajax 		= new Ajax();
+			var path		= 'ajax/quizz/load_items';
+			var list_name 	= options.list;
+			var data	= {	'list_name' : list_name};
+			
+			//function for handling the list returned from the database
+			var responseHandler	= function(msg){
+				console.log('--Database response --');
+				console.log(msg);
+				var parsed = JSON.parse(msg);
+			//	console.log(parsed[0].kana);
+				set_list_items(parsed);
+				after_loading_items(self);
+			};
+			console.log('loading the kana');
+			ajax.ajaxPostRequest(path,data,responseHandler);
+		};
+		
+		var after_loading_items	= function(itself){
+			console.log('---- Items ------');
+			console.log(items);
+			initialize_flashcard(itself);
+		};
+		
+		var initialize		= function(){
 		//load items from db
-		//items = load_items();
-
+		console.log("THIS : ");
+		console.log(this);
+			self = this;
+			load_items({'list' : 'hiragana'});
+			
 		//create item list 
 			//item_list 	= get_item_list(items);
 		
@@ -547,7 +564,7 @@ var test = function(){
 		//	var item_list = current_card.get_multiple_answers_list(4, new Array({item : 'あ'}));
 
 		//initialize the flashcard
-			initialize_flashcard(this);
+			//initialize_flashcard(this);
 		
 			console.log("******* Resultat ***********");
 			console.log(test);
@@ -662,6 +679,10 @@ var test = function(){
 				item_list[item_list.length] 	= next_item;
 				
 				func = '';
+				
+				console.log('DEBUG: answer quantity : '+answer_quantity);
+				console.log('DEBUG: preselected length :'+preselected.length);
+				console.log('DEBUG: difference : '+(answer_quantity - preselected.length));
 				
 				//check the size of the item list
 				if(item_list.length != answer_quantity){
@@ -785,32 +806,38 @@ var test = function(){
 			var validated	= current_card.validate(answer);
 			
 			console.log('** Validated : '+ validated);
-			
-		    var answer 		= $('#answer_label');
-		    var points_elt	= $('#points');
+			var current_item	= current_card.get_item();
+		    var answer 			= $('#answer_label');
+		    var points_elt		= $('#points');
 			if(validated){
+				//must get the card that was clicked, and not the current card
+				add_stats(current_item.id,current_item.item,true);
 				add_points(calculate_points());
+			
 				current_card.set_answer_result('Right');
 				current_card.set_points(points);
 			}
 			else{
+				add_stats(current_item.id,current_item.item,false);
 				current_card.set_answer_result('Wrong');
 			}	
 			
 			
             console.log("Quizz.validate. Rem. items : "+remaining_elts);
 			if(remaining_elts > 0){
+				//First, we choose the next random quizz element.
+				//Then we obtain other elements, to fill the list of multiple possible answers
+				
 				//get next random elt
 				var random_elt 		= next_random_item();
-				
-				//get new random answer set
-				var random_answers 	= current_card.get_multiple_answers_list(answer_quantity-1, new Array(random_elt));
-				//add the answer element to the random elements
-				random_answers.push(random_elt);
-				
 				var buttons;
 				
 				if(input_method === current_card.MULTIPLE_ANSWERS){
+					//get new random answer set
+					var random_answers 	= current_card.get_multiple_answers_list(answer_quantity-1, new Array(random_elt));
+					//add the answer element to the random elements
+					random_answers.push(random_elt);
+					
 					//get the existing buttons, to reinitialize them
 					buttons 		= current_card.get_existing_buttons();
 				
@@ -831,14 +858,45 @@ var test = function(){
 			//END of the game, last screen
 			else{
 				sleep(display_endgame,1000);
-			/*	$('#card').hide('slide');
 				
-				reset_html_quizz_elements();
-				
-				$('#quizz_end_screen').show('slide');*/
+				//send result to server
+				send_result(stats);
 			}
 			$('#quizz_answer').val('');
 			
+		};
+		
+		//correct_answer is a boolean describing if the answer was right or wrong
+		var add_stats		= function(itemID,item,isAnswerOK){
+			console.log("----- Dans add stats ------");
+			var element = _.findWhere(stats,{id : itemID, item : item});
+		
+		//if there is already an entry for this element, we increment the count
+		//of right and wrong answers
+			if (element !== undefined){
+				console.log('-- Element found : '+element.item);
+				if(isAnswerOK){
+					element.right += 1;
+				}
+				else{
+					element.wrong += 1;
+				}
+				console.log(element);
+			}
+		//else, we create the element and initialize 'right' and 'wrong' depending on isAnswerOK
+			else{
+				console.log('-- Element not found. We create '+item);
+				var new_stat = null;
+				if(isAnswerOK){
+					new_stat	= {id : itemID, item : item, right : 1, wrong : 0};
+				}
+				else{
+					new_stat 	= {id : itemID, item : item, right : 0, wrong : 1};
+				}
+				
+				console.log(new_stat);
+				stats.push(new_stat);				
+			}
 		};
 		
 		var display_endgame	= function(){
@@ -847,10 +905,25 @@ var test = function(){
 			reset_html_quizz_elements();
 				
 			$('#quizz_end_screen').show('slide');
+			
+			console.log(stats);
 		};
 		
 		var sleep			= function(callback,time){
 			setTimeout(function(){callback();}, time);
+		};
+		
+		//send the quizz result to the server
+		var send_result		= function(stats){
+			console.log("stat !!!!!!!!!!!!!!!!!!!!!!");
+			console.log(stats);
+			var path	= 'ajax/quizz/add_stats';
+			var data 	= {'stats' 	: stats};
+			
+			var responseHandler	= function(msg){
+				console.log("--- Add stats result(js) : "+msg);
+			};
+			ajax.ajaxPostRequest(path,data,responseHandler);
 		};
 		
 		//display the next item by giving the dom parent element
@@ -892,6 +965,10 @@ var test = function(){
 			return items;
 		};
 		
+		
+		var set_list_items	= function(new_items){
+			items	= new_items;
+		};
 		
 		var get_item_list	= function(items){
 			var list_size 	= items.length;
@@ -1174,10 +1251,10 @@ var test = function(){
         
         	if(type==='get'){
             	$.ajax({
-                    url:path
-                ,   datatype:datatype
-                ,   type:'get'
-                ,   success:function(data){
+                    url			:path
+                ,   datatype	:datatype
+                ,   type		:'get'
+                ,   success		:function(data){
                         responesHandler(data);
                 }
             });

@@ -49,7 +49,8 @@ $route['users/(:any)']			= "users/profile/$1";
 /*********************************************************************
  *                        Quizz routes
  * *******************************************************************/
-$route['default_controller'] = "test/quizz";
+//$route['ajax/quizz/(:any)']		= 'test/ajax/$1';
+$route['default_controller'] 	= "test/quizz";
 $route['404_override'] = '';
 
 
