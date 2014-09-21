@@ -52,15 +52,13 @@ class Test extends TNK_Controller {
 		echo $this->Kana_model->add_stats($post['stats'],$userID);
 	}
 	
-	public function ajax($elt,$elt2){
-		//echo "elt 1 ".$elt;
-	//	echo "  elt 2 ".$elt2;
-		//print_r($_SESSION);
+	public function ajax($elt,$elt2 = "arg2"){
 		
-		switch($elt2){
+		switch($elt){
 			case 'quizz' :
-				echo $elt;
-				$this->ajax_quizz();
+				echo "HHHHHHello ".$elt;
+				echo " ".$elt2;
+				//$this->ajax_quizz();
 				break;
 
 			case 'load_items' 	:
@@ -108,8 +106,7 @@ class Test extends TNK_Controller {
 	}
 	
 	private function ajax_quizz(){
-		echo "ajax quizz ok<br/>";
-		echo $this->input->post('item').'<br/>';
+		echo $this->input->post('item').'<br/>tete';
 		echo $this->input->post('answer').'<br/>';
 	}
 }

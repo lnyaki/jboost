@@ -87,6 +87,7 @@ class Kana_model extends CI_Model{
 		$queryOK	= true;
 		
 		foreach($data as $item){
+			
 			$exists		= $this->exists($item['item'],$userID);
 			
 			echo "EXIST ".$item['item']." pour user ".$userID.' : '.((int)$exists).'<br/>';
@@ -97,10 +98,11 @@ class Kana_model extends CI_Model{
 			else{
 				$queryOK 	= $queryOK and $this->add_single_stat($item, $userID);
 			}
+	
 		}
 		
 		echo ($queryOK)? "Ajout OK": "Problème dans l'ajout<br/>";
-		
+
 		echo "dans add stats";
 		
 		return $queryOK;
@@ -125,8 +127,7 @@ class Kana_model extends CI_Model{
 
 		$fields	= array();
 		
-		$sql	 = '';
-		$sql	.= "INSERT INTO $table (kana_ref,ok,ko,total,user_ref)";
+		$sql     = "INSERT INTO $table (kana_ref,ok,ko,total,user_ref)";
 		$sql	.= " VALUES ( ? ,?,?,?,?)";
 			
 		print_r($data);
@@ -146,7 +147,6 @@ class Kana_model extends CI_Model{
 		$table 	= 'kana01_stats';
 		
 		echo "////////////////// update_single_stat ////////////";
-	//	print_r($data);
 		
 		if(!isset($data['right'])){
 			$data['right'] = 0;
@@ -158,14 +158,13 @@ class Kana_model extends CI_Model{
 		
 		$total = $data['right'] + $data['wrong'];
 		
-		$sql	= "UPDATE $table SET ok = ok + ?, ko = ko + ?, total = total + ?,user_ref = ?";
+		$sql	= "UPDATE $table SET ok = ok + ?, ko = ko + ?, total = total + ?";
 		$sql	.= " WHERE kana_ref = ? and user_ref = ?";
 		
 		$fields	= array();
 		array_push($fields, $data['right']);
 		array_push($fields, $data['wrong']);
 		array_push($fields, $total);
-		array_push($fields, $userID);
 		array_push($fields, $data['item']);
 		array_push($fields, $userID);
 		
