@@ -20,7 +20,9 @@ class Users extends TNK_Controller {
 			$data['content'] .= '<li>email : '.$result->email.'</li>';
 			$data['content'] .= '</ul>';
 		}
-		
+		else{
+			//output text or error
+		}
 		$this->create_page($data);
 	}
 	

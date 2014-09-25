@@ -2,10 +2,35 @@
 
 class Kana_model extends CI_Model{
 	const main_table 	= 'kana01';
+	const list_table	= 'kana02';
 	
 	//call modes
 	public static $cm_01	= array('*');
 	public static $cm_02	= array('kana','pronounciation','type');
+	
+	//return the kana lists
+	public function get_kana_lists(){
+		$this->load->helper('table_helper');
+		$sql = 'select '.call_mode(self::$cm_01);
+		$sql .= ' from '.self::list_table;
+
+		$query = $this->db->query($sql);
+		
+		$data 			= array();
+		$data_fields	= array();
+		
+		//get the field names
+		foreach ($query->list_fields() as $elt){
+			array_push($data_fields,$elt);
+		}
+		
+		//get the content
+		foreach($query->result() as $elt){
+			array_push($data,$elt);
+		}
+		
+		return array($data_fields,$data);
+	}
 	
 	//return 1 hiragana corresponding to the pronounciation
 	public function get_hiragana($pronounciation){
@@ -19,11 +44,8 @@ class Kana_model extends CI_Model{
 	
 	//return 1 kana corresponding to the pronounciation
 	public function get_kana($pronounciation, $type){
-		$this->load->helper('table');
-		
 		$fields = array($pronounciation);
 		
-
 		$sql = 'select '.$cm_02;
 		$sql .= ' from '.self::main_table;
 		$sql .= ' where pronounciation = ?';

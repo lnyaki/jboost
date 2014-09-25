@@ -40,6 +40,7 @@
         	echo '<li><a href='.base_url().'users/'.$_SESSION['username'].'>Profile</a>';
         }
         ?>
+        <li><a href='<?php echo base_url();?>lists'>Lists</a></li>
       </ul>
       
       </div>
