@@ -1,6 +1,8 @@
-<div class="panel panel-default span12">
+<div class="panel">
 	<h1 >Kana Lists</h1>
 	<?php 
+	
+	//<div class="panel panel-default">
 	//build the html table 
 			
 	if(isset($_thead) and isset($_tbody)){
@@ -8,6 +10,7 @@
 		
 		echo html_table($_thead,$_tbody, $table_class);
 	}
+	//echo "test content";
 	
 	?>
 </div>

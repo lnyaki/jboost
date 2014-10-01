@@ -41,7 +41,9 @@ class TNK_Controller extends MX_Controller{
 		
 		//load website header
 		$data['_site_header']	= $this->load->view('templates/header',$scripts,TRUE);
+		
 		$data['_content'] 		= $data2['content'];
+		
 		$data['_scripts']		 = $this->import_js($default). $this->import_js(!$default);
 		$data['_scripts']		.= isset($data2['_scripts'])?$data2['_scripts']:'';
 		$data['_footer']		= $this->load->view('templates/footer','',TRUE);

@@ -10,6 +10,7 @@ class Lists extends TNK_Controller {
 
 		
 		$data	= array();
+		$data2 	= array();
 		$table = '';
 		
 		if($lists){
@@ -22,7 +23,13 @@ class Lists extends TNK_Controller {
 			//set up the class of the table 
 			$table_class = 'table condensed';
 			
-			$data['content'] = $this->load->view('lists/list_table_view',array('_thead' => $thead, '_tbody' => $tbody, '_table_class' => $table_class),TRUE);
+			//initialize the left and right side
+			$data2['_left_aside']	= '';
+			$data2['_right_aside']	= '';
+			//load the list view to put in the content view
+			$data2['_content'] 		= $this->load->view('lists/list_table_view',array('_thead' => $thead, '_tbody' => $tbody, '_table_class' => $table_class),TRUE);
+		
+			$data['content']		= $this->load->view('templates/content.php',$data2,true);
 		}
 		else{
 		//output warning or something
