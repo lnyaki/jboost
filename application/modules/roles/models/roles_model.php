@@ -21,6 +21,7 @@ class Roles_model extends CI_Model{
 		$sql	 = "SELECT * FROM ".self::privileges_table;
 		
 		$operations	= array();
+		$fields		= array();
 		
 		$result	= $this->db->query($sql);
 		
@@ -28,7 +29,13 @@ class Roles_model extends CI_Model{
 			array_push($operations,$res);
 		} 
 		
-		return $operations;
+		//get the field names
+		foreach ($result->list_fields() as $elt){
+			array_push($fields,$elt);
+		}
+		
+		
+		return array($fields,$operations);
 	}
 		
 	//return the list of roles

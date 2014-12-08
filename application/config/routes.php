@@ -52,9 +52,19 @@ $route['users/(:any)']			= "users/profile/$1";
  //must use 2 routes because, depending on where the call is made, the
  //user will be Test/ajax... or ajax...
 $route['Test/ajax/quizz/(:any)']		= 'test/ajax/$1';
-$route['ajax/quizz/(:any)']			= 'test/ajax/$1';
-$route['default_controller'] 			= "test/quizz";
-$route['404_override'] = '';
+$route['ajax/quizz/(:any)']				= 'test/ajax/$1';
+
+
+/*********************************************************************
+ *                        List routes
+ * *******************************************************************/
+$route['lists/create']		= 'lists/create_list';
+$route['lists/update']		= 'lists/update_list';
+$route['lists/(:any)']		= 'lists/display_list/$1';
+
+
+$route['default_controller'] 	= "test/quizz";
+$route['404_override'] 			= '';
 
 
 /* End of file routes.php */

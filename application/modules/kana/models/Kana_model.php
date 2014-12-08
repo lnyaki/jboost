@@ -1,12 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class Kana_model extends CI_Model{
-	const main_table 	= 'kana01';
-	const list_table	= 'kana02';
+	const main_table 			= 'kana01';
+	const list_table			= 'kana02';
+	const list_table_details	= 'kana02_details';
 	
 	//call modes
 	public static $cm_01	= array('*');
 	public static $cm_02	= array('kana','pronounciation','type');
+	public static $cm_03	= array("list.name 'list_name',kana.id,kana.kana,kana.pronounciation, kana.type");
 	
 	//return the kana lists
 	public function get_kana_lists(){
@@ -61,11 +63,15 @@ class Kana_model extends CI_Model{
 		return $this->db->query($sql, $fields);
 	}
 	
+	//return the content of the list named $list
 	public function get_kana_list($list){
+		//load the table helper
+		$this->load->helper('table');
+		
 		$fields = array($list);
 
-		$sql = "select list.name 'list_name',kana.id,kana.kana,kana.pronounciation, kana.type";
-		$sql .= ' from kana02 as list, kana02_details as details, kana01 as kana';
+		$sql = "select ".call_mode(self::$cm_03);
+		$sql .= ' from '.self::list_table.' as list, '.self::list_table_details.' as details, kana01 as kana';
 		$sql .= ' where kana.id = details.kana_ref and details.list_ref = list.id';
 		$sql .= ' and list.name = ?';
 		

@@ -18,7 +18,9 @@ class Lists extends TNK_Controller {
 			$thead = html_table_head($lists[0]);
 			
 			//the second element is the rows
-			$tbody	= html_table_body($lists[1],'','',array(base_url().'list/',2));
+			$column_index 	= 2;
+			$href 			= array(base_url().'lists/',$column_index);
+			$tbody	= html_table_body($lists[1],'','',$href);
 			
 			//set up the class of the table 
 			$table_class = 'table condensed';
@@ -28,7 +30,7 @@ class Lists extends TNK_Controller {
 			$data2['_right_aside']	= '';
 			//load the list view to put in the content view
 			$data2['_content'] 		= $this->load->view('lists/list_table_view',array('_thead' => $thead, '_tbody' => $tbody, '_table_class' => $table_class),TRUE);
-		
+			$data2['_content']		.= $this->load->view('lists/create_list_view',null,TRUE);
 			$data['content']		= $this->load->view('templates/content.php',$data2,true);
 		}
 		else{
@@ -36,6 +38,51 @@ class Lists extends TNK_Controller {
 		}
 		
 		$this->create_page($data);
-	}		
+	}
+
+	public function display_list($list_name){
+		$this->load->model('kana/Kana_model','model');
+		$kana_list	= $this->model->get_kana_list($list_name);
+		
+		//initialize the left and right side
+			$data2['_left_aside']	= '';
+			$data2['_right_aside']	= '';
+			
+			//load the list view to put in the content view
+			$data2['_content'] 		 = $this->load->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $kana_list),TRUE);
+			$data2['_content']		.= $this->load->view('lists/update_list_view',null,TRUE);
+			
+			$data['content']		= $this->load->view('templates/content.php',$data2,true);
+			
+			$this->create_page($data);
+	}
+
+	//create a new list of characters (kana, kanji)
+	public function create_list(){
+		//initialize the left and right side
+			$data2['_left_aside']	= '';
+			$data2['_right_aside']	= '';
+			
+			//load the list view to put in the content view
+			$data2['_content'] 		= $this->load->view('lists/create_list_view',array(),TRUE);
+			$data = array();
+			$data['content']		= $this->load->view('templates/content.php',$data2,true);
+			
+			$this->create_page($data);
+	}
+	
+	//update the content of a list (add or remove characters)
+	public function update_list($list){
+		
+	}
+	
+	public function add_items($list, $items){
+		
+	}
+	
+	public function remove_items($list,$items){
+		
+	}
+	
 }
 	

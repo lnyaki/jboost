@@ -8,6 +8,8 @@ class Roles extends TNK_Controller {
 			$result = $this->roles_model->get_roles_list();
 			print_r($result);
 			
+			echo " <br/>";
+			
 			$result = $this->roles_model->get_privileges_list();
 			print_r($result);
 		}
