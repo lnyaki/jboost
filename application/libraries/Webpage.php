@@ -1,6 +1,7 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
+<?php 
+if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
-class Webpage {
+class Webpage extends CI_Controller{
 //***************************************
 //           Page
 //***************************************
@@ -10,6 +11,7 @@ class Webpage {
 	private $right			= '';
 	private $center			= '';
 	private $footer 		= '';
+	private $html_scripts	= ''; //html code of the scripts
 	
 	private $html_header	= null; //technical, html header
 		
@@ -20,52 +22,106 @@ class Webpage {
 	private $default_js		= null;
 	private $css			= null;
 	private $js				= null;
-	private $script			= null;
+	private $script			= null; //table with the names of scripts
 
+//***************************************
+//           Constants
+//***************************************
+//--------- Page types constants -----------
+	const NORMAL_PAGE 	= 1; 	// a left side, right side, and center
+	const LEFT_SIDE		= 2;	// left side and center
+	const RIGHT_SIDE	= 3;  	// right side and center
+	const CENTER_ONLY	= 4;	// just one big center
 	
+//--------- Block types constants -----------
+	const HEADER_BLOCK	= 10;
+	const LEFT_BLOCK	= 11;
+	const RIGHT_BLOCK	= 12;
+	const CENTER_BLOCK 	= 13;
+	const FOOTER_BLOCK	= 14;
 	
-	//Append an html block to a part of the page.
-	public function add_block($block, $side ="center"){
+	//test variable
+	private $tmp;
+	
+	function __construct($elt = 0){
+		$this->tmp = $elt;
+	}
+	
+	public function test2(){
+		echo "dans fonction test.<br/>";
+		echo "Valeur de l'objet : ".$this->tmp."<br/>";
+	}
+	
+//Append an html block to a part of the page.
+	public function add_block($block, $side = self::CENTER_BLOCK){
 		
 		switch($side){
-			case "header" :
-				$page_header	.= $block;
+			case self::HEADER_BLOCK :
+				$this->page_header	.= $block;
 				break;
-			case "left"	:
-				$left			.= $block;
+			case self::LEFT_BLOCK	:
+				$this->left			.= $block;
 				break;
-			case "right" :
-				$right 			.= $block;
+			case self::RIGHT_BLOCK :
+				$this->right 			.= $block;
 				break;
-			case "center" :
-				$center 		.= $block;
+			case self::CENTER_BLOCK :
+				$this->center 		.= $block;
 				break;
-			case "footer" :
+			case self::FOOTER_BLOCK :
+				$this->footer			.= $block;
 				break;
 			default : 
-				add_bloc("center");
+				$this->add_block($block,self::CENTER_BLOCK);
 		}
 	}
 	
-//Generate the final HTML code  of the page
-	public function generate_page(){
-	//add the css files used by this page to a css object
-		add_default_css();
-		
-	//add the js files used by this page to a js object
-		add_default_js();
-		
-	//generate the html header code for the import of js files
-		$this->html_header  = $this->import_js2($this->default_js);
-		$this->html_header .= $this->import_js2($this->js);
-		
-	//generate the page header
-		$this->page_header = $this->load->view('templates/header',null,TRUE);//shouldn't this be at higher level?
-	
+	public function test(){
+		echo "Hello!!!! Test! <br/><br/>";
 	}
 	
-
+//Generate the final HTML code  of the page
+//This function takes the data added by the controller to this object, and
+//uses this data (scripts, views, arrays, strings) to generate the final HTML page.
+	public function generate_page($page_style = ''){
+	//get the template of the page (side elements, center only, etc)
+		//$template_path = $get_appropriate_template();
+		$template_path = 'templates/blank_page';
+	//add the css files used by this page to a css object
+		$this->add_default_css();
+		
+	//add the js files used by this page to a js object
+		$this->add_default_js();
+		
+	//generate the html code for the import of css files
+		$this->html_header  = $this->import_css2($this->default_css);
+		$this->html_header .= $this->import_css2($this->css);
+		
+	//generate the html code for the import of js files
+		$this->html_scripts  = $this->import_js2($this->default_js);
+		$this->html_scripts .= $this->import_js2($this->js);
+		
+	//generate the page header
+		$this->page_header 	= $this->load->view('templates/header',null,TRUE);//shouldn't this be at higher level?
 	
+	//generate the whole content of the page
+		$total_content 		= $this->generate_content($template_path,$this->left,$this->center,$this->right);
+	
+	//generate the page footer
+		$this->footer		= $this->load->view('templates/footer','',TRUE);
+		
+		//$data['content']		= $this->load->view('templates/content.php',$data2,true);
+		$data = $this->generate_data_array($this->page_header,$total_content,$this->footer,$this->html_scripts);
+		//$this->load->view('templates/blank_page',$data);
+	}
+	
+	private function generate_data_array($header,$content,$footer,$scripts){
+		return array('_site_header' => $header,
+					'_content' 		=> $content,
+					'_footer' 		=> $footer,
+					'_scripts'		=> $scripts);
+	}
+
     public function create_page($data2){
 		$scripts['_js']		= $this->js;
 		$scripts['_css']	= $this->css;
@@ -76,12 +132,12 @@ class Webpage {
 		/*********************************************************
 		 *              add the default css
 		 *********************************************************/
-		add_default_css();
+		$this->add_default_css();
 		
 		/*********************************************************
 		 *              add the default javascript
 		 *********************************************************/
-		add_default_js();
+		$this->add_default_js();
 		
 		$default = TRUE;
 		
@@ -98,6 +154,12 @@ class Webpage {
 		$data['_footer']		= $this->load->view('templates/footer','',TRUE);
 		$this->load->view('templates/blank_page',$data);
 	}
+
+
+	public function get_center(){
+		return $this->center;
+	}
+	
 	
 	public function add_css($css, $default = FALSE){
 		//if we must add to the default css array
@@ -153,7 +215,21 @@ class Webpage {
 		}
 	}
 	
-		//return link tags for importing css files	
+	public function title($title){
+		$this->title = $title;
+	}
+	
+	
+//generate the main content of the page (without header or footer)
+	private function generate_content($path = 'templates/content.php',$left_side = '',$center = '',$right_side = ''){
+		return $this->load->view($path
+								,array(	'_left_side' 	=> $left_side,
+										'_center' 		=> $center,
+										'_right_side' 	=> $right_side)
+								,true);
+	}
+	
+//return link tags for importing css files	
 	private function import_css($default = FALSE){
 		if($default){
 			$tab = $this->default_css;
@@ -189,7 +265,18 @@ class Webpage {
 		return $js_content;
 	}
 	
-		//return script tags for importing javascript files
+	//return link tags for importing css files	
+	private function import_css2($css_files){
+		$css_content = '';
+		if(isset($css_files)){
+			foreach($css_files as $css){
+				$css_content .= ' <link rel="stylesheet" href="'.$css.'" />';
+			}	
+		}
+		return $css_content;
+	}
+	
+	//return script tags for importing javascript files
 	private function import_js2($js_files){
 		$js_content 	= '';
 		if(isset($js_files)){
@@ -215,7 +302,4 @@ class Webpage {
 		$this->add_js(base_url().'assets/js/bootstrap.min.js',true);
 	}
 
-	public function title($title){
-		$this->title = $title;
-	}
 }
