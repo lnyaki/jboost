@@ -63,13 +63,13 @@ class Webpage extends CI_Controller{
 				$this->left			.= $block;
 				break;
 			case self::RIGHT_BLOCK :
-				$this->right 			.= $block;
+				$this->right 		.= $block;
 				break;
 			case self::CENTER_BLOCK :
 				$this->center 		.= $block;
 				break;
 			case self::FOOTER_BLOCK :
-				$this->footer			.= $block;
+				$this->footer		.= $block;
 				break;
 			default : 
 				$this->add_block($block,self::CENTER_BLOCK);

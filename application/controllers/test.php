@@ -12,8 +12,21 @@ class Test extends TNK_Controller {
 		
 	}
 	
-	public function tain(){
-		echo "<div>tain</div>";
+	public function page(){
+		//js script
+		$this->add_js(base_url().'assets/js/lodash.compat.js');
+		$this->add_js(base_url().'assets/js/test.js');
+		
+		//get email list widget
+		$this->load->module("email_list");
+		$widget = $this->email_list->get_widget();
+		$this->add_block($widget,self::RIGHT_BLOCK);
+		
+		//center block
+		$block = "<div> Hello world!</div>";
+		$this->add_block($block,self::CENTER_BLOCK);
+		
+		$this->generate_page();
 	}
 	
 	public function quizz(){

@@ -73,7 +73,7 @@ class TNK_Controller extends MX_Controller{
 	public function generate_page($page_style = ''){
 	//get the template of the page (side elements, center only, etc)
 		//$template_path = $get_appropriate_template();
-		$template_path = 'templates/blank_page';
+		$template_path = 'templates/content';
 	//add the css files used by this page to a css object
 		$this->add_default_css();
 		
@@ -83,6 +83,7 @@ class TNK_Controller extends MX_Controller{
 	//generate the html code for the import of css files
 		$this->html_header  = $this->import_css2($this->default_css);
 		$this->html_header .= $this->import_css2($this->css);
+		
 		
 	//generate the html code for the import of js files
 		$this->html_scripts  = $this->import_js2($this->default_js);
@@ -96,14 +97,21 @@ class TNK_Controller extends MX_Controller{
 	
 	//generate the page footer
 		$this->footer		= $this->load->view('templates/footer','',TRUE);
-		
+	
 		//$data['content']		= $this->load->view('templates/content.php',$data2,true);
-		$data = $this->generate_data_array($this->page_header,$total_content,$this->footer,$this->html_scripts);
-		//$this->load->view('templates/blank_page',$data);
+		$data = $this->generate_data_array($this->html_header,
+											$this->title,
+											$this->page_header,
+											$total_content,
+											$this->footer,
+											$this->html_scripts);
+		$this->load->view('templates/blank_page',$data);
 	}
 	
-	private function generate_data_array($header,$content,$footer,$scripts){
-		return array('_site_header' => $header,
+	private function generate_data_array($html_header, $title,$header,$content,$footer,$scripts){
+		return array('_html_header'	=> $html_header,
+					'_title'		=> $title,
+					'_site_header' 	=> $header,
 					'_content' 		=> $content,
 					'_footer' 		=> $footer,
 					'_scripts'		=> $scripts);
@@ -199,6 +207,15 @@ class TNK_Controller extends MX_Controller{
 	
 	public function title($title){
 		$this->title = $title;
+	}
+	
+	//generate the main content of the page (without header or footer)
+	private function generate_content($path = 'templates/content.php',$left_side = '',$center = '',$right_side = ''){
+		return $this->load->view($path
+								,array(	'_left_aside' 	=> $left_side,
+										'_content' 		=> $center,
+										'_right_aside' 	=> $right_side)
+								,true);
 	}
 
 	//return link tags for importing css files	
