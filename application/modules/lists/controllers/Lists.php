@@ -40,7 +40,7 @@ class Lists extends TNK_Controller {
 		$this->create_page($data);
 	}
 
-	public function display_list($list_name){
+	public function display_list2($list_name){
 		$this->load->model('kana/Kana_model','model');
 		$kana_list	= $this->model->get_kana_list($list_name);
 		
@@ -55,6 +55,33 @@ class Lists extends TNK_Controller {
 			$data['content']		= $this->load->view('templates/content.php',$data2,true);
 			
 			$this->create_page($data);
+	}
+	
+	public function display_list($list_name){
+	//load the views
+		$character_list_view	= $this->display_list_widget($list_name);
+		$update_view			= $this->update_list_widget();
+		
+	//add the content of the views to the page
+		$this->add_block($character_list_view	,self::CENTER_BLOCK);
+		$this->add_block($update_view			,self::CENTER_BLOCK);
+	
+	//Generate the html page
+		$this->generate_page();
+	}
+
+	//get the update-list widget
+	public function update_list_widget(){
+		return $this->view('lists/update_list_view',null);
+	}
+
+	public function display_list_widget($list_name){
+	//load the kana_model so that we can get kana data
+		$this->load->model('kana/Kana_model','model');	
+	//load a kana list from database
+		$kana_list				= $this->model->get_kana_list($list_name);
+		
+		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $kana_list));
 	}
 
 	//create a new list of characters (kana, kanji)

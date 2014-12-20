@@ -209,6 +209,11 @@ class TNK_Controller extends MX_Controller{
 		$this->title = $title;
 	}
 	
+	
+	public function view($path,$data,$generate_html = TRUE){
+		return $this->load->view($path,$data,$generate_html);
+	}
+	
 	//generate the main content of the page (without header or footer)
 	private function generate_content($path = 'templates/content.php',$left_side = '',$center = '',$right_side = ''){
 		return $this->load->view($path

@@ -16,15 +16,21 @@ class Test extends TNK_Controller {
 		//js script
 		$this->add_js(base_url().'assets/js/lodash.compat.js');
 		$this->add_js(base_url().'assets/js/test.js');
+		$this->add_js(base_url().'assets/js/test-page.js');
 		
 		//get email list widget
 		$this->load->module("email_list");
 		$widget = $this->email_list->get_widget();
+		$widget2 = "<h2> Hello widget</h2>";
 		$this->add_block($widget,self::RIGHT_BLOCK);
+		$this->add_block($widget2,self::RIGHT_BLOCK);
 		
 		//center block
 		$block = "<div> Hello world!</div>";
-		$this->add_block($block,self::CENTER_BLOCK);
+		$block2 = "<h3> Go belgium</h3>";
+		$this->add_block($block2,self::CENTER_BLOCK);
+		$this->add_block($block ,self::CENTER_BLOCK);
+		
 		
 		$this->generate_page();
 	}
