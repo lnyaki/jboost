@@ -14,9 +14,9 @@ class Test extends TNK_Controller {
 	
 	public function page(){
 		//js script
-		$this->add_js(base_url().'assets/js/lodash.compat.js');
-		$this->add_js(base_url().'assets/js/test.js');
-		$this->add_js(base_url().'assets/js/test-page.js');
+		$this->add_js('assets/js/lodash.compat.js');
+		$this->add_js('assets/js/test.js');
+		$this->add_js('assets/js/test-page.js');
 		
 		//get email list widget
 		$this->load->module("email_list");

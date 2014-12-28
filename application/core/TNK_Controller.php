@@ -152,6 +152,7 @@ class TNK_Controller extends MX_Controller{
 	}
 	
 	public function add_css($css, $default = FALSE){
+		$css = base_url().$css;
 		//if we must add to the default css array
 		if($default){
 			if($this->default_css!=null){
@@ -175,6 +176,7 @@ class TNK_Controller extends MX_Controller{
 	
 	//$default indicate if the js must be added to the default list of js files
 	public function add_js($js,$default = FALSE){
+		$js = base_url().$js;
 		//if we must add to the default js array
 		if($default){
 			if($this->default_js!=null){
@@ -283,17 +285,17 @@ class TNK_Controller extends MX_Controller{
 	
 	//add the default css files of this page
 	private function add_default_css(){
-		$this->add_css(base_url().'assets/css/bootstrap-theme.min.css',true);
-		$this->add_css(base_url().'assets/css/bootstrap.min.css',true);
-		$this->add_css(base_url().'assets/css/style-blue.css',true);
-		$this->add_css(base_url().'assets/css/font-awesome.min.css',true);
-		$this->add_css(base_url().'assets/css/test.css',true);
+		$this->add_css('assets/css/bootstrap-theme.min.css',true);
+		$this->add_css('assets/css/bootstrap.min.css',true);
+		$this->add_css('assets/css/style-blue.css',true);
+		$this->add_css('assets/css/font-awesome.min.css',true);
+		$this->add_css('assets/css/test.css',true);
 	}
 
 //add the default js files of this page
 	private function add_default_js(){
-		$this->add_js(base_url().'assets/js/jquery-2.0.3.min.js',true);
-		$this->add_js(base_url().'assets/js/bootstrap.min.js',true);
+		$this->add_js('assets/js/jquery-2.0.3.min.js',true);
+		$this->add_js('assets/js/bootstrap.min.js',true);
 	}
 	
 }
