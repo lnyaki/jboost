@@ -5,6 +5,6 @@
 	var log_array = function(elt){
 		console.log(elt);
 	};
-		
+
 	_.each(tab,log_array);
 

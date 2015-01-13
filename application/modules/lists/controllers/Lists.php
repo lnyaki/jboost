@@ -58,13 +58,21 @@ class Lists extends TNK_Controller {
 	}
 	
 	public function display_list($list_name){
+	//load js files
+		$this->add_js('assets/js/lodash.compat.js');
+		$this->add_js('assets/js/module_manager.js');
+		$this->add_js('assets/js/module.js');
+		$this->add_js('assets/js/test-page.js');
+		
 	//load the views
 		$character_list_view	= $this->display_list_widget($list_name);
 		$update_view			= $this->update_list_widget();
+		$update_view2			= $this->update_list_widget2();
 		
 	//add the content of the views to the page
 		$this->add_block($character_list_view	,self::CENTER_BLOCK);
 		$this->add_block($update_view			,self::CENTER_BLOCK);
+		$this->add_block($update_view2			,self::CENTER_BLOCK);
 	
 	//Generate the html page
 		$this->generate_page();
@@ -73,6 +81,11 @@ class Lists extends TNK_Controller {
 	//get the update-list widget
 	public function update_list_widget(){
 		return $this->view('lists/update_list_view',null);
+	}
+	
+	//get the update-list widget
+	public function update_list_widget2(){
+		return $this->view('lists/update_list_view2',null);
 	}
 
 	public function display_list_widget($list_name){
