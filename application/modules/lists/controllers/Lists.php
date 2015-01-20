@@ -63,6 +63,7 @@ class Lists extends TNK_Controller {
 		$this->add_js('assets/js/module_manager.js');
 		$this->add_js('assets/js/module.js');
 		$this->add_js('assets/js/test-page.js');
+		$this->add_js('assets/js/html_lists.js',true);
 		
 	//load the views
 		$character_list_view	= $this->display_list_widget($list_name);
@@ -97,18 +98,30 @@ class Lists extends TNK_Controller {
 		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $kana_list));
 	}
 
+
+	public function create_list_widget(){
+		return $this->load->view('lists/create_list_view',array(),TRUE);
+	}
+	
 	//create a new list of characters (kana, kanji)
 	public function create_list(){
-		//initialize the left and right side
-			$data2['_left_aside']	= '';
-			$data2['_right_aside']	= '';
-			
-			//load the list view to put in the content view
-			$data2['_content'] 		= $this->load->view('lists/create_list_view',array(),TRUE);
-			$data = array();
-			$data['content']		= $this->load->view('templates/content.php',$data2,true);
-			
-			$this->create_page($data);
+	//load js files
+		$this->add_js('assets/js/lodash.compat.js');
+		$this->add_js('assets/js/module_manager.js');
+		$this->add_js('assets/js/module.js');
+		$this->add_js('assets/js/html_lists.js',true);
+		
+	//load the views
+		$create_list_view	= $this->create_list_widget();
+
+		
+	//add the content of the views to the page
+		$this->add_block($create_list_view	, self::CENTER_BLOCK);
+		$this->add_block(''					, self::LEFT_BLOCK);
+		$this->add_block(''					, self::RIGHT_BLOCK);
+
+	//Generate the html page
+		$this->generate_page();
 	}
 	
 	//update the content of a list (add or remove characters)

@@ -38,6 +38,7 @@
 		
 	</div>
 	<script>
-		
+		var coucou = new Module.List();
+		coucou.test();
 	</script>
 </div>

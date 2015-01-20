@@ -296,6 +296,7 @@ class TNK_Controller extends MX_Controller{
 	private function add_default_js(){
 		$this->add_js('assets/js/jquery-2.0.3.min.js',true);
 		$this->add_js('assets/js/bootstrap.min.js',true);
+	
 	}
 	
 }
