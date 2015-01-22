@@ -22,7 +22,7 @@ Module.List = (function(){
 				console.log("-== Hello, in test function ==-");
 			};
 		
-			//textare
+			//return an array of the content of the textarea
 			var textarea_read_line	= function(selector){
 				return $(selector).val().split('\n');
 			};
@@ -54,6 +54,17 @@ Module.List = (function(){
 				 	
 			};
 			
+			//take an array of lines and return an array of key/value objects
+			var lines_to_item	= function(lines,separator){
+				var result = new Array();
+				
+				_.each(lines,function(line){
+					result.push(line_to_item(line,separator));
+				});
+				
+				return result;
+			};
+			
 			var textarea_read		= function(selector){
 				return $(selector).val();
 			};
@@ -67,9 +78,11 @@ Module.List = (function(){
 				$(list).append('<option value='+value+'>'+content+'</option>');
 			};
 			
+			//add an array of item to the html select element (list)
 			var add_array_list 		= function(list,items){
-				_.foreach(items,function(elt){
-					$(list).append('<option value='+elt.value+'>'+elt.content+'</option>');
+				console.log(items);
+				_.each(items,function(elt){
+					$(list).append('<option value='+elt.key+'>'+elt.key+' --> '+elt.value+'</option>');
 				});
 			};
 			
@@ -79,6 +92,9 @@ Module.List = (function(){
 				,textarea_read		: textarea_read
 				,echo_text			: echo_text
 				,add_element_list	: add_element_list
+				,add_array_list		: add_array_list
+				,line_to_item		: line_to_item
+				,lines_to_item		: lines_to_item
 			};
 		})();
 	

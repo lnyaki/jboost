@@ -13,10 +13,7 @@
 		<div class="col-md-5">
 		<!--	<textarea style="width : 100%;"></textarea> -->
 			<select multiple id="select" style="width : 100%;height : 30em;">
-				<option value="test1"> Test 1 </option>
-				<option value="test2"> Test 2</option>
-				<option value="test3"> Test 3</option>
-				<option value="test4"> Test 4</option>
+			
 
 			</select>
 		</div>
@@ -36,7 +33,16 @@
 		//set click function
 		$('#btn_add_element').click(function(){
 			list.echo_text(list.textarea_read("#textArea"));
-			list.add_element_array($('#select'),'toto','List item!');
+			//list.add_element_array($('#select'),'toto','List item!');
+			var lines = list.textarea_read_line('#textArea');
+			//appeler line_to_item en boucle (pour chaque ligne du tableau)
+			var tmp = list.lines_to_item(lines,':');
+			console.log(tmp);
+			
+			list.add_array_list('#select',tmp);
+			
+			list.add_array_list('#textArea',lines);
+			
 		});
 	</script>
 </div>
