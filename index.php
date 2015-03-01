@@ -161,6 +161,14 @@ if (defined('ENVIRONMENT'))
  *  Now that we know the path, set the main path constants
  * -------------------------------------------------------------------
  */
+	//Defining "relpath" to use a different default relative path if using local on my pc
+	if ($_SERVER['SERVER_NAME'] == 'localhost') {
+		define('RELPATH','codeigniter');
+	}
+	else{
+		define('RELPATH','');
+	}
+	
 	// The name of THIS file
 	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 

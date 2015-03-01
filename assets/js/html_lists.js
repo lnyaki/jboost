@@ -74,6 +74,7 @@ Module.List = (function(){
 				console.log(text);
 			};
 			
+			//add an element to a 'select' list
 			var add_element_list = function(list,value,content){
 				$(list).append('<option value='+value+'>'+content+'</option>');
 			};
@@ -86,15 +87,29 @@ Module.List = (function(){
 				});
 			};
 			
+			var select_all_elements = 	function(selector){
+				console.log("In select_all_elements");
+				console.log($(selector));
+				console.log($(selector).size());
+				console.log($(selector+' > option'));
+				console.log($(selector+' > option').size());
+				_.each($(selector+' > option'),function(elt){
+					$(elt).attr('selected','');
+					console.log("select_all_elements : ");
+					console.log(elt);
+				});
+			};
+			
 			return {
 				 test : test
-				,textarea_read_line : textarea_read_line
-				,textarea_read		: textarea_read
-				,echo_text			: echo_text
-				,add_element_list	: add_element_list
-				,add_array_list		: add_array_list
-				,line_to_item		: line_to_item
-				,lines_to_item		: lines_to_item
+				,textarea_read_line 	: textarea_read_line
+				,textarea_read			: textarea_read
+				,echo_text				: echo_text
+				,add_element_list		: add_element_list
+				,add_array_list			: add_array_list
+				,line_to_item			: line_to_item
+				,lines_to_item			: lines_to_item
+				,select_all_elements	: select_all_elements
 			};
 		})();
 	

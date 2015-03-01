@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class Lists_model extends CI_Model{
-	const main_table 	= 'kana01';
+	const main_table 	= 'list01';
 	
 	//call modes
 	public static $cm_01	= array('*');
@@ -25,7 +25,18 @@ class Lists_model extends CI_Model{
 	}
 	
 	//create a list named $list_name
-	public function create_list($list_name){
+	public function create_list($list_name, $items){
+		$sql = "create table ? ";
 		
+		return $this->db->query($sql, array($list_name));
+	}
+	
+	public function add_items($items){
+		return $this->db->insert_batch(self::main_table,$items);
+	}
+	
+	//Add a single item to the list $list_id
+	public function add_item($item){
+		return $this->add_items(array($item));
 	}
 }

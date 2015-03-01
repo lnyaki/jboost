@@ -58,9 +58,11 @@ $route['ajax/quizz/(:any)']				= 'test/ajax/$1';
 /*********************************************************************
  *                        List routes
  * *******************************************************************/
-$route['lists/create']		= 'lists/create_list';
-$route['lists/update']		= 'lists/update_list';
-$route['lists/(:any)']		= 'lists/display_list/$1';
+$route['lists/create']					= 'lists/create_list';
+$route['lists/process/create/(:any)']	= 'lists/creation_form/$1';
+$route['lists/update']					= 'lists/update_list';
+$route['lists/process/create']			= 'lists/creation_form';
+$route['lists/(:any)']					= 'lists/display_list/$1';
 
 
 $route['default_controller'] 	= "test/quizz";
