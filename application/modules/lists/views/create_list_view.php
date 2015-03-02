@@ -13,8 +13,7 @@
 			</div>
 			<div class="col-md-5">
 		<!--	<textarea style="width : 100%;"></textarea> -->
-				<select multiple name="itemsdd[]" id="select" style="width : 100%;height : 30em;">
-					<option value="1" selected>Apple</option> 
+				<select multiple name="items[]" id="select" style="width : 100%;height : 30em;">
 				</select>
 			</div>
 		</div>
@@ -49,13 +48,12 @@
 			//select all the elements in the list
 			console.log("In the click function : Test");
 			
-			//CHANGER LA REFERENCE POUR METTRE CELLE DE LA LISTE
-			list.select_all_elements('#select');
 		});
 		
 		//set the click function to the "create list" button
 		$('#btn_create_list').click(function(){
 			
+			list.select_all_elements('#select');
 		});
 	</script>
 </div>

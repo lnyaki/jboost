@@ -143,15 +143,18 @@ class Lists extends TNK_Controller {
 	//action to take when receiving data from the creation form
 	public function creation_form(){
 		$this->load->model('lists/Lists_model','model');
-		echo $this->input->post('list')."<br/>";
-		echo $this->input->post('items')."<br/>";
-		// echo $_POST['items']."<br/>";
-		 var_dump($_POST);
+		$items = $this->input->post('list');
+		
+		//temp code
+		echo $items."<br/>";
+		var_dump($_POST);
 	
 		//create the list
-		//$list	= $this->input->post('list');
-		//$this->model->create_list($list,$data);
-		//add the elements
+		$list	= $this->input->post('list');
+		$this->model->create_list($list,$data);
+		
+		//add the elements (from the "items" object)
+		$this->model->add_item($items);
 	}
 	
 }
