@@ -67,7 +67,7 @@ class TNK_Controller extends MX_Controller{
 		}
 	}
 	
-	//Generate the final HTML code  of the page
+//Generate the final HTML code  of the page
 //This function takes the data added by the controller to this object, and
 //uses this data (scripts, views, arrays, strings) to generate the final HTML page.
 	public function generate_page($page_style = ''){
@@ -88,6 +88,9 @@ class TNK_Controller extends MX_Controller{
 	//generate the html code for the import of js files
 		$this->html_scripts  = $this->import_js2($this->default_js);
 		$this->html_scripts .= $this->import_js2($this->js);
+		
+	//import the scripts (local html containing js, defined as views (might need to change that))
+		$this->html_scripts .= $this->import_scripts($this->script);
 		
 	//generate the page header
 		$this->page_header 	= $this->load->view('templates/header',null,TRUE);//shouldn't this be at higher level?
@@ -199,11 +202,14 @@ class TNK_Controller extends MX_Controller{
 	}
 	
 	public function add_script($script, $language = 'js'){
+		echo "in add script <br/>";
 		if($this->script!=null){
 			$this->script[]	= $script;
+			echo "Script ajouté <br/>";
 		}
 		else{
 			$this->script		= array($script);
+			echo "Array créé, Script ajouté<br/>";
 		}
 	}
 	
@@ -281,6 +287,18 @@ class TNK_Controller extends MX_Controller{
 			}
 		}
 		return $js_content;
+	}
+	
+	//return the concatenated scripts tags (they are unedited and just put one after another)
+	private function import_scripts($script_array){
+		$script_response	= '';
+
+		if(isset($script_array)){
+			foreach($script_array as $script){
+				$script_response .= $script;
+			}
+		}
+		return $script_response;
 	}
 	
 	//add the default css files of this page

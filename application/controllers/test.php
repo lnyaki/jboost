@@ -36,26 +36,28 @@ class Test extends TNK_Controller {
 	}
 	
 	public function quizz(){
-		//loading views
-		$data['_content']		= $this->load->view('test/view_quizz',null,TRUE);
-		//$data['_left_aside']	= "hello je suis toto";
-		$this->load->module("email_list");
-		$data['_right_aside']	= $this->email_list->get_widget();
-
-		$data['content']	= $this->load->view('templates/content.php',$data,TRUE);
+		//js script
+		$this->add_js('assets/js/lodash.compat.js');
+		$this->add_js('assets/js/test.js');
 		
-	
-		//$data['content'] 	= $this->load->view('test/view_quizz',null,TRUE);
+		//get email list widget
+		$this->load->module("email_list");
+		$widget	= $this->email_list->get_widget();
+		$this->add_block($widget,self::RIGHT_BLOCK);
+		
+		//loading views
+		$block			= $this->load->view('test/view_quizz',null,TRUE);
+		
+		//loading script views
+		$quizz_script 	= $this->load->view('scripts/flashcard_game_script', null, TRUE);
+		$this->add_script($quizz_script);
+		
+		//center block
+		$this->add_block($block,self::CENTER_BLOCK);
+		
 		$this->title("Quizz page");
 		
-		//js script
-		$this->add_js(base_url().'assets/js/lodash.compat.js');
-		$this->add_js(base_url().'assets/js/test.js');
-		$data['_scripts']	= $this->load->view('scripts/flashcard_game_script', null, TRUE);
-		
-		//$this->add_css(base_url().'assets/js/TOTO.css');
-		
-		$this->create_page($data);
+		$this->generate_page();
 	}
 	
 	private function load_items($post){
@@ -71,12 +73,19 @@ class Test extends TNK_Controller {
 		echo $this->Kana_model->add_stats($post['stats'],$userID);
 	}
 	
+	public function test1($elt,$elt2){
+		echo "ELT : $elt<br/>";
+		echo "ELT2 : $elt2<br/>";
+	}
+	
 	public function ajax($elt,$elt2 = "arg2"){
 		
 		switch($elt){
 			case 'quizz' :
-				echo "HHHHHHello ".$elt;
+				
+				echo "HHHHHHello ".$elt."elt2 $elt2";
 				echo " ".$elt2;
+				echo "Shouldn't come here. Argument should be 'load_items'";
 				//$this->ajax_quizz();
 				break;
 
@@ -89,7 +98,7 @@ class Test extends TNK_Controller {
 				print_r($_SESSION);
 				//$this->add_single_stat(array(array()),$_SESSION['userID']);
 				break;
-		
+
 			default :
 				echo 'Unknown ajax function '.$elt;
 		}
@@ -125,7 +134,8 @@ class Test extends TNK_Controller {
 	}
 	
 	private function ajax_quizz(){
-		echo $this->input->post('item').'<br/>tete';
+		echo $this->input->post('item').'<br/>';
 		echo $this->input->post('answer').'<br/>';
 	}
+	
 }

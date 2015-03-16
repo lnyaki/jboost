@@ -36,6 +36,7 @@
 	}
 	
 	var click_option	= function(){
+		console.log('Hello, I\'m here bitches');
 		$(options).hide();
 		quizz.initialize();
 		
@@ -61,7 +62,10 @@
 	$('#quizz_button').click(function(){
 		quizz.validate($(answer3));
 	});
-	
+	console.log("Hi there");
+	console.log($(options_button));
+	console.log($('#option_button'));
+	console.log($('#quizz_button'));
 	$(options_button).click(click_option);
 	$(restart).click(restart_function);
 	

@@ -151,10 +151,10 @@ class Lists extends TNK_Controller {
 	
 		//create the list
 		$list	= $this->input->post('list');
-		$this->model->create_list($list,$data);
+		//$this->model->create_list($list,$data);
 		
 		//add the elements (from the "items" object)
-		$this->model->add_item($items);
+		//$this->model->add_item($items);
 	}
 	
 }

@@ -27,6 +27,7 @@ class Lists_model extends CI_Model{
 	//create a list named $list_name
 	public function create_list($list_name, $items){
 		$sql = "create table ? ";
+		$this->db->insert(self::main_table,$items);
 		
 		return $this->db->query($sql, array($list_name));
 	}
@@ -37,6 +38,7 @@ class Lists_model extends CI_Model{
 	
 	//Add a single item to the list $list_id
 	public function add_item($item){
-		return $this->add_items(array($item));
+		//TODO : get the technical segment here.
+		return $this->add_items(array('name' => $item));
 	}
 }
