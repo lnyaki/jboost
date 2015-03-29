@@ -518,7 +518,12 @@ var test = function(){
 		//load the items that will be used in the quizz
 		var load_items		= function(options){
 			var ajax 		= new Ajax();
-			var path		= 'ajax/quizz/load_items';
+			//var path		= 'ajax/quizz/load_items';
+			//var path 		= 'http://localhost/codeigniter/ajax/quizz/load_items';
+			
+			//the BASE_URL is used to prevent an issue with the handling of the url
+			//with Ajax. See http://stackoverflow.com/questions/27420759/codeigniter-base-url-not-working-properly-for-ajax
+			var path 		= BASE_URL + 'ajax/quizz/load_items';
 			var list_name 	= options.list;
 			var data	= {	'list_name' : list_name};
 			

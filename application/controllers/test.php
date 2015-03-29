@@ -38,7 +38,13 @@ class Test extends TNK_Controller {
 	public function quizz(){
 		//js script
 		$this->add_js('assets/js/lodash.compat.js');
+		//be careful, the scripts below are order dependent (need to change that later
+		//with a js loader)
+		$this->add_js('assets/js/Flashcard_test.js');
+		$this->add_js('assets/js/Ajax_test.js');
+		$this->add_js('assets/js/Quizz_object_test.js');
 		$this->add_js('assets/js/test.js');
+		
 		
 		//get email list widget
 		$this->load->module("email_list");

@@ -1,9 +1,12 @@
 
-<script>
+<script type="text/javascript">
 
 	//get the game object
-	var game			= new test.Flashcard();
-	var quizz 			= new test.Quizz();
+//	var game			= new test.Flashcard();
+	var game			= new Flashcard(); 
+	
+	//var quizz 			= new test.Quizz();
+	var quizz			= new Quizz();
 	var item			= $('#item');
 	var card			= $('#card');
 	var answer			= $('#quizz_answer');
@@ -18,6 +21,9 @@
 	//ajax object
 	var ajax	= new test.Ajax();
 	//load game data
+
+	//code to prevent problem with ajax and url
+    var BASE_URL = "<?php echo base_url();?>";
 
 	$('#quizz_end_screen').hide();
 	

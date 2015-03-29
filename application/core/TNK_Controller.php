@@ -202,14 +202,12 @@ class TNK_Controller extends MX_Controller{
 	}
 	
 	public function add_script($script, $language = 'js'){
-		echo "in add script <br/>";
+		
 		if($this->script!=null){
 			$this->script[]	= $script;
-			echo "Script ajouté <br/>";
 		}
 		else{
 			$this->script		= array($script);
-			echo "Array créé, Script ajouté<br/>";
 		}
 	}
 	
