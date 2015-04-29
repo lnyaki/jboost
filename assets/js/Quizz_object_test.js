@@ -2,9 +2,11 @@
 //                           QUIZZ
 //
 //****************************************************************************
+	
 	var Quizz		= function(){};
 	
 	Quizz.prototype	=(function(){
+		
 		var constructor = Quizz;
 		//number of elements to review
 		var review_size;
@@ -244,6 +246,7 @@
 		//                   Game mechanics                           //
 		//                                                            //
 		//============================================================//
+		//add 'the_points' points to the current number of points
 		var add_points 		= function(the_points){
 			console.log('###### Adding points ####');
 			console.log(points + ' + '+the_points);
@@ -444,7 +447,7 @@
 				
 			$('#quizz_end_screen').show('slide');
 			
-			console.log(stats);
+			//console.log(stats);
 		};
 		
 		var sleep			= function(callback,time){
@@ -455,8 +458,19 @@
 		var send_result		= function(stats){
 			console.log("stat !!!!!!!!!!!!!!!!!!!!!!");
 			console.log(stats);
-			var path	= 'ajax/quizz/add_stats';
+			//the BASE_URL is used to prevent an issue with the handling of the url
+			//with Ajax. See http://stackoverflow.com/questions/27420759/codeigniter-base-url-not-working-properly-for-ajax
+			var path	= BASE_URL +'ajax/quizz/add_stats';
 			var data 	= {'stats' 	: stats};
+			
+			$(document).ajaxError(function(event, jqxhr, settings, thrownError){
+				console.log("-----------======== AJAX error =======-------------");
+				console.log(event);
+				console.log(jqxhr);
+				console.log(settings);
+				console.log(thrownError);
+				console.log("-----------======== AJAX error =======-------------");
+			});
 			
 			var responseHandler	= function(msg){
 				console.log("--- Add stats result(js) : "+msg);
@@ -562,3 +576,4 @@
 			,reset_html_quizz_elements	: reset_html_quizz_elements
 		};
 	})();
+	

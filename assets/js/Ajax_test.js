@@ -27,16 +27,16 @@
                 ,   type		:'get'
                 ,   success		:function(data){
                         responesHandler(data);
-                }
+                	}
             });
         	}
         	else if(type==='post'){
             	$.ajax({
-                    url:path
-                ,   datatype : datatype
-                ,   type:'post'
-                ,   data:data
-                ,   success : function(msg){
+                    url			:path
+                ,   datatype 	: datatype
+                ,   type		:'post'
+                ,   data		:data
+                ,   success 	: function(msg){
                         responesHandler(msg);
                 	}
             	});    
@@ -48,3 +48,4 @@
 			,ajaxPostRequest	:ajaxPostRequest	
 		};
 	})();
+

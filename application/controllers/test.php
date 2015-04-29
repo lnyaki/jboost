@@ -74,9 +74,10 @@ class Test extends TNK_Controller {
 	}
 	
 	public function add_stats($post,$userID){
-		$this->load->model('kana/Kana_model');
+		//$this->load->model('kana/Kana_model');
 		
-		echo $this->Kana_model->add_stats($post['stats'],$userID);
+		//$this->Kana_model->add_stats($post['stats'],$userID);
+		echo "************ Pokemon ******************";
 	}
 	
 	public function test1($elt,$elt2){
@@ -100,8 +101,14 @@ class Test extends TNK_Controller {
 				break;
 
 			case 'add_stats'	:
-				$this->add_stats($this->input->post(null,true),$_SESSION['id']);
-				print_r($_SESSION);
+				$ajaxResult = $this->input->post(null,true);
+				//echo "AJAX RESULTS :";
+				//print_r($ajaxResult);
+				
+				$this->add_stats($ajaxResult,$_SESSION['id']);
+				
+				//echo "************ Pokemon ******************";
+				//print_r($_SESSION);
 				//$this->add_single_stat(array(array()),$_SESSION['userID']);
 				break;
 

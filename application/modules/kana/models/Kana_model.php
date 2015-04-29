@@ -114,6 +114,9 @@ class Kana_model extends CI_Model{
 		$fields		= array();
 		$queryOK	= true;
 		
+		echo "////// Dans Kana_model.add_stats ////////$userID";
+		print_r($data);
+		/*
 		foreach($data as $item){
 			
 			$exists		= $this->exists($item['item'],$userID);
@@ -128,7 +131,7 @@ class Kana_model extends CI_Model{
 			}
 	
 		}
-		
+		*/
 		echo ($queryOK)? "Ajout OK": "Problème dans l'ajout<br/>";
 
 		echo "dans add stats";
