@@ -398,6 +398,12 @@
 			}
 			//END of the game, last screen
 			else{
+			//TODO : display end of game screen (result as charts and all)
+				var result = result_screen(stats);
+				console.log("#### Print de l'ecran de fin");
+				console.log(result);
+				$('#quizz_end_screen').append(result);
+				
 				sleep(display_endgame,1000);
 				
 				//send result to server
@@ -438,6 +444,34 @@
 				console.log(new_stat);
 				stats.push(new_stat);				
 			}
+		};
+		
+		//generate the html representing the result of the quizz (with progress bars)
+		var result_screen	= function(result){
+			console.log("#### Dans result screen");
+			var length = result.length;
+			var $result = $('<div>',{id	: 'result'});
+			var $rowContainer;
+			var $label;
+			var $progressbar;
+			
+			_.forEach(result,function(elt){
+				$rowContainer	= $('<div>',{class	: 'elt_stat'});
+				$label			= $('<label>'+elt.item+'</label>');
+				$progressbar	= $('<progress>',{
+					 max	: elt.right+elt.wrong
+					,value	: elt.right
+				});
+				
+				$rowContainer.append($($label));
+				$rowContainer.append($($progressbar));
+				$result.append($($rowContainer));
+				console.log('RESULT_SCREEN :');
+				console.log($label);
+				console.log($progressbar);
+			});
+			
+			return $result;
 		};
 		
 		var display_endgame	= function(){

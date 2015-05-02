@@ -828,7 +828,7 @@ var test = function(){
 			}	
 			
 			
-            console.log("Quizz.validate. Rem. items : "+remaining_elts);
+            console.log("[test.js.Validate] Quizz.validate. Rem. items : "+remaining_elts);
 			if(remaining_elts > 0){
 				//First, we choose the next random quizz element.
 				//Then we obtain other elements, to fill the list of multiple possible answers
@@ -862,6 +862,8 @@ var test = function(){
 			}
 			//END of the game, last screen
 			else{
+		
+				
 				sleep(display_endgame,1000);
 				
 				//send result to server
@@ -903,6 +905,7 @@ var test = function(){
 				stats.push(new_stat);				
 			}
 		};
+		
 		
 		var display_endgame	= function(){
 			$('#card').hide('slide');
