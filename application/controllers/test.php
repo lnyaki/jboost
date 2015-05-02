@@ -74,10 +74,9 @@ class Test extends TNK_Controller {
 	}
 	
 	public function add_stats($post,$userID){
-		//$this->load->model('kana/Kana_model');
+		$this->load->model('kana/Kana_model');
 		
-		//$this->Kana_model->add_stats($post['stats'],$userID);
-		echo "************ Pokemon ******************";
+		$this->Kana_model->add_stats($post['stats'],$userID);
 	}
 	
 	public function test1($elt,$elt2){
@@ -101,11 +100,13 @@ class Test extends TNK_Controller {
 				break;
 
 			case 'add_stats'	:
-				$ajaxResult = $this->input->post(null,true);
-				//echo "AJAX RESULTS :";
-				//print_r($ajaxResult);
+				if(isset($_SESSION['id'])){
+					$this->add_stats($this->input->post(null,true),$_SESSION['id']);
+				}
+				else{
+					echo "The user is not logged in";
+				}
 				
-				$this->add_stats($ajaxResult,$_SESSION['id']);
 				
 				//echo "************ Pokemon ******************";
 				//print_r($_SESSION);
@@ -149,6 +150,19 @@ class Test extends TNK_Controller {
 	private function ajax_quizz(){
 		echo $this->input->post('item').'<br/>';
 		echo $this->input->post('answer').'<br/>';
+	}
+	
+	public function charts(){
+		//create charts
+		$this->add_js('assets/js/highcharts.js');
+		$view 	=	$this->load->view('test/charts',null,TRUE);
+		//echo "<div>Hello charts</div>";
+		//center block
+		$this->add_block($view,self::CENTER_BLOCK);
+		
+		$this->title("Charts page");
+		
+		$this->generate_page();
 	}
 	
 }

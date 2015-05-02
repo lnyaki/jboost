@@ -9,6 +9,7 @@
 	
 <?php 
 	echo isset($_site_header)?$_site_header:'';
+	
 	echo isset($_content)?$_content:'';
 	echo isset($_scripts)?$_scripts:'';
 	echo isset($_footer)?$_footer:'';
