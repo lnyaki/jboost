@@ -16,6 +16,7 @@
 	var options_button 	= $('#option_button');
 	var restart			= $('#restart_button');
 	var end_screen		= $('#quizz_end_screen');
+	var card_view		= $('#card-view');
 	
 	
 	//ajax object
@@ -42,12 +43,11 @@
 	}
 	
 	var click_option	= function(){
-		console.log('Hello, I\'m here bitches');
 		$(options).hide();
 		quizz.initialize();
 		
-
 		$(card).show('slide');
+		$(card_view).show('slide');
 	};
 	
 	//set the click option for radio buttons
@@ -59,6 +59,9 @@
 		
 		//reinitializing the game
 		
+		//remove the stats from the html 'result' div
+		$(end_screen).children('div#result').remove();
+		
 		//showing the start screen
 		$(options).show();
 	};
@@ -68,7 +71,7 @@
 	$('#quizz_button').click(function(){
 		quizz.validate($(answer3));
 	});
-	console.log("Hi there");
+
 	console.log($(options_button));
 	console.log($('#option_button'));
 	console.log($('#quizz_button'));

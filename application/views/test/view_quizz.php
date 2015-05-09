@@ -108,18 +108,25 @@
 		echo form_close();
 	?>
 	</div>
-	<div id="card">
-		<div id="item" class="word"></div>	
-		<div id="quizz_input"></div>	
+	<div id="card-view" class="container" style="width : 100%;">
+		<div class="row" style="width : 100%;">
+			<div class="col-md-6">
+				<div id="card" >
+					<div id="item" class="word"></div>	
+					<div id="quizz_input"></div>	
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div id="quizz_data">
+					<div>Points      : <span id="points"></span></div>
+					<div>Answer	     : <span id="answer_label"></span></div>
+					<div>Time        : <span id="time_label"></span></div>
+					<div>Repetitions : <span id="repetitions_label"></span></div>
+					<div>Type        : <span id="type_label"></span></div>
+				</div>
+			</div>
+		</div>
 	</div>
-	<div id="quizz_data">
-		<div>Points      : <span id="points"></span></div>
-		<div>Answer	     : <span id="answer_label"></span></div>
-		<div>Time        : <span id="time_label"></span></div>
-		<div>Repetitions : <span id="repetitions_label"></span></div>
-		<div>Type        : <span id="type_label"></span></div>
-	</div>
-	
 	<div id="quizz_end_screen">
 		<h3>End screen</h3>
 	<?php

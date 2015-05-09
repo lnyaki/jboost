@@ -76,15 +76,15 @@
 		};
 		
 		var after_loading_items	= function(itself){
-			console.log('---- Items ------');
-			console.log(items);
+			//console.log('---- Items ------');
+			//console.log(items);
 			initialize_flashcard(itself);
 		};
 		
 		var initialize		= function(){
 		//load items from db
-		console.log("THIS : ");
-		console.log(this);
+			//console.log("THIS : ");
+			//console.log(this);
 			self = this;
 			load_items({'list' : 'hiragana'});
 			
@@ -106,8 +106,8 @@
 		//initialize the flashcard
 			//initialize_flashcard(this);
 		
-			console.log("******* Resultat ***********");
-			console.log(test);
+			//console.log("******* Resultat ***********");
+			//console.log(test);
 			
 		//initialize the options data
 			$('#time_label').text(response_time);
@@ -185,8 +185,8 @@
 			//create the validation buttons depending on the input method
 			var buttons = current_card.create_validation_button(input_method, answer_quantity);
 			
-			console.log("BOUTONS : ");
-			console.log(buttons);
+			//console.log("BOUTONS : ");
+			//console.log(buttons);
 			
 			
 			var preselected;
@@ -199,9 +199,9 @@
 			current_card.set_item(next_item);
 	
 			
-			console.log("################ Set Item ########################");
-			console.log(next_item);
-			console.log('ci dessus, le next item');
+			//console.log("################ Set Item ########################");
+			//console.log(next_item);
+			//console.log('ci dessus, le next item');
 			
 			
 			//put the button in the right div
@@ -220,9 +220,9 @@
 				
 				func = '';
 				
-				console.log('DEBUG: answer quantity : '+answer_quantity);
-				console.log('DEBUG: preselected length :'+preselected.length);
-				console.log('DEBUG: difference : '+(answer_quantity - preselected.length));
+				//console.log('DEBUG: answer quantity : '+answer_quantity);
+				//console.log('DEBUG: preselected length :'+preselected.length);
+				//console.log('DEBUG: difference : '+(answer_quantity - preselected.length));
 				
 				//check the size of the item list
 				if(item_list.length != answer_quantity){
@@ -235,7 +235,7 @@
 				console.log("*** Buttons is undefined ***");
 				exit();
 			}
-			console.log("INFO : avant initialize validation button");
+			//console.log("INFO : avant initialize validation button");
 			//initialize button text and values
 			buttons = current_card.initialize_validation_button(buttons, item_list, func);
 	
@@ -248,8 +248,8 @@
 		//============================================================//
 		//add 'the_points' points to the current number of points
 		var add_points 		= function(the_points){
-			console.log('###### Adding points ####');
-			console.log(points + ' + '+the_points);
+		//	console.log('###### Adding points ####');
+		//	console.log(points + ' + '+the_points);
 			points += the_points;
 		};
 		
@@ -350,6 +350,9 @@
 			var current_item	= current_card.get_item();
 		    var answer 			= $('#answer_label');
 		    var points_elt		= $('#points');
+		    
+		    console.log("-------------- SIZE OF STATS : "+stats.length);
+		    console.log(stats);
 			if(validated){
 				//must get the card that was clicked, and not the current card
 				add_stats(current_item.id,current_item.item,true);
@@ -408,6 +411,13 @@
 				
 				//send result to server
 				send_result(stats);
+
+				//reset the stats object
+				console.log("DEBUG : reset stats.");
+				console.log(stats);
+				console.log("DEBUG : reset ok");
+				stats = new Array();
+				console.log(stats);
 			}
 			$('#quizz_answer').val('');
 			
@@ -457,26 +467,28 @@
 			
 			_.forEach(result,function(elt){
 				$rowContainer	= $('<div>',{class	: 'elt_stat'});
-				$label			= $('<label>'+elt.item+'</label>');
+				$label			= $('<label style="margin-left : 1em;">'+elt.item+'</label>');
 				$progressbar	= $('<progress>',{
 					 max	: elt.right+elt.wrong
 					,value	: elt.right
 				});
 				
-				$rowContainer.append($($label));
 				$rowContainer.append($($progressbar));
+				$rowContainer.append($($label));
+				
 				$result.append($($rowContainer));
-				console.log('RESULT_SCREEN :');
-				console.log($label);
-				console.log($progressbar);
+				//console.log('RESULT_SCREEN :');
+				//console.log($label);
+				//console.log($progressbar);
 			});
 			
 			return $result;
 		};
 		
 		var display_endgame	= function(){
-			$('#card').hide('slide');
-				
+			//$('#card').hide('slide');
+			$('#card-view').hide('slide');
+			
 			reset_html_quizz_elements();
 				
 			$('#quizz_end_screen').show('slide');

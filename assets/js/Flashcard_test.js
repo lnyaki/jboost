@@ -89,7 +89,9 @@
 		//**********************************************
 		var get_multiple_answers_buttons	= function(quantity){
 			var tab = new Array();
-			console.log("* Quantity : "+quantity);
+			
+			//console.log("* Quantity : "+quantity);
+			
 			if(quantity>0){
 				for(var i = 0; i<quantity; i++){
 					tab[i]	= $('<button/>',{
@@ -106,7 +108,7 @@
 		//get 'quantity' elements from the list, but no elements that are in the blackList
 		var get_multiple_answers_list	= function(quantity, blackList){
 			var list = get_random_elements(quizz.get_items(),quantity,blackList);
-			console.log("DEBUG : dans get_multiple_answer_list. List size : "+list.length);
+			//console.log("DEBUG : dans get_multiple_answer_list. List size : "+list.length);
 			return list;
 		};
 		
@@ -121,9 +123,9 @@
 			var tmp1, tmp2		= null;
 			var elt				= null;
 			
-			console.log('DEBUG : item list size : '+ list.length);
-			console.log('DEBUG : required quantity : '+quantity);
-			console.log(list);
+			//console.log('DEBUG : item list size : '+ list.length);
+			//console.log('DEBUG : required quantity : '+quantity);
+			//console.log(list);
 			while(quantity_count>0){
 				//get random elt between 0 and max_random, excluded
 				i = (Math.floor(Math.random() * (max_random)));
@@ -169,8 +171,8 @@
 			
 			var t1	= boundary2+1-quantity;
 			var t2 	= (boundary2+1);
-			console.log('Liste ('+t1+', '+t2+')');
-			console.log('Slice('+(boundary2+1-quantity)+', '+(boundary2+1)+')');
+			//console.log('Liste ('+t1+', '+t2+')');
+			//console.log('Slice('+(boundary2+1-quantity)+', '+(boundary2+1)+')');
 			return list.slice((boundary2+1)-quantity,boundary2+1);
 		};
 
@@ -194,11 +196,11 @@
 				if(elt.item == element.item){
 					sortie = true;
 					answer = true;
-					console.log("Item "+element.item+" == "+elt.item);
+					//console.log("[DEBUG] Item "+element.item+" == "+elt.item);
 				}
 				else{
 					i++;
-					console.log("Item "+element.item+" <> "+elt.item);
+				//	console.log("[DEBUG] Item "+element.item+" <> "+elt.item);
 					if(i == max){
 						sortie = true;
 					}
@@ -247,8 +249,8 @@
 		};
 		
 		var set_quizz			 = function(the_quizz){
-			console.log('--------------- the quizz is set -------------');
-			console.log(the_quizz);
+			//console.log('--------------- the quizz is set -------------');
+			//console.log(the_quizz);
 			quizz = the_quizz;
 		};
 		
@@ -330,7 +332,7 @@
 			var click_function	= null;
 			var data 			= null;
 			
-			console.log("INFO : INPUT_METHOD => "+input_method);
+			//console.log("INFO : INPUT_METHOD => "+input_method);
 			//initialize the click function of the validation button(s)
 			if(input_method === DIRECT_INPUT){
 				console.log("INFO : append le textfield");
@@ -352,7 +354,7 @@
 					for(var i = 0; i<buttons.length; i++){
 						button 	= buttons[i];
 						data	= data_list[i];
-						console.log("DATA ITEM : "+data.item);
+						//console.log("[DEBUG] DATA ITEM : "+data.item);
 						$(button).attr('name',data.answer);
 						$(button).attr('value',data.answer);
 						$(button).attr('type', 'button');

@@ -114,8 +114,8 @@ class Kana_model extends CI_Model{
 		$fields		= array();
 		$queryOK	= true;
 		
-		echo "////// Dans Kana_model.add_stats ////////$userID";
-		print_r($data);
+		//echo "////// Dans Kana_model.add_stats ////////$userID";
+		//print_r($data);
 		/*
 		foreach($data as $item){
 			
@@ -134,7 +134,7 @@ class Kana_model extends CI_Model{
 		*/
 		echo ($queryOK)? "Ajout OK": "Problème dans l'ajout<br/>";
 
-		echo "dans add stats";
+		//echo "dans add stats";
 		
 		return $queryOK;
 	}
@@ -177,7 +177,7 @@ class Kana_model extends CI_Model{
 	public function update_single_stat($data,$userID){
 		$table 	= 'kana01_stats';
 		
-		echo "////////////////// update_single_stat ////////////";
+		//echo "////////////////// update_single_stat ////////////";
 		
 		if(!isset($data['right'])){
 			$data['right'] = 0;
