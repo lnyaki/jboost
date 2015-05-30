@@ -128,7 +128,7 @@
 		</div>
 	</div>
 	<div id="quizz_end_screen">
-		<h3>End screen</h3>
+		<!-- <h3>End screen</h3> -->
 	<?php
 		$button_restart	= array('id'		=> 'restart_button',
 								'content'	=> 'Restart');

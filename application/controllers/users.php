@@ -9,21 +9,38 @@ class Users extends TNK_Controller {
 	function profile($username){
 		//load the requiered model
 		$this->load->model('users_model');
+		$this->load->model('kana/Kana_model');
 		
+		//load data ///
 		//display basic info about the user, for now
-		$result = $this->users_model->get_user(array('username' => $username),'username');
+		$user_data = $this->users_model->get_user(array('username' => $username),'username');
+		//get kana stats
+		$_list = $this->Kana_model->get_stats($user_data->id);
 		
-		if($result){
-			$data['content'] = "<div> Hello, user profile ".$result->username."</div>";
-			$data['content'] .= '<ul>';
-			$data['content'] .= '<li>username : '.$result->username.'</li>';
-			$data['content'] .= '<li>email : '.$result->email.'</li>';
-			$data['content'] .= '</ul>';
-		}
-		else{
+		//if there is no user  (TODO : redo this, this is bullshit securitywise)
+		if(!$user_data){
 			//output text or error
+			echo "Error : User $result->username could not be found!";
 		}
-		$this->create_page($data);
+		
+		$data = array('_list' => $_list);
+		
+		//loading views
+		$stats		= $this->load->view('lists/hiragana_list',$data,TRUE);
+		
+		$bloc  = '';
+		$bloc  = "<div> Hello, user profile : ".$user_data->username."</div>";
+		$bloc .= '<ul>';
+		$bloc .= '<li>username : '.$user_data->username.'</li>';
+		$bloc .= '<li>email : '.$user_data->email.'</li>';
+		$bloc .= '</ul>';
+		
+		
+		//compose page
+		$this->add_block($bloc,self::CENTER_BLOCK);
+		$this->add_block($stats,self::CENTER_BLOCK);
+
+		$this->generate_page();
 	}
 	
 	function login(){

@@ -4,11 +4,13 @@ class Kana_model extends CI_Model{
 	const main_table 			= 'kana01';
 	const list_table			= 'kana02';
 	const list_table_details	= 'kana02_details';
+	const stats_table			= 'kana01_stats';
 	
 	//call modes
 	public static $cm_01	= array('*');
 	public static $cm_02	= array('kana','pronounciation','type');
 	public static $cm_03	= array("list.name 'list_name',kana.id,kana.kana,kana.pronounciation, kana.type");
+	public static $cm_04	= array('kana_ref','right','wrong');
 	
 	//return the kana lists
 	public function get_kana_lists(){
@@ -115,13 +117,12 @@ class Kana_model extends CI_Model{
 		$queryOK	= true;
 		
 		//echo "////// Dans Kana_model.add_stats ////////$userID";
-		//print_r($data);
-		/*
+
 		foreach($data as $item){
 			
 			$exists		= $this->exists($item['item'],$userID);
 			
-			echo "EXIST ".$item['item']." pour user ".$userID.' : '.((int)$exists).'<br/>';
+			//echo "EXIST ".$item['item']." pour user ".$userID.' : '.((int)$exists).'<br/>';
 			
 			if($exists){
 				$queryOK	= $queryOK and $this->update_single_stat($item, $userID);
@@ -131,7 +132,7 @@ class Kana_model extends CI_Model{
 			}
 	
 		}
-		*/
+
 		echo ($queryOK)? "Ajout OK": "Problème dans l'ajout<br/>";
 
 		//echo "dans add stats";
@@ -205,4 +206,24 @@ class Kana_model extends CI_Model{
 	public function get_list($list){
 		
 	}
+	
+	//return the stats on list $list, for user $user
+	public function get_stats($user){
+		//echo $user;
+		$sql = "select * from ".self::stats_table.' where user_ref = ?';
+		$fields = array($user);
+		//print_r($fields);
+		
+		$query = $this->db->query($sql,$fields);
+		$result = array();
+		//echo $this->db->last_query();
+		
+		if($query->num_rows() > 0){
+			foreach($query->result() as $row){
+				array_push($result,$row);		
+			}
+		}
+		return $result;
+	}
+	
 }

@@ -464,10 +464,12 @@
 			var $rowContainer;
 			var $label;
 			var $progressbar;
+			var total = 0;
 			
 			_.forEach(result,function(elt){
+				total = elt.right+elt.wrong;
 				$rowContainer	= $('<div>',{class	: 'elt_stat'});
-				$label			= $('<label style="margin-left : 1em;">'+elt.item+'</label>');
+				$label			= $('<label style="margin-left : 1em;">'+elt.item+' ('+elt.right+'/'+total+')</label>');
 				$progressbar	= $('<progress>',{
 					 max	: elt.right+elt.wrong
 					,value	: elt.right
@@ -477,9 +479,6 @@
 				$rowContainer.append($($label));
 				
 				$result.append($($rowContainer));
-				//console.log('RESULT_SCREEN :');
-				//console.log($label);
-				//console.log($progressbar);
 			});
 			
 			return $result;
