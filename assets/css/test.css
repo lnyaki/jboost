@@ -22,7 +22,6 @@ th{
 
 header{
 	background-color 	: green;
-	height				: 5em;
 }
 
 footer{
@@ -131,4 +130,8 @@ progress::-webkit-progress-value {
 
 .stats_number{
 	font-size : xx-small;
+}
+
+ul #navbar-right{
+	
 }
