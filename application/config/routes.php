@@ -42,6 +42,7 @@
  * *******************************************************************/
 $route['login']					= 'users/login';
 $route['register']				= 'users/register';
+$route['register/(:any)']		= 'users/register/$1';
 $route['disconnect']			= 'users/disconnect';
 $route['users/process/(:any)']	= 'users/$1';
 $route['users/(:any)']			= "users/profile/$1";

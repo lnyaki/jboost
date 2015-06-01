@@ -6,11 +6,15 @@
             	<div class="panel-body">
             		<?php $this->load->library('form_validation');
             		echo validation_errors(); ?>
+            		<!--
                 	<form method="post" role="form" action="users/process/process_registration">
+                   -->
+                   <form method="post" role="form" action="/register/1">
                     	<div class="form-group">
                         	<label for="InputUserName">User Name<sup>*</sup></label>
-                            	<input type="text" class="form-control" name="user" id="user">
+                            	<input type="text" class="form-control" name="user" value="<?php echo set_value('user');?>" id="user">
                         </div>
+                        <!--
                         <div class="form-group">
                              <label for="InputFirstName">First Name</label>
                              <input type="text" class="form-control" id="InputFirstName">
@@ -19,15 +23,16 @@
                         	<label for="InputLastName">Last Name</label>
                         	<input type="text" class="form-control" id="InputLastName">
                         </div>
+                        -->
                         <div class="form-group">
                         	<label for="InputEmail">Email<sup>*</sup></label>
-                        	<input type="email" class="form-control" name="email" id="email">
+                        	<input type="email" class="form-control" name="email" value="<?php echo set_value('email');?>" id="email">
                         </div>
                         <div class="row">
                         	<div class="col-md-6">
                             	<div class="form-group">
                                 	<label for="InputPassword">Password<sup>*</sup></label>
-                                    <input type="password" class="form-control" name="pass1" id="pass1">
+                                    <input type="password" class="form-control" name="pass1" value="<?php echo set_value('pass1');?>" id="pass1">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -39,9 +44,11 @@
                      	</div>
                         <div class="row">
                         	<div class="col-md-8">
+                            	<!--
                             	<label class="checkbox-inline">
                                  	<input type="checkbox" id="inlineCheckbox1" value="option1"> I read <a href="#">Terms and Conditions</a>.
                                 </label>
+                               	-->
                             </div>
                          	<div class="col-md-4">
                          		<button type="submit" class="btn btn-ar btn-primary pull-right">Register</button>

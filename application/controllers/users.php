@@ -49,7 +49,50 @@ class Users extends TNK_Controller {
 		$this->create_page($data);
 	}
 	
-	function register(){
+	//we handle the display and the processing in the same function
+	function register($processing = null){
+		if($processing <> null){
+			$this->load->helper(array('form', 'url'));
+			$this->load->library('form_validation');
+
+			$this->form_validation->set_rules('user', 'Username', 'trim|required');
+			$this->form_validation->set_rules('pass1', 'Password', 'required');
+			$this->form_validation->set_rules('pass2', 'Password Confirmation', 'required');
+			$this->form_validation->set_rules('email', 'Email', 'trim|required');
+			
+			if ($this->form_validation->run() == FALSE){
+				$register_view = $this->load->view('users/register.php',null,true);
+				$this->add_block($register_view,self::CENTER_BLOCK);
+				$this->generate_page();
+			}
+			else{
+				$this->load->model('users_model');
+				$this->load->helper('table');
+			
+				//check if email already exists.
+				if( ! $this->users_model->user_exists($this->input->post('email'))){
+					$success = $this->users_model->add_user(array('username' 	=> $this->input->post('user')
+																,'email'	=> $this->input->post('email')
+																,'password'	=> sha1_salt($this->input->post('pass1'))));
+			
+					if($success > 0){
+					//hydrate session
+						$result = $this->users_model->get_user(array('email' => $this->input->post('email')),'email');
+						$_SESSION['username'] 	= $result->username;
+						$_SESSION['email']		= $result->email;
+						$_SESSION['id']			= $result->id;
+						//print_r($_SESSION);
+						redirect('/test/quizz');
+					}
+				}
+				//if user exists, we go back on registration page
+				else{
+					redirect('/register');
+				}
+				//$this->load->view('formsuccess');
+			}				
+		}
+		
 		$data['content']	= $this->load->view('users/register.php',null,true);
 		$this->create_page($data);
 	}
@@ -74,19 +117,23 @@ class Users extends TNK_Controller {
 		$this->form_validation->set_rules('pass2', 'Password Confirmation', 'required');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required');
 
-			echo $this->input->post('user')."<br/>";
-			echo $this->input->post('pass1')."<br/>";
-			///echo $this->input->post('pass2')."<br/>";
-			echo $this->input->post('email')."<br/>";
+		/*echo $this->input->post('user')."<br/>";
+		echo $this->input->post('pass1')."<br/>";
+		///echo $this->input->post('pass2')."<br/>";
+		echo $this->input->post('email')."<br/>";
+		*/
 		if ($this->form_validation->run() == FALSE)
 		{
 			
-			echo "NO SUCCESS";
+			//echo "NO SUCCESS";
 			
 			//$this->load->module('users');
 			//$this->users->register();
 			$this->load->helper('url');
 			//redirect('register');
+			$register_view = $this->load->view('users/register.php',null,true);
+			$this->add_block($register_view,self::CENTER_BLOCK);
+			$this->generate_page();
 		}
 		else
 		{
