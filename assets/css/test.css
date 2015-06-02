@@ -59,9 +59,15 @@ progress::-webkit-progress-value {
 	border-style	: solid;
 	border-width	: 0.2em;
 	border-color	: black;
+
 	width			: 10em;
-	height			: 15em;
+	height			: 17em;
 	display			: none;
+}
+
+#direct_input_id{
+	width 	: 90%;
+	margin 	:auto;
 }
 
 .word{

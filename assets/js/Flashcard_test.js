@@ -43,6 +43,7 @@
 			return $('<input/>', {
 				id				: DIRECT_INPUT_ID
 				,name 			: DIRECT_INPUT_ID
+				,type			: 'text'
 				,autocomplete	: 'off'
 			});
 		};

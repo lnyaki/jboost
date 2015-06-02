@@ -29,7 +29,7 @@
 				<a href="#" class="social-icon-ar sm google-plus animated fadeInDown animation-delay-3"><i class="fa fa-google-plus"></i></a>
 				<a href="#" class="social-icon-ar sm facebook animated fadeInDown animation-delay-4"><i class="fa fa-facebook"></i></a>
 				<hr class="dotted margin-10">
-				<a href="#" class="btn btn-ar btn-success pull-right">Create Account</a>
+				<a href="/register" class="btn btn-ar btn-success pull-right">Create Account</a>
 				<a href="#" class="btn btn-ar btn-warning">Password Recovery</a>
 				<div class="clearfix"></div>
 			</div>

@@ -51,7 +51,7 @@
                                	-->
                             </div>
                          	<div class="col-md-4">
-                         		<button type="submit" class="btn btn-ar btn-primary pull-right">Register</button>
+                         		<button type="submit" class="btn btn-ar btn-primary pull-right">Create account</button>
                        		</div>
                         </div>
                		</form>

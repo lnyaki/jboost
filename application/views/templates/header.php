@@ -5,8 +5,34 @@
 				<a href="index.html">Japanese <span>Boost</span></a>
 			</h1>
 			<p class="animated fadeInRight">Learn japanese, the fun way</p>
+		</div>	
+		
+	
+      	
+		<div class="navbar-right">
+			<p style="padding-top:10px;">
+      		<?php if(isset($_SESSION['id'])){
+					echo 'Welcome '.$_SESSION['username'];
+					echo '<a href="'.base_url().'disconnect">Log out </a>';
+				}
+				else{
+					echo "Welcome guest".'<a href="'.base_url().'login"> Log in </a>';
+				?>
+				<form class="inline" action="/login" method="post">		
+					<button type="submit"  id="login-button" class="btn btn-success">Login</button>
+				</form>
+				<form class="inline" action="/register" method="post">
+					<button type="submit" id="register-button" class="btn btn-primary">Register</button>
+				</form>
+				<?php
+				} 
+											
+			?>
+			
+      		</p>	
+      		
 		</div>
-		<nav class="top-nav"></nav>
+		<!--<nav class="top-nav">Hello, just saying</nav>-->
 	</div>
 </header>
 <nav id="header" class="navbar navbar-default navbar-static-top navbar-header-full navbar-dark" role="navigation">
@@ -17,11 +43,6 @@
 				<i class="fa fa-bars"></i>
 			</button>
 		</div>
-		<div class="pull-right">
-			<!--<a href="#" class="sb-icon-navbar sb-toggle-right" data-toggle="collapse" data-target = '.navHeaderCollapse'>
-						<i class="fa fa-bars"></i>				
-			</a>-->
-		</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
    		 <div class="collapse navbar-collapse navHeaderCollapse" id="bs-example-navbar-collapse-1">
       		<ul class="nav navbar-nav">
@@ -31,19 +52,6 @@
         	}
         	?>
         		<li><a href='<?php echo base_url();?>lists'>Lists</a></li>
-      		</ul>
-      		<ul class="nav navbar-nav navbar-right" style="padding-top:16px;">
-      			<li><p>
-      		<?php if(isset($_SESSION['id'])){
-					echo 'Welcome '.$_SESSION['username'];
-					echo '<a href="'.base_url().'disconnect">Log out </a>';
-				}
-				else{
-					echo "Welcome guest".'<a href="'.base_url().'login"> Log in </a>';
-				} 
-											
-			?>
-      			</p></li>
       		</ul>
 
       	</div>
