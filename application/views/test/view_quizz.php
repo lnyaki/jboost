@@ -131,7 +131,8 @@
 		<!-- <h3>End screen</h3> -->
 	<?php
 		$button_restart	= array('id'		=> 'restart_button',
-								'content'	=> 'Restart');
+								'content'	=> 'Restart',
+								'class'		=> 'btn btn-primary');
 		echo form_open();
 		echo form_button($button_restart);
 		echo form_close();

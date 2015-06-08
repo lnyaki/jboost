@@ -165,4 +165,11 @@ class Test extends TNK_Controller {
 		$this->generate_page();
 	}
 	
+	public function modal(){
+		$view = $this->load->view('test/modal',null,true);
+		
+		$this->add_block($view,self::CENTER_BLOCK);
+		$this->generate_page();
+	}
+	
 }

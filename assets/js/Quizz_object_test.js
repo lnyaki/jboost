@@ -405,7 +405,7 @@
 				var result = result_screen(stats);
 				console.log("#### Print de l'ecran de fin");
 				console.log(result);
-				$('#quizz_end_screen').append(result);
+				$('#quizz_end_screen').prepend(result);
 				
 				sleep(display_endgame,1000);
 				

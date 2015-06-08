@@ -10,6 +10,7 @@ class Email_list extends TNK_Controller {
 		$this->load->model("email_list_model",'model');
 		$email 	= $this->input->post('email');
 		$list	= $this->input->post('list');
+		
 		//check that the email is not already in the list, then add.
 		if(!$this->model->exists($email,$list)){
 			$this->model->add_email(array(	'email' 	=> $email,
@@ -17,7 +18,7 @@ class Email_list extends TNK_Controller {
 									));
 		}
 		
-		redirect($this->input->post('redirect'));
+		//redirect($this->input->post('redirect'));
 	}
 }
 	
