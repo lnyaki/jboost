@@ -44,11 +44,14 @@ class MX_Router extends CI_Router
 	}
 	
 	public function _validate_request($segments) {
-
+		log_message('debug','[Core/router.php]validate_request : '.implode('/',$segments));
+		
 		if (count($segments) == 0) return $segments;
 		
 		/* locate module controller */
 		if ($located = $this->locate($segments)) return $located;
+		
+		log_message('debug','[Core/router.php]Validate_quest : Could not locate '.implode('/',$segments));
 		
 		/* use a default 404_override controller */
 		if (isset($this->routes['404_override']) AND $this->routes['404_override']) {
@@ -66,10 +69,17 @@ class MX_Router extends CI_Router
 		$this->module = '';
 		$this->directory = '';
 		$ext = $this->config->item('controller_suffix').EXT;
-		
+	
+		log_message('debug','01[MX/router.php]Locate : Module: '.$segments[0]);	
 		/* use module route if available */
 		if (isset($segments[0]) AND $routes = Modules::parse_routes($segments[0], implode('/', $segments))) {
 			$segments = $routes;
+			
+/*Debug update >>*/
+			if(count($segments)==0){
+				log_message('debug','02[MX/router.php]Locate : Couldn\' find the route.');
+			}
+/* << Debug update*/
 		}
 	
 		/* get the segments array elements */
@@ -80,18 +90,29 @@ class MX_Router extends CI_Router
 		
 			/* module exists? */
 			if (is_dir($source = $location.$module.'/controllers/')) {
-				
+/*>> Debug update >>*/
+				log_message('debug','03[MX/router.php]Locate : IS a DIRECTORY : '.$location.$module.'/controllers/');
+/*<< Debug update <<*/
 				$this->module = $module;
 				$this->directory = $offset.$module.'/controllers/';
 				
+/*>> Debug update >>*/
+				log_message('debug','04[MX/router.php]Locate : [Module]'.$this->module.' [Directory]'.$directory.' [source]'.$source);
+/*<< Debug update <<*/
+				
 				/* module sub-controller exists? */
 				if($directory AND is_file($source.$directory.$ext)) {
+/*>> Debug update >>*/
+					log_message('debug','05[MX/router.php]Locate : Sub controller : '.$source.$directory.$ext);
+/*<< Debug update <<*/
 					return array_slice($segments, 1);
 				}
 					
 				/* module sub-directory exists? */
 				if($directory AND is_dir($source.$directory.'/')) {
-
+/*>> Debug update >>*/
+					log_message('debug','06[MX/router.php]Locate : Sub directory : '.$source.$directory.'/');
+/*<< Debug update <<*/
 					$source = $source.$directory.'/'; 
 					$this->directory .= $directory.'/';
 
@@ -105,18 +126,47 @@ class MX_Router extends CI_Router
 						return array_slice($segments, 2);
 					}
 				}
+/*>> Debug update >>*/
+				else{
+					log_message('debug','07[MX/router.php]Locate : NO Sub directory : '.$source.$directory.'/');
+					if($directory){
+						log_message('debug','07[MX/router.php]Locate : However directory : '.$directory);	
+					}
+					else{
+						log_message('debug','07[MX/router.php]Locate : NO  directory : '.$directory);
+					}
+				}
+/*<< Debug update <<*/
 				
 				/* module controller exists? */			
 				if(is_file($source.$module.$ext)) {
+/*>> Debug update >>*/
+					log_message('debug','08[MX/router.php]Locate : File exists : '.$source.$module.$ext);
+/*<< Debug update <<*/
 					return $segments;
 				}
+/*>> Debug update >>*/
+				else{
+					log_message('debug','09[MX/router.php]Locate : File NOT exists : '.$source.$module.$ext);
+				}
+/*<< Debug update <<*/
 			}
+/*>> Debug update >>*/
+			else{
+				log_message('debug','10[MX/router.php]Locate : NOT a DIRECTORY : '.$location.$module.'/controllers/');
+			}
+/*<< Debug update <<*/
 		}
 		
 		/* application controller exists? */			
 		if (is_file(APPPATH.'controllers/'.$module.$ext)) {
 			return $segments;
 		}
+/*>> Debug update >>*/
+			else{
+				log_message('debug','11[MX/router.php]Locate : NOT a controller : '.APPPATH.'controllers/'.$module.$ext);
+			}
+/*<< Debug update <<*/
 		
 		/* application sub-directory controller exists? */
 		if($directory AND is_file(APPPATH.'controllers/'.$module.'/'.$directory.$ext)) {

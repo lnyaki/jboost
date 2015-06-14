@@ -24,6 +24,7 @@
 	//load game data
 
 	//code to prevent problem with ajax and url
+	//from : http://stackoverflow.com/questions/27420759/codeigniter-base-url-not-working-properly-for-ajax
     var BASE_URL = "<?php echo base_url();?>";
 
 	$('#quizz_end_screen').hide();
