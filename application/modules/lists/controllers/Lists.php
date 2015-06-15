@@ -30,7 +30,7 @@ class Lists extends TNK_Controller {
 			$data2['_right_aside']	= '';
 			//load the list view to put in the content view
 			$data2['_content'] 		= $this->load->view('lists/list_table_view',array('_thead' => $thead, '_tbody' => $tbody, '_table_class' => $table_class),TRUE);
-			$data2['_content']		.= $this->load->view('lists/create_list_view',null,TRUE);
+			//$data2['_content']		.= $this->load->view('lists/create_list_view',null,TRUE);
 			$data['content']		= $this->load->view('templates/content.php',$data2,true);
 		}
 		else{

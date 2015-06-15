@@ -375,6 +375,7 @@
 				//get next random elt
 				var random_elt 		= next_random_item();
 				var buttons;
+				var shuffled_list;
 				
 				if(input_method === current_card.MULTIPLE_ANSWERS){
 					//get new random answer set
@@ -382,11 +383,14 @@
 					//add the answer element to the random elements
 					random_answers.push(random_elt);
 					
+					//randomize the array of answers
+					shuffled_list = _.shuffle(random_answers);
+
 					//get the existing buttons, to reinitialize them
 					buttons 		= current_card.get_existing_buttons();
 				
 					//initialize buttons
-					current_card.initialize_validation_button(buttons,random_answers);
+					current_card.initialize_validation_button(buttons,shuffled_list);
 				}		
 				else if(input_method === current_card.DIRECT_INPUT){
 					//empty the text input element

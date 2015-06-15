@@ -24,13 +24,13 @@
 		</div>
 	</form>
 	<script>
-		var list = new Module.List();
+		/*var list = new Module.List();
 		list.test();
 		
 		var test = "Hello";
 		var regex = new RegExp('e*l');
 		console.log("test regex : "+regex.test(test));
-		
+		*/
 		//set click function to the "add element" button
 		$('#btn_add_element').click(function(){
 			list.echo_text(list.textarea_read("#textArea"));
