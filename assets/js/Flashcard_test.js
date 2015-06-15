@@ -360,7 +360,10 @@
 						$(button).attr('value',data.answer);
 						$(button).attr('type', 'button');
 						$(button).attr('id', data.id);
-						$(button).text(data.item);
+						
+						//TODO: test the direction of the quizz : kana --> romaji or romaji --> kana
+						//$(button).text(data.item);
+						$(button).text(data.answer);
 						
 						//removing previous click function, if any. Otherwise, the previous
 						//click function can be called along with the new one.

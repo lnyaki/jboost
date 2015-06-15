@@ -147,8 +147,11 @@
 			
 			//get the number of multiple answers
 			if(input_method == 'multiple_answers'){
-				var num_ans 		= $('#menu_multiple_answers').find('[checked="checked"][name="mult_answ"]');	
+				var num_ans 		= $('#menu_multiple_answers').find('[checked="checked"][name="mult_answ"]');
+				console.log("number of answers :");
+				console.log(num_ans);	
 				answer_quantity 	= $(num_ans).attr("value");
+				console.log(answer_quantity);	
 			}
 			
 	
@@ -173,6 +176,9 @@
 			current_card.set_points(0);
 			current_card.set_answer_result('');
 			
+			
+			console.log("Answer quantity");
+			console.log(answer_quantity);
 			//set the number of possible answers
 			current_card.set_answers_number(answer_quantity);
 			
@@ -185,23 +191,20 @@
 			//create the validation buttons depending on the input method
 			var buttons = current_card.create_validation_button(input_method, answer_quantity);
 			
-			//console.log("BOUTONS : ");
-			//console.log(buttons);
+			console.log("BOUTONS : ");
+			console.log(answer_quantity);
+			console.log(buttons);
 			
 			
 			var preselected;
 			var item_list;
 			var func;
+			var shuffled_list;
 			
 			//get the next item (randomly)			
 			var next_item = next_random_item();
 			//set the next item
 			current_card.set_item(next_item);
-	
-			
-			//console.log("################ Set Item ########################");
-			//console.log(next_item);
-			//console.log('ci dessus, le next item');
 			
 			
 			//put the button in the right div
@@ -218,6 +221,9 @@
 				//add the preselected item to the item list
 				item_list[item_list.length] 	= next_item;
 				
+				//shuffle the list
+				shuffled_list = _.shuffle(item_list);
+				
 				func = '';
 				
 				//console.log('DEBUG: answer quantity : '+answer_quantity);
@@ -225,8 +231,8 @@
 				//console.log('DEBUG: difference : '+(answer_quantity - preselected.length));
 				
 				//check the size of the item list
-				if(item_list.length != answer_quantity){
-					console.log('CHK-ERROR : List size different than expected number of answers ('+item_list.length+', '+answer_quantity+')');	
+				if(shuffled_list.length != answer_quantity){
+					console.log('CHK-ERROR : List size different than expected number of answers ('+shuffled_list.length+', '+answer_quantity+')');	
 				}
 			}
 			
@@ -237,7 +243,7 @@
 			}
 			//console.log("INFO : avant initialize validation button");
 			//initialize button text and values
-			buttons = current_card.initialize_validation_button(buttons, item_list, func);
+			buttons = current_card.initialize_validation_button(buttons, shuffled_list, func);
 	
 		};
 		
@@ -386,6 +392,9 @@
 					//randomize the array of answers
 					shuffled_list = _.shuffle(random_answers);
 
+					console.log("shuffle :");
+					console.log(random_answers);
+					console.log(shuffled_list);
 					//get the existing buttons, to reinitialize them
 					buttons 		= current_card.get_existing_buttons();
 				
@@ -603,7 +612,7 @@
 			if($(this).attr('checked') == undefined){
 				var groupName	= $(this).attr('name');
 				
-				$('#menu_repetitions').find("input[name='"+groupName+"'][checked='checked']").removeAttr('checked');
+				$('#menu_multiple_answers').find("input[name='"+groupName+"'][checked='checked']").removeAttr('checked');
 				$(this).attr("checked","checked");
 				console.log("elems trouvés ["+groupName+"]: "+$(this).parent().parent().find("input[name='"+groupName+"'][checked='checked']").size());
 				console.log("* radio button : was not checked "+$(this).attr("value"));
