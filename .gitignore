@@ -2,7 +2,7 @@
 ################################
 ignore/
 wordpress/
-
+application/logs/
 
 # Compiled source #
 ###################

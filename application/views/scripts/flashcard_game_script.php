@@ -51,8 +51,31 @@
 		$(card_view).show('slide');
 	};
 	
-	//set the click option for radio buttons
-	$('input[type="radio"]').click(quizz.click_radio);
+	//set the click option for radio buttons, depending on radio button group
+	//$('input[type="radio"]').click(quizz.click_radio);
+	$('#menu_repetitions').find('input[type="radio"][name="option_repetitions"]').click(
+			function(){
+				quizz.click_radio($('#menu_repetitions'), this);
+			}
+	);
+	
+	$('#menu_input_type').find('input[type="radio"][name="input_type"]').click(
+			function(){
+				quizz.click_radio($('#menu_input_type'), this);
+			}
+	);
+
+	$('#menu_multiple_answers').find('input[type="radio"][name="mult_answ"]').click(
+			function(){
+				quizz.click_radio($('#menu_multiple_answers'), this);
+			}
+	);
+	
+	$('#menu_time').find('input[type="radio"][name="option_time"]').click(
+			function(){
+				quizz.click_radio($('#menu_time'), this);
+			}
+	);
 	
 	var restart_function	= function(){
 		//hidding the end screen

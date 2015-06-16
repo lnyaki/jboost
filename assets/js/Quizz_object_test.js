@@ -129,7 +129,7 @@
 		//TODO : use constants instead of hard coded values.
 		var initialize_options	= function(){
 			//get repetitions
-			var repetitions	= $('#menu_repetitions').find('[checked="checked"][name="option_repetitions"]');
+			var repetitions	= $('#menu_repetitions').find('input[checked="checked"][name="option_repetitions"]');
 			review_size = $(repetitions).attr("value");
 			remaining_elts = review_size -1;
 			console.log("* Répétitions : 		" + review_size);
@@ -147,7 +147,7 @@
 			
 			//get the number of multiple answers
 			if(input_method == 'multiple_answers'){
-				var num_ans 		= $('#menu_multiple_answers').find('[checked="checked"][name="mult_answ"]');
+				var num_ans 		= $('#menu_multiple_answers').find('input[checked="checked"][name="mult_answ"]');
 				console.log("number of answers :");
 				console.log(num_ans);	
 				answer_quantity 	= $(num_ans).attr("value");
@@ -606,19 +606,22 @@
 			return $(parent).children('input[selected]');
 		};
 		
-		var click_radio	= function(){
-			console.log("Checked value : "+$(this).attr('value'));
-
-			if($(this).attr('checked') == undefined){
-				var groupName	= $(this).attr('name');
+		var click_radio	= function($parent,element){
+			//console.log("Checked value : "+$(element).attr('value'));
+			
+			if($(element).attr('checked') == undefined){
+				var groupName	= $(element).attr('name');
 				
-				$('#menu_multiple_answers').find("input[name='"+groupName+"'][checked='checked']").removeAttr('checked');
-				$(this).attr("checked","checked");
-				console.log("elems trouvés ["+groupName+"]: "+$(this).parent().parent().find("input[name='"+groupName+"'][checked='checked']").size());
-				console.log("* radio button : was not checked "+$(this).attr("value"));
+				//Old version
+				//$('#menu_multiple_answers').find("input[name='"+groupName+"'][checked='checked']").removeAttr('checked');
+				$parent.find("input[name='"+groupName+"'][checked='checked']").removeAttr('checked');
+				//check the current element
+				$(element).attr("checked","checked");
+				//console.log("elems trouvés ["+groupName+"]: "+$(element).parent().parent().find("input[name='"+groupName+"'][checked='checked']").size());
+				console.log("* radio button : was not checked "+$(element).attr("value"));
 			}
 			else{
-				console.log("* radio button : already checked "+$(this).attr("value"));
+				console.log("* radio button : already checked "+$(element).attr("value"));
 			}
 		};
 		
