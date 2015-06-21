@@ -35,6 +35,8 @@ class Users extends TNK_Controller {
 		$bloc .= '<li>email : '.$user_data->email.'</li>';
 		$bloc .= '</ul>';
 		
+		//test alerts
+		
 		
 		//compose page
 		$this->add_block($bloc,self::CENTER_BLOCK);

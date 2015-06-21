@@ -100,6 +100,7 @@ class Test extends TNK_Controller {
 				break;
 
 			case 'add_stats'	:
+				//only execute if there is a session id (if the user is logged)
 				if(isset($_SESSION['id'])){
 					$this->add_stats($this->input->post(null,true),$_SESSION['id']);
 				}

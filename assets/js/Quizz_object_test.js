@@ -430,7 +430,6 @@
 				console.log(stats);
 				console.log("DEBUG : reset ok");
 				stats = new Array();
-				console.log(stats);
 			}
 			$('#quizz_answer').val('');
 			
