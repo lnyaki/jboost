@@ -36,10 +36,16 @@ class Users extends TNK_Controller {
 		$bloc .= '</ul>';
 		
 		//test alerts
-		
+		$alert = '<div id="alert-success" class="alert alert-success alert-dismissible" role="alert"> 
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			Alert Success
+		</div>';
 		
 		//compose page
 		$this->add_block($bloc,self::CENTER_BLOCK);
+		$this->add_block($alert,self::CENTER_BLOCK);
 		$this->add_block($stats,self::CENTER_BLOCK);
 
 		$this->generate_page();
