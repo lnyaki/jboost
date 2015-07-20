@@ -12,13 +12,14 @@
 		var constructor	= Flashcard;
 
 	//attributes
-		var quizz;				/* The instance of the quizz game                    */
-		var root_card;			/* The flashcard html object                         */
+		var quizz;				/* The instance of the quizz game                    							*/
+		var root_card;			/* The flashcard html object                         							*/
 		var answers;			/* */
-		var input_method;		/* Input type ('direct input' or 'multiple answers') */
-		var answers_number;     /* The number of multiple answers 				     */
-		var current_item;		/* The current object being quizzed     			 */
-		var validated_item;		/* The item that was validated by the user 			 */
+		var input_method;		/* Input type ('direct input' or 'multiple answers') 							*/
+		var quizz_direction;	/* Expresses the direction of the quizz (question to answer, or the opposite)	*/
+		var answers_number;     /* The number of multiple answers 				     							*/
+		var current_item;		/* The current object being quizzed     			 							*/
+		var validated_item;		/* The item that was validated by the user 			 							*/
 		
 	//html elements
 		var POINTS	 			= '#points';
@@ -54,10 +55,17 @@
 		//**********************************************
 		var validate		= function(answer){
 			console.log('*************** Flashcard.validate *************');
+			console.log('*** Quizz direction : '+quizz_direction);
 			console.log('*** answer : '+answer+'	item : '+current_item.answer);
 			console.log(current_item);
 
-			return current_item.answer == answer;
+			if(quizz_direction == "q2a"){
+				return current_item.answer == answer;	
+			}
+			else if(quizz_direction == "a2q"){
+				return current_item.item == answer;
+			}
+			
 		};
 		
 		
@@ -235,6 +243,10 @@
 			input_method	= input_type;
 		};
 		
+		var set_quizz_direction	= function(direction){
+			quizz_direction = direction;
+		};
+		
 		//set the number of multiple anwers in the card
 		var set_answers_number	 = function(num){
 			answers_number	= num;
@@ -258,9 +270,22 @@
 		//sets the items being quizzed
 		var set_item			 = function(item){
 			current_item = item;
-			set_item_text(current_item.item);
+			
+			if(quizz_direction == "q2a"){
+				set_item_text(current_item.item);	
+			}
+			else if(quizz_direction == "a2q"){
+				set_item_text(current_item.answer);
+			}
+			else{
+				console.log("[Flashcard.set_item] ERR : Unknown quizz direction : "+quizz_direction);
+			}
+			
+			
+			
 			console.log("##################### Current Item : ######################");
 			console.log(current_item);
+			console.log("Direction : "+quizz_direction);
 		};
 		
 		var set_item_text		= function(text){
@@ -357,13 +382,19 @@
 						data	= data_list[i];
 						//console.log("[DEBUG] DATA ITEM : "+data.item);
 						$(button).attr('name',data.answer);
-						$(button).attr('value',data.answer);
 						$(button).attr('type', 'button');
 						$(button).attr('id', data.id);
 						
+
 						//TODO: test the direction of the quizz : kana --> romaji or romaji --> kana
-						//$(button).text(data.item);
-						$(button).text(data.answer);
+						if(quizz_direction == "q2a"){
+							$(button).attr('value',data.answer);
+							$(button).text(data.answer);
+						}
+						else if(quizz_direction == "a2q"){
+							$(button).attr('value',data.item);
+							$(button).text(data.item);
+						}
 						
 						//removing previous click function, if any. Otherwise, the previous
 						//click function can be called along with the new one.
@@ -402,6 +433,9 @@
 			return input_method;	
 		};
 		
+		var get_quizz_direction = function(){
+			return quizz_direction;
+		};
 		
 		var get_direct_input_button = function(text){
 			return $('<button/>', {
@@ -431,6 +465,7 @@
 			,set_answer_result				: set_answer_result
 			,set_input_method				: set_input_method
 			,set_answers_number				: set_answers_number
+			,set_quizz_direction			: set_quizz_direction
 			,set_time						: set_time
 			,set_multiple_answers			: set_multiple_answers
 			,set_quizz						: set_quizz
@@ -445,6 +480,7 @@
 			,create_validation_button		: create_validation_button
 			,initialize_validation_button	: initialize_validation_button
 			,get_random_elements			: get_random_elements
+			,get_quizz_direction			: get_quizz_direction
 			,get_multiple_answers_list		: get_multiple_answers_list
 			,get_existing_buttons			: get_existing_buttons
 			,empty_input_element			: empty_input_element

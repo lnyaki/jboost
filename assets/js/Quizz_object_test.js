@@ -20,6 +20,8 @@
 		//in case of multiple choice questions, this describes the number
 		//of possible answers
 		var answer_quantity;
+		//The direction of the answers : questions --> answers, or answers --> questions
+		var answer_direction;
 		//allocated time for each answer
 		var response_time;
 		//html flashcard reference
@@ -33,11 +35,8 @@
 		
 		var self = null;
 		
-		// when we'll be connected to a DB
-		
-		var items		= new Array(
-				/* {id	: 1, item	: 'あ', answer	: 'a'}*/
-		);
+		//the variable containing the questions and answers
+		var items		= new Array();
 		
 		var sound			= new Audio();
 
@@ -76,38 +75,21 @@
 		};
 		
 		var after_loading_items	= function(itself){
-			//console.log('---- Items ------');
-			//console.log(items);
 			initialize_flashcard(itself);
 		};
-		
+
 		var initialize		= function(){
 		//load items from db
 			//console.log("THIS : ");
 			//console.log(this);
 			self = this;
 			load_items({'list' : 'hiragana'});
-			
-		//create item list 
-			//item_list 	= get_item_list(items);
 		
 		//initialize things that need to be reset to zero
 			initialize_quizz_variables();
 			
 		//get options data from the user
 			initialize_options();
-
-		//after loading, create a list
-			//create_item_list(items);
-		
-		//TODO : get 1 random element first			
-		//	var item_list = current_card.get_multiple_answers_list(4, new Array({item : 'あ'}));
-
-		//initialize the flashcard
-			//initialize_flashcard(this);
-		
-			//console.log("******* Resultat ***********");
-			//console.log(test);
 			
 		//initialize the options data
 			$('#time_label').text(response_time);
@@ -115,7 +97,7 @@
 			$('#repetitions_label').text(review_size);
 			//build_card();
 		};
-		
+
 		var initialize_quizz_variables	= function(){
 			item_index 		= 0;
 			points			= 0;
@@ -151,9 +133,23 @@
 				console.log("number of answers :");
 				console.log(num_ans);	
 				answer_quantity 	= $(num_ans).attr("value");
-				console.log(answer_quantity);	
+				console.log(answer_quantity);
+				
 			}
 			
+			//set the direction of the answer/response
+			//answer_direction = 
+			if($('#btn-question2answer').attr('selected')== 'selected'){
+				answer_direction = 'q2a';
+			}
+			else if ($('#btn-answer2question').attr('selected')== 'selected'){
+				answer_direction = 'a2q';
+			}
+			else{
+				console.log('ERR : None of the buttons for selecting the quizz direction are selected.');	
+			}
+	
+			console.log("S\* : answer_direction = "+answer_direction);
 	
 			//get time per answer
 			var answer_time = $('#menu_time').find('[checked="checked"][name="option_time"]');
@@ -169,7 +165,6 @@
 		
 		var initialize_flashcard	= function(quizz){
 			//set the quizz object in the card object
-			console.log(quizz);
 			current_card.set_quizz(quizz);
 			
 			//set elements to their initial values
@@ -177,8 +172,7 @@
 			current_card.set_answer_result('');
 			
 			
-			console.log("Answer quantity");
-			console.log(answer_quantity);
+			console.log("Answer quantity : "+answer_quantity);
 			//set the number of possible answers
 			current_card.set_answers_number(answer_quantity);
 			
@@ -187,6 +181,9 @@
 			
 			//set the card input method
 			current_card.set_input_method(input_method);
+			
+			//set the direction of questions/answers
+			current_card.set_quizz_direction(answer_direction);
 			
 			//create the validation buttons depending on the input method
 			var buttons = current_card.create_validation_button(input_method, answer_quantity);
@@ -477,8 +474,16 @@
 			var $label;
 			var $progressbar;
 			var total = 0;
+			var answer = '';
 			
 			_.forEach(result,function(elt){
+				if(answer_direction == "q2a"){
+					answer = elt.item;
+				}
+				else if(answer_direction == "a2q"){
+					answer = elt.answer;
+				}
+				
 				total = elt.right+elt.wrong;
 				$rowContainer	= $('<div>',{class	: 'elt_stat'});
 				$label			= $('<label style="margin-left : 1em;">'+elt.item+' ('+elt.right+'/'+total+')</label>');
@@ -605,6 +610,7 @@
 			return $(parent).children('input[selected]');
 		};
 		
+		//click function for radio buttons in the option form of the quizz
 		var click_radio	= function($parent,element){
 			//console.log("Checked value : "+$(element).attr('value'));
 			

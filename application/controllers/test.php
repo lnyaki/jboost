@@ -45,6 +45,8 @@ class Test extends TNK_Controller {
 		$this->add_js('assets/js/Quizz_object_test.js');
 		$this->add_js('assets/js/test.js');
 		
+		//add the quizz css
+		$this->add_css('assets/css/quizz.css');
 		
 		//get email list widget
 		$this->load->module("email_list");

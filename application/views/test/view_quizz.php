@@ -11,7 +11,8 @@
 		$options_button	= array('id'		=> 'option_button',
 								'content'	=> 'Play !',
 								'type'		=> 'button',
-								'class'		=> 'btn btn-primary center-block');
+								'class'		=> 'btn btn-primary center-block',
+								'style'		=> 'font-size:1.5em;');
 	
 		//data for 'input type' options
 		$fieldset_input_type		= array('id'	=> 'menu_input_type');
@@ -79,6 +80,10 @@
     				9
  	 			</label>
 			</div>
+			<div>
+				<button type="button" id="btn-question2answer" class="btn btn-success directionSelected" selected='selected' >あ　--> a</button>
+				<button type="button" id="btn-answer2question" class="btn btn-default directionNotSelected">a -->　あ</button>
+			</div>
 		</fieldset>
 
 		<div class="radio">
@@ -88,7 +93,7 @@
  			</label>
 		</div>
 	</fieldset>
-	
+<!--
 	<fieldset id="menu_time">
 		<legend>Time limit</legend>
 		<div class="radio">
@@ -103,6 +108,7 @@
  			</label>
 		</div>
 	</fieldset>
+-->
 	<?php
 		echo form_button($options_button);
 		echo form_close();
