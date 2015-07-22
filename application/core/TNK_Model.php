@@ -6,6 +6,16 @@ class TNK_Model extends CI_Model{
 		return 'test Model : OK';
 	}
 	
+	public function extract_results($results){
+		$extracted = array();
+		
+		foreach($results->result() as $row){
+			array_push($extracted,$row);
+		}
+		
+		return $extracted;
+	}
+	
 	
 	public function generate_select(){
 		

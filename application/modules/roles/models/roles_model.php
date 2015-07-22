@@ -8,12 +8,14 @@
 	const privilege_table		= 'security_privilege';
 	
 	//Domain Fields
+	const domain_id				= 'id';
 	const domain_name 			= 'name';
 	const domain_description	= 'description';
+	const domain_deleted		= 'deleted';
 	
 	//Role Fields
-	
-	
+	const role_name				= 'name';
+	const role_domain_ref		= 'domain_ref';
 	
 	//delete lines below, when sure that it has no impact.
 	const main_table 		= 'roles01';
@@ -31,70 +33,47 @@
 	public function create_domain($data){		
 		return $this->db->insert(self::domain_table,$data);
 	}
-	
-	
+
 	//Update of an existing domain
+
 	public function update_domain($domainID,$data){
-		//We check that we don't receive null data, or null domain ID.
-		if($domainID == null){
-			echo '[roles_model.update_domain]ERR : Trying to update domain with null DomainID.';
-			return false;
-		}
-		
-		if( $data == null){
-			echo '[roles_model.update_domain]ERR : Trying to update domain with null data.';
-			return false;
-		}
-		
-		$name 			= '';
-		$description 	= '';
-		$data_is_set	= false;
-		$update_values	= '';
-		
-		//if the name should be changed, we initialize $name and description before putting them in the update statement.
-		if(isset($data[self::domain_name])){
-			$update_values	= self::domain_name.' = '.$data[self::domain_name];
-			$data_is_set	= true;
-		}
-		
-		if(isset($data[self::domain_description])){
-			if(!$data_is_set){
-				$update_values 	=  self::domain_description.' = '.$data[self::domain_description];
-			}
-			else{
-				$update_values .= ', '.self::domain_description.' = '.$data[self::domain_description];
-			}
-			
-			$data_is_set 		= true;
-		}
-		
-		
-		//If the data should really be updated
-		if($data_is_set){
-			$sql = 'UPDATE '.self::domain_table.'set '.$update_values.' where id = ? ';	
-		}
-		//No data to update, we generate an error.
-		else{
-			echo '[roles_model.update_domain]ERR : Trying to update domain with empty data.';
-			return false;
-		}
-		
-		
+		$this->db->where(self::domain_id,$domainID);
+		return $this->db->update(self::domain_table,$data);
 	}
+	
 	
 	//logical deletion of a domain
 	public function delete_domain($domainID){
-		
+		$this->update_domain($domainID,array(self::domain_deleted =>'Y'));
+	}
+	
+	//physical delete
+	public function physical_delete_domain($domainID){
+		return $this->db->delete(self::domain_table, array(self::domain_id => $domainID));
 	}
 	
 	//list users with rights on this domain
 	public function list_users_on_domain($domainID){
-		
+	
 	}
 	
 	//list the roles active on this domain
 	public function list_domain_roles($domainID){
+		//column aliases
+		$domain_name_alias	= 'domain';
+		$role_name_alias	= 'role';
 		
+		//crafting the query
+		$this->db->select("$domain_name_alias.".self::domain_name." as $domain_name_alias,$role_name_alias.".self::role_name." as $role_name_alias");
+		$this->db->from(self::domain_table.' as '.$domain_name_alias.','.self::roles_table.' as '.$role_name_alias);
+		$this->db->where($domain_name_alias.'.'.self::domain_id,$domainID);
+		$this->db->join(self::roles_table, $domain_name_alias.'.'.self::domain_id.' = '.$role_name_alias.'.'.self::role_domain_ref);
+
+		$query = $this->db->get();
+		
+		print_r($this->extract_results($query));
+		
+		return $this->extract_results($query);
 	}
 	
 	/******************************************************************************
@@ -192,6 +171,13 @@
 	
 	//return the privileges linked to a role.
 	public function get_privileges($role){
+		//column aliases
+		$domain_alias		= 'domain';
+		$role_alias			= 'role';
+		$privilege_alias	= 'privilege';
+		
+		//crafting the query
+
 		
 	}
 	
