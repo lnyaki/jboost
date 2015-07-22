@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class Lists_model extends CI_Model{
-	const main_table 	= 'list01';
+	const main_table 	= 'list';
 	
 	//call modes
 	public static $cm_01	= array('*');
