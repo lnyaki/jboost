@@ -21,9 +21,19 @@
 	const role_domain_ref		= 'domain_ref';
 	const role_deleted			= 'deleted';
 	
+	//User privilege fields
+	const user_privilege_id				= 'id';
+	const user_privilege_user_ref		= 'user_ref';
+	const user_privilege_domain_ref		= 'domain_ref';
+	const user_privilege_privilege_ref	= 'privilege_ref';
+	
+	//Privilege Fields
+	const privilege_name		= 'name';
+	const privilege_deleted		= 'deleted';
+	
 	//delete lines below, when sure that it has no impact.
 	const main_table 		= 'roles01';
-	const privileges_table	= 'roles01';
+	//const privileges_table	= 'roles01';
 	const user_privileges	= 'roles02';
 
 	//call modes
@@ -98,11 +108,14 @@
 		$this->update_role($roleID,array(self::role_deleted =>'Y'));	
 	}
 	
+	//TODO : Before implementing this one, we implement the privileges
 	//Add a new role to a user
 	public function add_role_to_user($roleID,$userID){
-	//First, add the role to the security_user_roles
+		//1. Get the privileges for this role
+		
+		//2. Add the privileges to the user
 	
-	//Then, actually add the privileges linked to this role, in security_user_privileges	
+		//3. Add the role to the user
 	}
 	
 	
@@ -129,48 +142,57 @@
 	/******************************************************************************
 	 *                       Privilege functions
 	 * ****************************************************************************/
-	 //Add a single privilege to a user
-	 public function add_privilege_to_user($privilegeID,$userID){
-	 	
+	 //Add a single privilege to a user. $privilegeData also contains the ID of the user.
+	 public function add_privilege_to_user($privilegeID,$domainID,$userID){
+	 	return $this->db->insert(self::user_privilege_table,
+	 							  array(self::user_privilege_id				=> $userID,
+	 									self::user_privilege_domain_ref 	=> $domainID,
+	 									self::user_privilege_privilege_ref 	=> $privilegeID)
+								);
 	 }
 	 
 	 //Remove a single privilege from a user
 	 public function remove_privilege_from_user($privilegeID,$userID){
-	 	
+	 	$this->db->delete(self::user_privilege_table,
+	 							array(self::user_privilege_privilege_ref 	=> $privilegeID,
+										self::user_privilege_user_ref		=> $userID));
+		echo $this->db->last_query();
 	 }
 	 
+	 //TODO : test
 	 //Logical deletion of a privilege (the roles must be corrected too)
 	 public function delete_privilege($privilegeID){
-	 	
+	 	$this->update_privilege($privilegeID, array(self::domain_deleted => 'Y'));
 	 }
 	 
-	 
+	 //Update a privilege
+	 public function update_privilege($privilegeID,$data){
+		$this->db->where(self::privilege_name,$privilegeID);
+		return $this->db->update(self::privilege_table,$data);
+	 }
 	 
 	//return the list of types of privilege (creation, validation, etc)
 	public function get_privileges_list(){
+		//crafting the query		
+		$this->db->select('*');
+		$this->db->from(self::privilege_table);		
+		
+		$query = $this->db->get();
+		print_r($this->extract_results($query));
+		
+		return $this->extract_results($query);
 	}
 	
 	//return the privileges linked to a role.
 	public function get_privileges($role){
-		//column aliases
-		$domain_alias		= 'domain';
-		$role_alias			= 'role';
-		$privilege_alias	= 'privilege';
-		
 		//crafting the query
 
 		
 	}
 	
+	//create a new privilege in security_privilege
 	public function create_privilege($privilege){
-		
-	}
-	
-	//For test purposes, can be deleted when tests are done.
-	public function test(){
-		//return $this->model_test();
-		$this->generate_insert("test_table", array('field1' => 'value1', 'field2' => 'value2'));
-		echo $this->db->last_query();
+		return $this->db->insert(self::privilege_table,array(self::privilege_name => $privilege));
 	}
 }
 	

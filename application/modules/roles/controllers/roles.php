@@ -34,9 +34,6 @@ class Roles extends TNK_Controller {
 	}
 
 	public function test_db(){
-		//Test for domain creation : ok.
-		//$this->role->create_domain(array('name' => 'Test-name3',  'description' => 'Check that default value for deleted is space'));
-		
 		//test for domain update : ok
 		//$this->role->update_domain2(7, array('name' => 'Test-updated-name', 'description' => 'This is an updated domain! Crazy!'));
 		
@@ -56,7 +53,24 @@ class Roles extends TNK_Controller {
 		//$this->role->update_role(3,array('name' => 'Updated-Role'));
 		
 		//Test for logical deletion : OK
-		$this->role->delete_role(3);
+		//$this->role->delete_role(3);
+		
+		//Test for addition of privilege : ok
+		//$this->role->add_privilege_to_user('comment',2,5);
+		
+		//Test the deletion of a privilege : OK
+		//$this->role->remove_privilege_from_user('comment',5);
+		
+		//Test update and logical deletion of privilege : OK
+		//$this->role->delete_privilege('comment');
+		//$this->role->update_privilege('comment',array('deleted' => ' '));
+		
+		//Test for getting the list of all possible privileges : OK
+		//$this->role->get_privileges_list();
+		
+		//Test the creation of new privilege : OK
+		//$this->role->create_privilege('Test_Privilege_Hello!');
+		
 	}
 }
 
