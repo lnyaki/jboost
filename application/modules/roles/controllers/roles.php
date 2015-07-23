@@ -43,8 +43,11 @@ class Roles extends TNK_Controller {
 		//test for logical deletion : OK
 		//$this->role->delete_domain(8);
 		
-		//Test for getting the roles of a domain : oK
+		//Test for getting the roles of a domain : !!! KO
 		//$this->role->list_users_on_domain(2);
+		
+		//Test for getting the roles of a domain : OK
+		//$this->role->list_domain_roles(2);
 
 		//Test for creating a new role : OK
 		//$this->role->create_role(array( 'name' => 'Test_role','domain_ref' => '2' ));
@@ -71,6 +74,8 @@ class Roles extends TNK_Controller {
 		//Test the creation of new privilege : OK
 		//$this->role->create_privilege('Test_Privilege_Hello!');
 		
+		//Test for getting the privilege of a role
+		$this->role->get_privileges(1);
 	}
 }
 

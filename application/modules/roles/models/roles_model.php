@@ -6,6 +6,7 @@
 	const role_table			= 'security_role';
 	const domain_table			= 'security_domain';
 	const privilege_table		= 'security_privilege';
+	const role_privilege_table	= 'security_role_privilege';
 	const user_privilege_table	= 'security_user_privileges';
 	const user_roles_table		= 'security_user_roles';
 	
@@ -20,6 +21,10 @@
 	const role_name				= 'name';
 	const role_domain_ref		= 'domain_ref';
 	const role_deleted			= 'deleted';
+	
+	//Role privilege
+	const role_role_ref			= 'role_ref';
+	const role_privilege_ref	= 'privilege_ref';
 	
 	//User privilege fields
 	const user_privilege_id				= 'id';
@@ -78,14 +83,14 @@
 		
 		//crafting the query
 		$this->db->select("$domain_name_alias.".self::domain_name." as $domain_name_alias,$role_name_alias.".self::role_name." as $role_name_alias");
-		$this->db->from(self::domain_table.' as '.$domain_name_alias.','.self::roles_table.' as '.$role_name_alias);
+		$this->db->from(self::domain_table.' as '.$domain_name_alias.','.self::role_table.' as '.$role_name_alias);
 		$this->db->where($domain_name_alias.'.'.self::domain_id,$domainID);
-		$this->db->join(self::roles_table, $domain_name_alias.'.'.self::domain_id.' = '.$role_name_alias.'.'.self::role_domain_ref);
+		$this->db->join(self::role_table, $domain_name_alias.'.'.self::domain_id.' = '.$role_name_alias.'.'.self::role_domain_ref);
 
 		$query = $this->db->get();
 		
 		print_r($this->extract_results($query));
-		
+		echo $this->db->last_query();
 		return $this->extract_results($query);
 	}
 	
@@ -141,7 +146,12 @@
 	
 	/******************************************************************************
 	 *                       Privilege functions
-	 * ****************************************************************************/
+	 * ****************************************************************************/	 
+	//create a new privilege in security_privilege
+	public function create_privilege($privilege){
+		return $this->db->insert(self::privilege_table,array(self::privilege_name => $privilege));
+	}
+
 	 //Add a single privilege to a user. $privilegeData also contains the ID of the user.
 	 public function add_privilege_to_user($privilegeID,$domainID,$userID){
 	 	return $this->db->insert(self::user_privilege_table,
@@ -184,15 +194,23 @@
 	}
 	
 	//return the privileges linked to a role.
-	public function get_privileges($role){
+	public function get_privileges($roleID){
+		$role_alias			= 'rp';
+		$privilege_alias	='p';
 		//crafting the query
-
+		$this->db->select("$role_alias.".self::role_role_ref.", $privilege_alias.".self::privilege_name);
+		$this->db->from(self::role_privilege_table." as $role_alias,".self::privilege_table." as $privilege_alias");
+		$this->db->where("$role_alias.".self::role_role_ref,$roleID);
+		$this->db->where($role_alias.'.'.self::role_role_ref.' = '.self::role_table.'.'.self::role_id);
+		$this->db->join(self::role_table, $role_alias.'.'.self::role_privilege_ref.'='.$privilege_alias.'.'.self::privilege_name);
 		
+		$query	= $this->db->get();
+		
+		print_r($this->extract_results($query));
+		echo $this->db->last_query();
+		
+		return $this->extract_results($query);
 	}
 	
-	//create a new privilege in security_privilege
-	public function create_privilege($privilege){
-		return $this->db->insert(self::privilege_table,array(self::privilege_name => $privilege));
-	}
 }
 	
