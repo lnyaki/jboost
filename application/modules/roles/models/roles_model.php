@@ -3,9 +3,11 @@
 //class Roles_model extends CI_Model{
 	class Roles_model extends TNK_Model{
 	//Table names
-	const roles_table			= 'security_role';
+	const role_table			= 'security_role';
 	const domain_table			= 'security_domain';
 	const privilege_table		= 'security_privilege';
+	const user_privilege_table	= 'security_user_privileges';
+	const user_roles_table		= 'security_user_roles';
 	
 	//Domain Fields
 	const domain_id				= 'id';
@@ -14,8 +16,10 @@
 	const domain_deleted		= 'deleted';
 	
 	//Role Fields
+	const role_id				= 'id';
 	const role_name				= 'name';
 	const role_domain_ref		= 'domain_ref';
+	const role_deleted			= 'deleted';
 	
 	//delete lines below, when sure that it has no impact.
 	const main_table 		= 'roles01';
@@ -35,7 +39,6 @@
 	}
 
 	//Update of an existing domain
-
 	public function update_domain($domainID,$data){
 		$this->db->where(self::domain_id,$domainID);
 		return $this->db->update(self::domain_table,$data);
@@ -80,23 +83,26 @@
 	 *                       Role functions
 	 * ****************************************************************************/
 	//create a new role (and linked privileges) for a domain
-	public function create_role($domainID,$role_name,$privileges){
-		
+	public function create_role($data){ 
+		return $this->db->insert(self::role_table,$data);
 	}
 	
 	//update a role (modify name, linked privileges, etc)
 	public function update_role($roleID, $data){
-		
+		$this->db->where(self::role_id,$roleID);
+		return $this->db->update(self::role_table,$data);
 	}
 	
 	//logicial deletion of a role
 	public function delete_role($roleID){
-		
+		$this->update_role($roleID,array(self::role_deleted =>'Y'));	
 	}
 	
 	//Add a new role to a user
 	public function add_role_to_user($roleID,$userID){
-		
+	//First, add the role to the security_user_roles
+	
+	//Then, actually add the privileges linked to this role, in security_user_privileges	
 	}
 	
 	
@@ -107,24 +113,17 @@
 	
 	//return the roles/privileges of a user.
 	public function get_user_roles($userID){
+
 	}
 
-
-
 	//return the list of roles
-	public function get_roles_list(){
+	public function list_roles(){
 		
-		$sql	 = "SELECT * FROM ".self::roles_table;
+	}
+	
+	//list the roles for a domain
+	public function list_roles_for_domain($domainID){
 		
-		$roles	= array();
-		
-		$result	= $this->db->query($sql);
-		
-		foreach($result->result() as $res){
-			array_push($roles,$res);
-		} 
-		
-		return $roles;
 	}
 	
 	/******************************************************************************
@@ -149,24 +148,6 @@
 	 
 	//return the list of types of privilege (creation, validation, etc)
 	public function get_privileges_list(){
-		$sql	 = "SELECT * FROM ".self::privileges_table;
-		
-		$operations	= array();
-		$fields		= array();
-		
-		$result	= $this->db->query($sql);
-		
-		foreach($result->result() as $res){
-			array_push($operations,$res);
-		} 
-		
-		//get the field names
-		foreach ($result->list_fields() as $elt){
-			array_push($fields,$elt);
-		}
-		
-		
-		return array($fields,$operations);
 	}
 	
 	//return the privileges linked to a role.
