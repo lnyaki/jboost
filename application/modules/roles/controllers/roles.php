@@ -74,8 +74,32 @@ class Roles extends TNK_Controller {
 		//Test the creation of new privilege : OK
 		//$this->role->create_privilege('Test_Privilege_Hello!');
 		
-		//Test for getting the privilege of a role
-		$this->role->get_privileges(1);
+		//Test for getting the privilege of a role : OK
+		//$this->role->get_role_privileges(1);
+		
+		//Test for adding multiple privileges to a user at the same time : OK
+		/*
+		$data = array();
+		array_push($data,array(Roles_model::user_privilege_user_ref 		=> '5',
+								Roles_model::user_privilege_domain_ref 		=> '2',
+								Roles_model::user_privilege_privilege_ref	=> 'submit')
+				);
+				
+		array_push($data,array(Roles_model::user_privilege_user_ref 		=> '5',
+								Roles_model::user_privilege_domain_ref 		=> '2',
+								Roles_model::user_privilege_privilege_ref	=> 'consult')
+				);
+		
+		array_push($data,array(Roles_model::user_privilege_user_ref 		=> '5',
+								Roles_model::user_privilege_domain_ref 		=> '2',
+								Roles_model::user_privilege_privilege_ref	=> 'create')
+				);
+
+		$this->role->add_multiple_privileges_to_user($data);
+		*/
+		
+		//Test the addition of role (and therefore, privileges) to a user
+		$this->role->add_role_to_user(1,5);
 	}
 }
 
