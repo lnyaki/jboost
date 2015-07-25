@@ -23,8 +23,12 @@
 	const role_deleted			= 'deleted';
 	
 	//Role privilege
-	const role_role_ref			= 'role_ref';
-	const role_privilege_ref	= 'privilege_ref';
+	const role_privilege_role_ref		= 'role_ref';
+	const role_privilege_privilege_ref	= 'privilege_ref';
+	
+	//User Role
+	const user_role_user_ref	= 'user_ref';
+	const user_role_role_ref	= 'role_ref';
 	
 	//User privilege fields
 	const user_privilege_id				= 'id';
@@ -119,27 +123,49 @@
 		//we use a transaction to make sure that everything stays consistent
 		$this->db->trans_start();
 		//1. Get the privileges for this role
-		$privileges = $this->get_role_privileges($roleID);
+		$RolePrivileges = $this->get_role_privileges($roleID);
 		
-		echo "<br/><br/> Result from 'get_role_privileges'<br/>";
-		print_r($privileges);
-		echo "<br/><br/> After transformation :<br/>";
-	
-		//1.1 Format the resuolt so that it can be used to add privileges to a user.
-		$privileges = $this->format_privilege_sql_response($privileges,$userID);
-		
-		print_r($privileges);
+		//1.1 Format the result so that it can be used to add privileges to a user.
+		$RolePrivileges = $this->format_privilege_sql_response($RolePrivileges,$userID);
 		
 		//2. Add the privileges to the user
-		$this->add_multiple_privileges_to_user($privileges);
-		//3. Add the role to the user
+		$this->add_multiple_privileges_to_user($RolePrivileges,$userID);
 		
+		//3. Add the role to the user, in the user_role table
+		$this->add_entry_in_user_role_table($userID,$roleID);
+	
 		$this->db->trans_complete();
 	}
 	
+	//Add a role to the user. This is non functional (for documentation purpose).
+	public function add_entry_in_user_role_table($userID,$roleID){
+		if(!$this->already_has_role($userID,$roleID)){
+			$this->db->insert(self::user_roles_table,array(self::user_role_user_ref => $userID, self::user_role_role_ref => $roleID));
+		}
+		else{
+			echo "<br/>ROLE DEJA PRESENT<br/>";
+		}
+	}
+	
+	//Add a privilege to a certain role
+	public function add_privilege_to_role($privilegeID){
+		
+	}
+	
+	//Remove a privilege from a role.
+	public function remove_privilege_from_role($privilegeID){
+		
+	}
 	
 	//Remove a role from a user
 	public function remove_role_from_user($roleID,$userID){
+		//1. Get the privileges for each role of the user
+		
+		//2. Get the privileges of the role to remove
+		
+		//3. For each privilege of the role to remove, we check if the privilege
+		//   is present in more than one role. If yes, this privilege should not
+		//   be removed. If it is only present in this role, it should be removed.
 		
 	}
 	
@@ -161,15 +187,6 @@
 	//Receive an array of privileges comming from get_role_privileges, and format it to
 	//be used in function add_multiple_privileges_to_user
 	public function format_privilege_sql_response($privilegeArray,$userID){
-		/* Code to help me see which fieldnames to use (from initial query), and into which names to set them
-		$this->db->select(self::role_table.'.'.self::role_domain_ref.",$role_alias.".self::role_role_ref.", $privilege_alias.".self::privilege_name);
-		
-			array_push($data,array(Roles_model::user_privilege_user_ref 		=> '5',
-								Roles_model::user_privilege_domain_ref 		=> '2',
-								Roles_model::user_privilege_privilege_ref	=> 'submit')
-				);
-		*/
-		
 		$result = array();
 		
 		foreach($privilegeArray as $row){
@@ -177,9 +194,9 @@
 			
 			$row = (array) $row;
 			
-			$elt[Roles_model::user_privilege_user_ref]		= $userID;
-			$elt[Roles_model::user_privilege_domain_ref]	= $row[self::role_domain_ref];
-			$elt[Roles_model::user_privilege_privilege_ref]	= $row[self::privilege_name];
+			$elt[self::user_privilege_user_ref]			= $userID;
+			$elt[self::user_privilege_domain_ref]		= $row[self::role_domain_ref];
+			$elt[self::user_privilege_privilege_ref]	= $row[self::privilege_name];
 			
 			array_push($result,$elt);
 		}
@@ -197,17 +214,35 @@
 
 	 //Add a single privilege to a user.
 	 public function add_privilege_to_user($privilegeID,$domainID,$userID){
-	 	return $this->db->insert(self::user_privilege_table,
+	 	$res = true;
+	 	//1. Verify if the current privilege exists. If yes, we do nothing. If not, we add it.
+	 	if(!$this->user_privilege_exists($privilegeID,$domainID,$userID)){
+	 		$res = $this->db->insert(self::user_privilege_table,
 	 							  array(self::user_privilege_user_ref		=> $userID,
 	 									self::user_privilege_domain_ref 	=> $domainID,
 	 									self::user_privilege_privilege_ref 	=> $privilegeID)
 								);
+	 	}
+	 	return $res;
 	 }
 	 
-	 //TODO
 	 //Add multiple privileges to a user
-	 public function add_multiple_privileges_to_user($data){
-	 	return $this->db->insert_batch(self::user_privilege_table,$data);
+	 public function add_multiple_privileges_to_user($rolePrivileges,$userID){
+	 	//We need to get the privilege which don't already exist for this user.
+	 	$privileges_to_add = $this->get_privileges_to_add($rolePrivileges,$userID);
+		
+		echo "<br/>Role privileges <br/>";
+		print_r($rolePrivileges);
+		echo "<br/>PRIVILEGES TO ADD<br/>";
+		print_r($privileges_to_add);
+		
+		if(count($privileges_to_add) == 0){
+			return true;
+		}
+		else{
+			return $this->db->insert_batch(self::user_privilege_table,$privileges_to_add);
+			
+		}
 	 }
 	 
 	 //Remove a single privilege from a user
@@ -246,11 +281,11 @@
 		$role_alias			= 'rp';
 		$privilege_alias	='p';
 		//crafting the query
-		$this->db->select(self::role_table.'.'.self::role_domain_ref.",$role_alias.".self::role_role_ref.", $privilege_alias.".self::privilege_name);
+		$this->db->select(self::role_table.'.'.self::role_domain_ref.",$role_alias.".self::role_privilege_role_ref.", $privilege_alias.".self::privilege_name);
 		$this->db->from(self::role_privilege_table." as $role_alias,".self::privilege_table." as $privilege_alias");
-		$this->db->where("$role_alias.".self::role_role_ref,$roleID);
-		$this->db->where($role_alias.'.'.self::role_role_ref.' = '.self::role_table.'.'.self::role_id);
-		$this->db->join(self::role_table, $role_alias.'.'.self::role_privilege_ref.'='.$privilege_alias.'.'.self::privilege_name);
+		$this->db->where("$role_alias.".self::role_privilege_role_ref,$roleID);
+		$this->db->where($role_alias.'.'.self::role_privilege_role_ref.' = '.self::role_table.'.'.self::role_id);
+		$this->db->join(self::role_table, $role_alias.'.'.self::role_privilege_privilege_ref.'='.$privilege_alias.'.'.self::privilege_name);
 		
 		$query	= $this->db->get();
 		
@@ -258,6 +293,124 @@
 		echo $this->db->last_query();
 		
 		return $this->extract_results($query);
+	}
+	
+	//return the privilege from the user.
+	public function get_user_privilege($userID){
+		//crafting the query
+		$this->db->select(self::user_privilege_domain_ref.','.self::user_privilege_privilege_ref);
+		$this->db->from(self::user_privilege_table);
+		$this->db->where(self::user_privilege_user_ref,$userID);
+		
+		$query = $this->db->get();
+		
+		return $this->extract_results($query);
+	}
+	
+	//Return true if a privilege corresponding to the parameters already exists in security_user_privileges
+	private function user_privilege_exists($privilegeID,$domainID,$userID){
+		$this->db->select(self::user_privilege_privilege_ref);
+		$this->db->from(self::user_privilege_table);
+		$this->db->where(self::user_privilege_user_ref,$userID);
+		$this->db->where(self::user_privilege_domain_ref,$domainID);
+		$this->db->where(self::user_privilege_privilege_ref,$privilegeID);
+		
+		$query = $this->db->get();
+		
+		//If the number of rows is superior to 0, this privilege already exists
+		if ($query->num_rows() > 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	private function already_has_role($userID,$roleID){
+		$this->db->select(self::user_role_user_ref);
+		$this->db->from(self::user_roles_table);
+		$this->db->where(self::user_role_user_ref,$userID);
+		$this->db->where(self::user_role_role_ref,$roleID);
+		
+		$query = $this->db->get();
+		
+		if($query->num_rows()>0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	//Take the privilege that will be added to the user, and only send back those
+	//that the user doesn't already have.
+	private function get_privileges_to_add($privilegesToAdd,$userID){		
+
+		if(count($privilegesToAdd)>0){
+			//get the privilege of the user
+			$userPrivileges	= $this->get_user_privilege($userID);
+			
+			return $this->get_new_user_privileges($userPrivileges,$privilegesToAdd);
+		}
+		else{
+			return array();
+		}
+	}
+	
+	//Take the current user privileges, the privileges that we want to add, and return the privileges that
+	//we want to add, and which are not already in the current user privileges.
+	private function get_new_user_privileges($userPrivileges,$privilegesToAdd){
+		$newPrivileges = array();
+		
+		//if the user doesn't have privileges already, we can directly add whatever we want.
+		//If the $privileges to add are empty, we return this empty array too.
+		if(count($userPrivileges) == 0 or count($privilegesToAdd) == 0){
+			return $privilegesToAdd;
+		}
+		else{
+			//we loop on the privileges to add and check if they are already in the user privileges list
+			foreach($privilegesToAdd as $row){
+				//if the current privilege is not in the user privilege list, we can add it
+				//to the $newPrivileges
+				if(!$this->is_privilege_in($row,$userPrivileges)){
+					array_push($newPrivileges,$row);
+				}
+				else{
+					echo "<br/> Le privilege suivant est déjà présent :<br/>";
+					print_r($row);
+					echo "<br/>";
+				}
+			}
+		}
+		
+		return $newPrivileges;
+	}
+	
+	//Return true if $privilege is in the $privilegeList. Returns false otherwise.
+	private function is_privilege_in($privilege,$privilegeList){
+		$exit 	= false;
+		$i		= 0;
+		
+		$length = count($privilegeList);
+		//If the privlege list is empty, then the privilege is not in the list(we return false)
+		if($length == 0){
+			return false;
+		}
+		
+		while(! $exit and $i < $length){
+			$row = (array)$privilegeList[$i];
+			
+			//if the $privilege can be found in $privilegeList, we return 'true';
+			if(	$row[self::role_domain_ref] 				== $privilege[self::user_privilege_domain_ref] and
+				$row[self::role_privilege_privilege_ref] 	== $privilege[self::user_privilege_privilege_ref]
+			){
+				$exit = true;
+			}
+			
+			$i++;
+		}
+		
+		return $exit;
 	}
 	
 }

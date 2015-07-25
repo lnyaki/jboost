@@ -98,8 +98,12 @@ class Roles extends TNK_Controller {
 		$this->role->add_multiple_privileges_to_user($data);
 		*/
 		
-		//Test the addition of role (and therefore, privileges) to a user
-		$this->role->add_role_to_user(1,5);
+		//Test the addition of role (and therefore, privileges) to a user : OK
+		$this->role->add_role_to_user(3,5);
+		
+		//Test for getting the privilege of a user
+		//$test = $this->role->get_user_privilege(5);
+		//print_r($test);
 	}
 }
 
