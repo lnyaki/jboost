@@ -3,15 +3,28 @@
 class Roles extends TNK_Controller {
 		
 	public function index(){
-		$this->load->model('roles_model');
+		$this->load->model('roles/roles_model','role');
 		
 		$result = $this->roles_model->get_roles_list();
 		print_r($result);
 		
 		echo " <br/>";
 		
-		$result = $this->roles_model->get_privileges_list();
+		$result = $this->roles->get_privileges_list();
 		print_r($result);
+	}
+	
+	public function domains(){
+		$this->load->model('roles/roles_model','role');
+		
+		$domains = $this->role->list_domains();
+		print_r($domains);
+		
+		$domain_view = $this->load->view('roles/domain_list', array('_domains' => $domains),true);
+		
+		$this->add_block($domain_view, self::CENTER_BLOCK);
+		
+		$this->generate_page();
 	}
 	
 	public function test(){

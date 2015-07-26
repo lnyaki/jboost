@@ -98,6 +98,15 @@
 		return $this->extract_results($query);
 	}
 	
+	public function list_domains(){
+		$this->db->select(self::domain_id.','.self::domain_name.','.self::domain_description);
+		$this->db->from(self::domain_table);
+		
+		$query = $this->db->get();
+		
+		return $this->extract_results($query);
+	}
+	
 	/******************************************************************************
 	 *                       Role functions
 	 * ****************************************************************************/
