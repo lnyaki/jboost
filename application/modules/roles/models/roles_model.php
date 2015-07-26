@@ -80,7 +80,7 @@
 	}
 	
 	//list the roles active on this domain
-	public function list_domain_roles($domainID){
+	public function list_domain_roles($domainID,$listByID = 'true'){
 		//column aliases
 		$domain_name_alias	= 'domain';
 		$role_name_alias	= 'role';
@@ -88,13 +88,18 @@
 		//crafting the query
 		$this->db->select("$domain_name_alias.".self::domain_name." as $domain_name_alias,$role_name_alias.".self::role_name." as $role_name_alias");
 		$this->db->from(self::domain_table.' as '.$domain_name_alias.','.self::role_table.' as '.$role_name_alias);
-		$this->db->where($domain_name_alias.'.'.self::domain_id,$domainID);
+		
+		if($listByID){
+			$this->db->where($domain_name_alias.'.'.self::domain_id,$domainID);
+		}
+		else{
+			$this->db->where($domain_name_alias.'.'.self::domain_name,$domainID);
+		}
+		
 		$this->db->join(self::role_table, $domain_name_alias.'.'.self::domain_id.' = '.$role_name_alias.'.'.self::role_domain_ref);
 
 		$query = $this->db->get();
-		
-		print_r($this->extract_results($query));
-		echo $this->db->last_query();
+
 		return $this->extract_results($query);
 	}
 	

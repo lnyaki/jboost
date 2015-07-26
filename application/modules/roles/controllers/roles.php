@@ -14,15 +14,33 @@ class Roles extends TNK_Controller {
 		print_r($result);
 	}
 	
+	//page that lists all the domains
 	public function domains(){
 		$this->load->model('roles/roles_model','role');
 		
 		$domains = $this->role->list_domains();
-		print_r($domains);
 		
-		$domain_view = $this->load->view('roles/domain_list', array('_domains' => $domains),true);
+		$domain_view 		= $this->load->view('roles/domain_list', array('_domains' => $domains),true);
+		$new_domain_button	= $this->get_new_domain_widget();
 		
+		//Add the views to the page		
 		$this->add_block($domain_view, self::CENTER_BLOCK);
+		$this->add_block($new_domain_button,self::RIGHT_BLOCK);
+		
+		
+		$this->generate_page();
+	}
+	
+	//Page with details on a single domain
+	public function domain_details($domain_name){
+		$this->load->model('roles/roles_model','role');
+		
+		$roles = $this->role->list_domain_roles($domain_name,false);
+		
+		$roles_view 		= $this->load->view('roles/domain_roles_list',array('_roles' => $roles),true);
+
+		//Add views to the page
+		$this->add_block($roles_view,self::CENTER_BLOCK);
 		
 		$this->generate_page();
 	}
@@ -46,6 +64,11 @@ class Roles extends TNK_Controller {
 		$this->generate_page();
 	}
 
+	//Button for creating a new domain
+	public function get_new_domain_widget(){
+		return $this->load->view('roles/create_domain_widget',null,true);		
+	}
+
 	public function test_db(){
 		//test for domain update : ok
 		//$this->role->update_domain2(7, array('name' => 'Test-updated-name', 'description' => 'This is an updated domain! Crazy!'));
@@ -60,7 +83,7 @@ class Roles extends TNK_Controller {
 		//$this->role->list_users_on_domain(2);
 		
 		//Test for getting the roles of a domain : OK
-		//$this->role->list_domain_roles(2);
+		$this->role->list_domain_roles(2);
 
 		//Test for creating a new role : OK
 		//$this->role->create_role(array( 'name' => 'Test_role','domain_ref' => '2' ));
@@ -112,7 +135,7 @@ class Roles extends TNK_Controller {
 		*/
 		
 		//Test the addition of role (and therefore, privileges) to a user : OK
-		$this->role->add_role_to_user(3,5);
+		//s$this->role->add_role_to_user(3,5);
 		
 		//Test for getting the privilege of a user
 		//$test = $this->role->get_user_privilege(5);
