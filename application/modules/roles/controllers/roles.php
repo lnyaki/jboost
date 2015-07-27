@@ -18,8 +18,13 @@ class Roles extends TNK_Controller {
 	public function domains(){
 		$this->load->model('roles/roles_model','role');
 		
+		//load the js
+		$this->add_js('assets/js/Ajax_test.js');
+		
+		//load data
 		$domains = $this->role->list_domains();
 		
+		//load views
 		$domain_view 		= $this->load->view('roles/domain_list', array('_domains' => $domains),true);
 		$new_domain_button	= $this->get_new_domain_widget();
 		
@@ -67,6 +72,39 @@ class Roles extends TNK_Controller {
 	//Button for creating a new domain
 	public function get_new_domain_widget(){
 		return $this->load->view('roles/create_domain_widget',null,true);		
+	}
+
+	//function for routing ajax calls relative to domain/roles/privileges.
+	public function ajax($function){
+		echo "AJAX : ".$function;
+		
+		$ajaxOperationOk = false;
+		
+		switch($elt){
+			//We receive the ajax call for the creation of a new domain
+			case 'create_domain' :
+				//We load the model, so we can call the DB functions.
+				$this->load->model('roles/roles_model','role');
+				
+				//We take the name and description of the new Domain
+				$domainName			= $this->input->post('domainName');
+				$domainDescription	= $this->input->post('domainDescription');
+				
+				//Create the new domain
+				$ajaxOperationOk = $this->role->create_domain(array(Roles_model::domain_name => $domainName,Roles_model::domain_description));
+			
+				break;
+			case 'update_domain': break;
+			
+			case 'delete_domain' : break;
+			
+			case 'create_role' : break;
+			
+			case 'delete_role' : break;
+			default: ;
+		}
+		
+		return $ajaxOperationOk;
 	}
 
 	public function test_db(){

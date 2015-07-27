@@ -48,11 +48,11 @@ $route['users/process/(:any)']	= 'users/$1';
 $route['users/(:any)']			= "users/profile/$1";
 
 /*********************************************************************
- *                        Quizz routes
+ *                        Ajax routes
  * *******************************************************************/
 //$route['Test/ajax/quizz/(:any)']		= 'test/ajax/$1';
 $route['ajax/quizz/(:any)']				= 'test/ajax/$1';
-
+$route['ajax/roles/(:any)']				= 'roles/ajax/$1';
 
 /*********************************************************************
  *                        Roles routes
