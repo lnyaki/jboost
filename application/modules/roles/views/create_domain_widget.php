@@ -24,20 +24,5 @@
 			</div>
 		</div>
 	</div>
-	<script>
-	//script for attaching the ajax event to the button
-		$(function(){
-			var Ajax = new Ajax();
-			
-			//click function for the create_domain button
-			var create_domain_click = function(){
-				var path 				= 'roles/ajax/create_domain';
-				var domainName			= '';
-				var domainDescription	= '';
-				Ajax.ajaxPostRequest(path, data, responseHandler);
-
-			}
-			//get the button and add the click function on it
-		});
-	</script>
+	
 </div>

@@ -22,7 +22,7 @@
 	
 	
 	//ajax object
-	var ajax	= new test.Ajax();
+	var ajax	= new Ajax();
 	//load game data
 
 	//code to prevent problem with ajax and url

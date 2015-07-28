@@ -13,13 +13,15 @@
     
     	//create an ajax request of type post
     	var ajaxPostRequest = function(path, data, responseHandler){
+    		console.log('Data Request');
+       	 	console.log(data);
        	 	ajaxRequest(path, data, responseHandler, 'post');
     	};
     
     	//create an ajax request.
     	var ajaxRequest = function(path, data, responesHandler, type){
         	datatype = 'json';
-        
+        	console.log(data);
         	$(document).ajaxError(function(event, jqxhr, settings, thrownError){
 				console.log("-----------======== AJAX error =======-------------");
 				console.log(event);
@@ -41,10 +43,10 @@
         	}
         	else if(type==='post'){
             	$.ajax({
-                    url			:path
+                    url			: path
                 ,   datatype 	: datatype
                 ,   type		:'post'
-                ,   data		:data
+                ,   data		: data
                 ,   success 	: function(msg){
                         responesHandler(msg);
                 	}

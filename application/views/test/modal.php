@@ -15,13 +15,18 @@
 		</div>
 	</div>
 	fff
-	<div id="alert" class="alert success fade" data-alert="alert">
+	<!--
+	<div id="alert" class="alert alert-success fade alert-dismissible" data-alert="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+		</button>
 		Test alert	
 	</div>
+	-->
 </div>
 <script>
-	function showAlert(){
-  		$("#alert").addClass("in")
+	function showAlert(id){
+  		$("#"+id).addClass("in")
 	}
 	
 	function hideAlert(){
@@ -29,6 +34,11 @@
 	}
 	
 	window.setTimeout(function () {
-    	showAlert();
+    	showAlert('alert');
+	}, 2000);
+	
+	
+	window.setTimeout(function () {
+    	showAlert('alert2');
 	}, 2000);
 </script>

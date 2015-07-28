@@ -32,7 +32,10 @@ class Roles extends TNK_Controller {
 		$this->add_block($domain_view, self::CENTER_BLOCK);
 		$this->add_block($new_domain_button,self::RIGHT_BLOCK);
 		
-		
+		//add the script for the widget
+		$this->load->view('scripts/domain_creation_click_function',null,true);
+		$this->add_script2('domain_creation_click_function');
+
 		$this->generate_page();
 	}
 	
@@ -76,22 +79,24 @@ class Roles extends TNK_Controller {
 
 	//function for routing ajax calls relative to domain/roles/privileges.
 	public function ajax($function){
-		echo "AJAX : ".$function;
+		echo "AJAX : ".$function.'<br/>';
 		
 		$ajaxOperationOk = false;
 		
-		switch($elt){
+		echo $_POST['name'];
+		echo $_POST['description'];
+		switch($function){
 			//We receive the ajax call for the creation of a new domain
 			case 'create_domain' :
 				//We load the model, so we can call the DB functions.
 				$this->load->model('roles/roles_model','role');
 				
 				//We take the name and description of the new Domain
-				$domainName			= $this->input->post('domainName');
-				$domainDescription	= $this->input->post('domainDescription');
+				$domainName			= $this->input->post('name');
+				$domainDescription	= $this->input->post('description');
 				
 				//Create the new domain
-				$ajaxOperationOk = $this->role->create_domain(array(Roles_model::domain_name => $domainName,Roles_model::domain_description));
+				$ajaxOperationOk = $this->role->create_domain(array(Roles_model::domain_name => $domainName,Roles_model::domain_description => $domainDescription));
 			
 				break;
 			case 'update_domain': break;

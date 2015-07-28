@@ -43,7 +43,7 @@ class Test extends TNK_Controller {
 		$this->add_js('assets/js/Flashcard_test.js');
 		$this->add_js('assets/js/Ajax_test.js');
 		$this->add_js('assets/js/Quizz_object_test.js');
-		$this->add_js('assets/js/test.js');
+		//$this->add_js('assets/js/test.js');
 		
 		//add the quizz css
 		$this->add_css('assets/css/quizz.css');
@@ -169,10 +169,32 @@ class Test extends TNK_Controller {
 	}
 	
 	public function modal(){
-		$view = $this->load->view('test/modal',null,true);
+		//$this->add_js('assets/js/website.js');
+
+		$view 	= $this->load->view('test/modal',null,true);
+		$alert	= $this->load->view('test/alerts',null,true);
 		
 		$this->add_block($view,self::CENTER_BLOCK);
+		$this->add_block($alert,self::CENTER_BLOCK);
+		
+		$this->add_script2('test_alerts');
+		
 		$this->generate_page();
 	}
 	
+	public function alert(){
+		$this->add_js('assets/js/website.js');
+		$this->add_css('assets/css/website.css');
+
+		$alert	= $this->load->view('test/alerts',null,true);
+		$this->add_block($alert,self::CENTER_BLOCK);
+
+		$this->add_script2('test_alerts');
+
+		$this->generate_page();
+	}
 }
+
+
+
+

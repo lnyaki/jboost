@@ -211,6 +211,14 @@ class TNK_Controller extends MX_Controller{
 		}
 	}
 	
+	//This add_script functions is an improvement over the previous one. You only specify the path
+	public function add_script2($path){
+		$base = 'scripts/';
+		$script = $this->load->view($base.$path,null,true);
+		
+		$this->add_script($script);
+	}
+	
 	public function title($title){
 		$this->title = $title;
 	}
