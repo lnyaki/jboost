@@ -17,5 +17,7 @@
 	web.alert_show_delay(id,500);
 	web.alert_hide_delay(id,2000);
 	$('body').append($alert);
+	
+	$('.modal-backdrop').css('opacity','0.5');
 	//$('body')[0].append($alert);
 </script>

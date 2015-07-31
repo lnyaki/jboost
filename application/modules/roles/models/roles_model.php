@@ -9,6 +9,7 @@
 	const role_privilege_table	= 'security_role_privilege';
 	const user_privilege_table	= 'security_user_privileges';
 	const user_roles_table		= 'security_user_roles';
+	const role_view				= 'security_roles_v';
 	
 	//Domain Fields
 	const domain_id				= 'id';
@@ -22,6 +23,11 @@
 	const role_domain_ref		= 'domain_ref';
 	const role_deleted			= 'deleted';
 	
+	//Role view fields
+	const role_view_role		= 'role';
+	const role_view_privilege	= 'privilege';
+	const role_view_domain		= 'domain';
+
 	//Role privilege
 	const role_privilege_role_ref		= 'role_ref';
 	const role_privilege_privilege_ref	= 'privilege_ref';
@@ -29,6 +35,8 @@
 	//User Role
 	const user_role_user_ref	= 'user_ref';
 	const user_role_role_ref	= 'role_ref';
+	
+
 	
 	//User privilege fields
 	const user_privilege_id				= 'id';
@@ -53,7 +61,7 @@
 	 * ****************************************************************************/
 	//Tested : ok
 	//Function that creates a new domain (new entry in table security_domain).
-	public function create_domain($data){		
+	public function create_domain($data){
 		return $this->db->insert(self::domain_table,$data);
 	}
 
@@ -86,8 +94,9 @@
 		$role_name_alias	= 'role';
 		
 		//crafting the query
-		$this->db->select("$domain_name_alias.".self::domain_name." as $domain_name_alias,$role_name_alias.".self::role_name." as $role_name_alias");
-		$this->db->from(self::domain_table.' as '.$domain_name_alias.','.self::role_table.' as '.$role_name_alias);
+		$this->db->select($role_name_alias.'.'.self::role_domain_ref.",$domain_name_alias.".self::domain_name." as $domain_name_alias,$role_name_alias.".self::role_name." as $role_name_alias");
+		//$this->db->from(self::domain_table.' as '.$domain_name_alias.','.self::role_table.' as '.$role_name_alias);
+		$this->db->from(self::domain_table.' as '.$domain_name_alias);
 		
 		if($listByID){
 			$this->db->where($domain_name_alias.'.'.self::domain_id,$domainID);
@@ -96,7 +105,7 @@
 			$this->db->where($domain_name_alias.'.'.self::domain_name,$domainID);
 		}
 		
-		$this->db->join(self::role_table, $domain_name_alias.'.'.self::domain_id.' = '.$role_name_alias.'.'.self::role_domain_ref);
+		$this->db->join(self::role_table.' as '.$role_name_alias, $domain_name_alias.'.'.self::domain_id.' = '.$role_name_alias.'.'.self::role_domain_ref);
 
 		$query = $this->db->get();
 
@@ -190,12 +199,49 @@
 
 	//return the list of roles
 	public function list_roles(){
+		//crafting the query
+		$this->db->select(self::role_view_domain.','.self::role_view_role.','.self::role_view_privilege);
+		$this->db->from(self::role_view);
 		
+		$query = $this->db->get();
+		
+		return $this->extract_results($query);
 	}
 	
 	//list the roles for a domain
 	public function list_roles_for_domain($domainID){
 		
+	}
+	
+	public function list_privileges_of_role($roleID){
+		$privilege = 'p';
+		$role = 'r';
+		//crafting the query
+		$this->db->select("$role.".self::role_privilege_role_ref.", $role.".self::role_privilege_privilege_ref);
+		$this->db->from(self::role_privilege_table." as $role");
+		$this->db->where($role.'.'.self::role_privilege_role_ref, $roleID);
+		$this->db->join(self::privilege_table.' as p', $role.'.'.self::role_privilege_privilege_ref.'='.$privilege.'.'.self::privilege_name);
+		
+	
+		$query = $this->db->get();
+		echo $this->db->last_query().'<br/>';
+		return $this->extract_results($query);
+	}
+	
+	public function list_privileges_of_role_by_name($roleName){
+		$privilege = 'p';
+		$role = 'r';
+		//crafting the query
+		$this->db->select(self::role_table.'.'.self::role_name." as role_name,$role.".self::role_privilege_role_ref.", $role.".self::role_privilege_privilege_ref);
+		$this->db->from(self::role_privilege_table." as $role");
+		//$this->db->where($role.'.'.self::role_privilege_role_, $roleName);
+		$this->db->where(self::role_table.'.'.self::role_name,$roleName);
+		$this->db->join(self::privilege_table.' as p', $role.'.'.self::role_privilege_privilege_ref.'='.$privilege.'.'.self::privilege_name);
+		$this->db->join(self::role_table,self::role_table.'.'.self::role_id.'='.$role.'.'.self::role_privilege_role_ref);
+		
+		$query = $this->db->get();
+		
+		return $this->extract_results($query);
 	}
 	
 	//Receive an array of privileges comming from get_role_privileges, and format it to
@@ -289,6 +335,7 @@
 		
 		return $this->extract_results($query);
 	}
+	
 	
 	//return the privileges linked to a role.
 	public function get_role_privileges($roleID){

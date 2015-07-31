@@ -50,15 +50,16 @@ $route['users/(:any)']			= "users/profile/$1";
 /*********************************************************************
  *                        Ajax routes
  * *******************************************************************/
-//$route['Test/ajax/quizz/(:any)']		= 'test/ajax/$1';
 $route['ajax/quizz/(:any)']				= 'test/ajax/$1';
 $route['ajax/roles/(:any)']				= 'roles/ajax/$1';
 
 /*********************************************************************
  *                        Roles routes
  * *******************************************************************/
+ $route['roles/domains']				= 'roles/domains';
  $route['roles/domains/(:any)']			= 'roles/domain_details/$1';
- 
+ $route['roles/(:any)']					= 'roles/role_details/$1';
+ //$route['roles/(:any)']					= 'roles/'
 /*********************************************************************
  *                        List routes
  * *******************************************************************/

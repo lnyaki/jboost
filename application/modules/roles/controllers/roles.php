@@ -4,14 +4,20 @@ class Roles extends TNK_Controller {
 		
 	public function index(){
 		$this->load->model('roles/roles_model','role');
-		
+		/*
 		$result = $this->roles_model->get_roles_list();
 		print_r($result);
 		
 		echo " <br/>";
 		
 		$result = $this->roles->get_privileges_list();
-		print_r($result);
+		print_r($result);*/
+		$result = $this->role->list_roles();
+		
+		$view = $this->load->view('roles/role_list',array('_roles' => $result), true);
+		
+		$this->add_block($view,self::CENTER_BLOCK);
+		$this->generate_page();
 	}
 	
 	//page that lists all the domains
@@ -20,7 +26,10 @@ class Roles extends TNK_Controller {
 		
 		//load the js
 		$this->add_js('assets/js/Ajax_test.js');
+		$this->add_js('assets/js/website.js');
 		
+		//add css
+		$this->add_css('assets/css/website.css');
 		//load data
 		$domains = $this->role->list_domains();
 		
@@ -33,7 +42,7 @@ class Roles extends TNK_Controller {
 		$this->add_block($new_domain_button,self::RIGHT_BLOCK);
 		
 		//add the script for the widget
-		$this->load->view('scripts/domain_creation_click_function',null,true);
+		//$this->load->view('scripts/domain_creation_click_function',null,true);
 		$this->add_script2('domain_creation_click_function');
 
 		$this->generate_page();
@@ -52,6 +61,24 @@ class Roles extends TNK_Controller {
 		
 		$this->generate_page();
 	}
+	
+	//Page with details on a single role
+	public function role_details($role_name){
+		$this->load->model('roles/roles_model','role');
+		
+		//$privileges = $this->role->list_privileges_of_role($domainID,$role_name);
+		$privileges = $this->role->list_privileges_of_role_by_name($role_name);
+		
+		$privileges_view 		= $this->load->view('roles/role_privilege_list',array('_privileges' => $privileges),true);
+		
+		//Add views to the page
+		$this->add_block($privileges_view,self::CENTER_BLOCK);
+		
+		$this->generate_page();
+	}
+	
+	
+	
 	
 	public function test(){
 		//load the role model
@@ -79,12 +106,9 @@ class Roles extends TNK_Controller {
 
 	//function for routing ajax calls relative to domain/roles/privileges.
 	public function ajax($function){
-		echo "AJAX : ".$function.'<br/>';
 		
 		$ajaxOperationOk = false;
-		
-		echo $_POST['name'];
-		echo $_POST['description'];
+
 		switch($function){
 			//We receive the ajax call for the creation of a new domain
 			case 'create_domain' :
@@ -97,6 +121,9 @@ class Roles extends TNK_Controller {
 				
 				//Create the new domain
 				$ajaxOperationOk = $this->role->create_domain(array(Roles_model::domain_name => $domainName,Roles_model::domain_description => $domainDescription));
+				
+				//Send feedback on the creation of the domain (success/fail).
+				echo $ajaxOperationOk;
 			
 				break;
 			case 'update_domain': break;
@@ -113,6 +140,9 @@ class Roles extends TNK_Controller {
 	}
 
 	public function test_db(){
+		//test for domain creation : ok
+		//$this->role->create_domain(array('name' => 'test_dammit2', 'description' => 'ça marchait, et là ça ne marche plus'));
+		
 		//test for domain update : ok
 		//$this->role->update_domain2(7, array('name' => 'Test-updated-name', 'description' => 'This is an updated domain! Crazy!'));
 		
@@ -126,7 +156,7 @@ class Roles extends TNK_Controller {
 		//$this->role->list_users_on_domain(2);
 		
 		//Test for getting the roles of a domain : OK
-		$this->role->list_domain_roles(2);
+		//$this->role->list_domain_roles(2);
 
 		//Test for creating a new role : OK
 		//$this->role->create_role(array( 'name' => 'Test_role','domain_ref' => '2' ));
@@ -183,6 +213,9 @@ class Roles extends TNK_Controller {
 		//Test for getting the privilege of a user
 		//$test = $this->role->get_user_privilege(5);
 		//print_r($test);
+		
+		//Test for getting the privileges of a role
+		print_r($this->role->list_privileges_of_role(1));
 	}
 }
 

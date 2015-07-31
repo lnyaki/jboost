@@ -1,6 +1,8 @@
 
 <script type="text/javascript">
 
+
+//$(document).ready(function(){
 	//get the game object
 //	var game			= new test.Flashcard();
 	var game			= new Flashcard(); 
@@ -182,5 +184,5 @@
 
 	$(options_button).click(click_option);
 	$(restart).click(restart_function);
-	
+//});
 </script>

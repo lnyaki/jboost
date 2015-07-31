@@ -170,7 +170,8 @@ class Test extends TNK_Controller {
 	
 	public function modal(){
 		//$this->add_js('assets/js/website.js');
-
+		$this->add_js('assets/js/website.js');
+		
 		$view 	= $this->load->view('test/modal',null,true);
 		$alert	= $this->load->view('test/alerts',null,true);
 		

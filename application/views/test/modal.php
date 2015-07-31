@@ -14,15 +14,7 @@
 			</div>
 		</div>
 	</div>
-	fff
-	<!--
-	<div id="alert" class="alert alert-success fade alert-dismissible" data-alert="alert">
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-		</button>
-		Test alert	
-	</div>
-	-->
+
 </div>
 <script>
 	function showAlert(id){

@@ -26,6 +26,8 @@
 		var response_time;
 		//html flashcard reference
 		var HTML_FLASHCARD	= '#card';
+		
+		//var BASE_URL = "<?php echo base_url();?>";
 
 		//quizz card
 		//var current_card 	= new Flashcard(HTML_FLASHCARD);
@@ -640,6 +642,7 @@
 			,get_items					: get_items
 			,initialize_quizz_variables	: initialize_quizz_variables
 			,reset_html_quizz_elements	: reset_html_quizz_elements
+	//		,BASE_URL					: BASE_URL
 		};
 	})();
 	
