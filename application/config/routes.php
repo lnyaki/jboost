@@ -56,7 +56,9 @@ $route['ajax/roles/(:any)']				= 'roles/ajax/$1';
 /*********************************************************************
  *                        Roles routes
  * *******************************************************************/
- $route['roles/domains']				= 'roles/domains';
+ //tmp
+ //$route['roles/dom']					= 'roles/dom';
+ $route['domains']						= 'roles/domains';
  $route['roles/domains/(:any)']			= 'roles/domain_details/$1';
  $route['roles/(:any)']					= 'roles/role_details/$1';
  //$route['roles/(:any)']					= 'roles/'

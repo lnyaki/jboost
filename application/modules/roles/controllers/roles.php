@@ -4,14 +4,7 @@ class Roles extends TNK_Controller {
 		
 	public function index(){
 		$this->load->model('roles/roles_model','role');
-		/*
-		$result = $this->roles_model->get_roles_list();
-		print_r($result);
-		
-		echo " <br/>";
-		
-		$result = $this->roles->get_privileges_list();
-		print_r($result);*/
+
 		$result = $this->role->list_roles();
 		
 		$view = $this->load->view('roles/role_list',array('_roles' => $result), true);
@@ -20,16 +13,29 @@ class Roles extends TNK_Controller {
 		$this->generate_page();
 	}
 	
+	public function dom(){
+		//load the js
+		$this->add_js('assets/js/Ajax_test.js');
+		$this->add_js('assets/js/website.js');
+		
+		
+		//add the script for the widget
+		$this->add_script2('domain_creation_click_function2');
+
+		$this->generate_page();
+	}
+	
 	//page that lists all the domains
 	public function domains(){
 		$this->load->model('roles/roles_model','role');
-		
+
 		//load the js
 		$this->add_js('assets/js/Ajax_test.js');
 		$this->add_js('assets/js/website.js');
 		
 		//add css
 		$this->add_css('assets/css/website.css');
+
 		//load data
 		$domains = $this->role->list_domains();
 		
@@ -40,9 +46,8 @@ class Roles extends TNK_Controller {
 		//Add the views to the page		
 		$this->add_block($domain_view, self::CENTER_BLOCK);
 		$this->add_block($new_domain_button,self::RIGHT_BLOCK);
-		
+
 		//add the script for the widget
-		//$this->load->view('scripts/domain_creation_click_function',null,true);
 		$this->add_script2('domain_creation_click_function');
 
 		$this->generate_page();
@@ -52,12 +57,25 @@ class Roles extends TNK_Controller {
 	public function domain_details($domain_name){
 		$this->load->model('roles/roles_model','role');
 		
+		//load the js
+		$this->add_js('assets/js/Ajax_test.js');
+		$this->add_js('assets/js/website.js');
+		
+		//add css
+		$this->add_css('assets/css/website.css');
+		
+		//loading data
 		$roles = $this->role->list_domain_roles($domain_name,false);
 		
+		//loading the views
 		$roles_view 		= $this->load->view('roles/domain_roles_list',array('_roles' => $roles),true);
+		$new_role_button	= $this->get_new_role_widget();
 
 		//Add views to the page
 		$this->add_block($roles_view,self::CENTER_BLOCK);
+		$this->add_block($new_role_button,self::CENTER_BLOCK);
+		
+		$this->add_script2('role_creation_click_function');
 		
 		$this->generate_page();
 	}
@@ -104,17 +122,21 @@ class Roles extends TNK_Controller {
 		return $this->load->view('roles/create_domain_widget',null,true);		
 	}
 
+	//button for creating a new role
+	public function get_new_role_widget(){
+		return $this->load->view('roles/create_role_widget',null,true);
+	}
+
 	//function for routing ajax calls relative to domain/roles/privileges.
 	public function ajax($function){
-		
-		$ajaxOperationOk = false;
+		$ajaxOperationOk = '0';
 
-		switch($function){
+		//We load the model, so we can call the DB functions.
+		$this->load->model('roles/roles_model','role');
+			
+		switch($function){			
 			//We receive the ajax call for the creation of a new domain
-			case 'create_domain' :
-				//We load the model, so we can call the DB functions.
-				$this->load->model('roles/roles_model','role');
-				
+			case 'create_domain' :				
 				//We take the name and description of the new Domain
 				$domainName			= $this->input->post('name');
 				$domainDescription	= $this->input->post('description');
@@ -124,19 +146,29 @@ class Roles extends TNK_Controller {
 				
 				//Send feedback on the creation of the domain (success/fail).
 				echo $ajaxOperationOk;
-			
 				break;
 			case 'update_domain': break;
 			
 			case 'delete_domain' : break;
 			
-			case 'create_role' : break;
+			case 'create_role' :				
+				//we take the name of the new role, and the id of the domain
+				$roleName	= $this->input->post('name');
+				$domainID	= $this->input->post('domainID');
+
+				//create the new role
+				$ajaxOperationOk	= $this->role->create_role(array(Roles_model::role_name =>$roleName,
+																	Roles_model::role_domain_ref => $domainID));		
+				
+				//send feedback on the creation of the role(success/fail).
+				echo $ajaxOperationOk;
+				break;
 			
 			case 'delete_role' : break;
 			default: ;
 		}
 		
-		return $ajaxOperationOk;
+		//return $ajaxOperationOk;
 	}
 
 	public function test_db(){

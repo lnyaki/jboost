@@ -86,7 +86,7 @@
 	console.log($(btn_question2answer));
 	console.log('Test sur l\'attribut "toto"');
 	console.log('Toto présent : '+$(btn_question2answer).attr('toto'));
-	console.log('HasAttr : '+document.getElementById("btn-question2answer").hasAttribute('toto'));
+	//console.log('HasAttr : '+document.getElementById("btn-question2answer").hasAttribute('toto'));
 	if($(btn_question2answer).attr('toto') == true){
 		console.log("Attribut est là");
 	}
@@ -100,6 +100,7 @@
 		console.log("true");
 	}
 	else console.log("valeur inconnue");
+	
 	
 	//USE RADIO INSTEAD OF BUTTONS
 	

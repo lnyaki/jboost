@@ -1,36 +1,53 @@
 <script>
 	//script for attaching the ajax event to the button
-	$(function(){
-			var ajax = new Ajax();
+	//(function(){
+		var ajax = new Ajax();
+		//var path 	= BASE_URL+'test/ajax_test_execution';
+		var path 				= BASE_URL+'ajax/roles/create_domain';
+
+		var create_domain_click2 = function(){
+			var data = {};
+
+			var responseHandler = function(msg){
+				var web = new Website();
+				console.log(msg);
+				$('#content').append(msg);
+			}
+			ajax.ajaxPostRequest(path, data, responseHandler);
+		
+		};
+			
+			
+			
+			
+			
+			
 			//click function for the create_domain button
 			var create_domain_click = function(){
-			//path of the php code to execute
-			var path 				= 'roles/ajax/create_domain';
+				//path of the php code to execute
+				//var path 				= 'roles/ajax/create_domain';
+				//var path = 'test/ajax_tddest_execution';
+				//get the form data
+				var domainName			= $('#domain_name_input').val();
+				var domainDescription	= $('#domain_description_input').val();
 			
-			//get the form data
-			var domainName			= $('#domain_name_input').val();
-			var domainDescription	= $('#domain_description_input').val();
+				//get the modal element
+				var $modal	= $('#newDomainForm');
 			
-			//get the modal element
-			var $modal	= $('#newDomainForm');
-
-			console.log($('#domain_name_input'));
-			console.log($('#domain_description_input'));
+				//parameters object
+				data =	{'name' 		: domainName,
+						'description'	: domainDescription};
 			
-			//parameters object
-			data =	{'name' 		: domainName,
-					'description'	: domainDescription};
-			
-			//Function to handle the response
-			var responseHandler = function(msg){
-				console.log('Message : '+msg);
-				var web = new Website();
+				//Function to handle the response
+				var responseHandler = function(msg){
+					console.log('Message : '+msg);
+					var web = new Website();
 
 				if(msg == '1'){
-					console.log(' Message OK');
+					console.log('Message OK');
 					//output ok alert
 					var id = 'alert-success-domain';
-					var content = 'Domain ['+domainName+'] has been successfully created.';
+					var content = 'Domain <b>'+domainName+'</b> has been successfully created.';
 					
 					var $alert;
 					//if not already exist, we append the alert. Otherwise, we get the existing
@@ -41,7 +58,7 @@
 					}
 					else{
 						$alert = $('#'+id);
-						$.text(content);
+						$alert.text(content);
 					}
 	
 					web.alert_show_delay(id,500);
@@ -53,7 +70,7 @@
 
 					//output ko.
 					var id = 'alert-error-domain';
-					var content = 'Domain ['+domainName+'] could NOT be created.';
+					var content = 'Domain <b>'+domainName+'</b> could NOT be created.';
 					var $alert = web.alert_danger(content,id);
 	
 					web.alert_show_delay(id,500);
@@ -61,6 +78,7 @@
 					$('body').append($alert);
 				}
 				
+				//reinitialize form
 				$('#domain_name_input').val('');
 				$('#domain_description_input').val('');
 			}
@@ -69,8 +87,9 @@
 
 			$modal.modal('toggle');
 		}
-			
-		$('#button_create_new_domain').click(create_domain_click);
+		
 		//get the button and add the click function on it
-	});
+		$('#button_create_new_domain').click(create_domain_click);
+		
+	//});
 </script>

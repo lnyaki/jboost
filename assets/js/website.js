@@ -1,3 +1,7 @@
+var module = module || {};
+
+//(function(modules){
+	
 var Website = function(){
 	
 };
@@ -54,3 +58,7 @@ Website.prototype = (function(){
 		,alert_hide_delay	: alert_hide_delay
 	};
 })();
+
+//modules.Website = Website;
+//}(module));
+

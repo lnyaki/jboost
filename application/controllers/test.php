@@ -155,6 +155,30 @@ class Test extends TNK_Controller {
 		echo $this->input->post('answer').'<br/>';
 	}
 	
+	public function dom(){
+		
+		//load the js
+		$this->add_js('assets/js/Ajax_test.js');
+		$this->add_js('assets/js/website.js');
+		
+		
+		//add the script for the widget
+		$this->add_script2('domain_creation_click_function2');
+
+		$this->generate_page();
+	}
+	
+	public function ajax_test(){
+		$this->add_js('assets/js/Ajax_test.js');
+		$this->add_js('assets/js/website.js');
+		//$this->add_script2('ajax_test.php');
+		$this->add_script2('domain_creation_click_function2.php');	
+		$this->generate_page();
+	}
+	
+	public function ajax_test_execution(){
+		echo "Ajax test OK";
+	}
 	public function charts(){
 		//create charts
 		$this->add_js('assets/js/highcharts.js');

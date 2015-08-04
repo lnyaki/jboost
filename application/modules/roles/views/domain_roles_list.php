@@ -6,6 +6,11 @@
 			
 			if(count($_roles)>0){
 				echo '<h3>Domain : '.$_roles[0]->domain.'</h3>';
+?>
+<script>
+	var domainID = "<?php echo $_roles[0]->domain_ref;?>";
+</script>
+<?php
 				//get array  head
 				$thead = html_table_head(array_keys((array)$_roles[0]));
 				
