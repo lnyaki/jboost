@@ -42,7 +42,7 @@ class Roles extends TNK_Controller {
 		//load views
 		$domain_view 		= $this->load->view('roles/domain_list', array('_domains' => $domains),true);
 		$new_domain_button	= $this->get_new_domain_widget();
-		
+		//$this->load->view('roles/add_privilege_to_user_widget',null,true);
 		//Add the views to the page		
 		$this->add_block($domain_view, self::CENTER_BLOCK);
 		$this->add_block($new_domain_button,self::RIGHT_BLOCK);
@@ -116,7 +116,9 @@ class Roles extends TNK_Controller {
 	//Generate the html page
 		$this->generate_page();
 	}
-
+/********************************************************************
+ * 				Widgets
+ *********************************************************************/
 	//Button for creating a new domain
 	public function get_new_domain_widget(){
 		return $this->load->view('roles/create_domain_widget',null,true);		
@@ -125,6 +127,16 @@ class Roles extends TNK_Controller {
 	//button for creating a new role
 	public function get_new_role_widget(){
 		return $this->load->view('roles/create_role_widget',null,true);
+	}
+
+	//button for adding privileges to a user
+	public function get_add_privilege_to_user_widget($data){
+		return $this->load->view('roles/add_privilege_to_user_widget',$data,true);
+		//return '<h3>test workaround</h3>';
+	}
+
+	public function get_test(){
+		return 'testok';
 	}
 
 	//function for routing ajax calls relative to domain/roles/privileges.

@@ -5,39 +5,29 @@ class Lists extends TNK_Controller {
 	public function index(){
 		$this->load->model('kana/Kana_model','model');
 		$lists = $this->model->get_kana_lists();
-		
-		$this->load->helper('my_array');
-
-		
-		$data	= array();
-		$data2 	= array();
-		$table = '';
-		
+				
 		if($lists){
-			//the first element of the index is the list of fields
-			$thead = html_table_head($lists[0]);
+			//load the library that generates tables from arrays of data
+			$this->load->library('View_generator');
 			
-			//the second element is the rows
-			$column_index 	= 2;
-			$href 			= array(base_url().'lists/',$column_index);
-			$tbody	= html_table_body($lists[1],'','',$href);
+			$prefix = base_url().'lists/';
 			
-			//set up the class of the table 
-			$table_class = 'table condensed';
+			$list_array = $this->view_generator->to_array2($lists);
 			
-			//initialize the left and right side
-			$data2['_left_aside']	= '';
-			$data2['_right_aside']	= '';
-			//load the list view to put in the content view
-			$data2['_content'] 		= $this->load->view('lists/list_table_view',array('_thead' => $thead, '_tbody' => $tbody, '_table_class' => $table_class),TRUE);
-			//$data2['_content']		.= $this->load->view('lists/create_list_view',null,TRUE);
-			$data['content']		= $this->load->view('templates/content.php',$data2,true);
+			//set the links for the fields of the array
+			$links = array();
+			$links = $this->view_generator->create_row_link($links,2,array(2),$prefix);
+
+			$link_array = $this->view_generator->generate_links($list_array[1],$links);
+
+			$view = $this->view_generator->generate_array($list_array[1],null,$link_array);
+		
+			$this->add_block($view,self::CENTER_BLOCK);
 		}
 		else{
 		//output warning or something
 		}
-		
-		$this->create_page($data);
+		$this->generate_page();
 	}
 
 	public function display_list2($list_name){

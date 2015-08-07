@@ -218,6 +218,44 @@ class Test extends TNK_Controller {
 
 		$this->generate_page();
 	}
+	
+	public function page_not_found(){
+		$this->title("Page not found");
+		
+		//get view
+		$view = '<p>Page not found</>';
+		
+		$this->add_block($view,self::CENTER_BLOCK);
+		$this->generate_page();
+	}
+	
+	public function view_generator(){
+		$this->load->library('View_generator');
+		
+		//create the array manualy, for now
+		$rows = array(
+				array('id'=> '1', 'First Name' => 'Alice', 'Last Name' => 'Fox', 'Job' => 'Entrepreneur'),
+				array('id'=> '2', 'First Name' => 'Barra', 'Last Name' => 'Brow', 'Job' => 'Computer Scientist'),
+				array('id'=> '3', 'First Name' => 'Charles', 'Last Name' => 'Manik', 'Job' => 'Air Pilot')
+		);
+		
+		$toIgnore	= array();
+		
+		//Initialise the links configuration array
+		$prefix = 'mysite/prefix';
+		$links 	= array();
+
+		$links = $this->view_generator->create_row_link($links,2,array(2),$prefix);
+		$links = $this->view_generator->create_row_link($links,3,array(1,4),$prefix);
+
+		$result = $this->view_generator->generate_links($rows,$links);
+
+		$view = $this->view_generator->generate_array($rows,$toIgnore,$result);
+		
+		$this->add_block($view,self::CENTER_BLOCK);
+		
+		$this->generate_page();
+	}
 }
 
 

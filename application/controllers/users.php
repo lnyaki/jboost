@@ -10,12 +10,19 @@ class Users extends TNK_Controller {
 		//load the requiered model
 		$this->load->model('users_model');
 		$this->load->model('kana/Kana_model');
+		$this->load->model('roles/roles_model','role');
 		
-		//load data ///
+		//load module to access view from other modules
+		$this->load->module('roles');
+		/************************************************************
+		*    			Load data
+		//************************************************************/
 		//display basic info about the user, for now
 		$user_data = $this->users_model->get_user(array('username' => $username),'username');
 		//get kana stats
 		$_list = $this->Kana_model->get_stats($user_data->id);
+		//get user privileges
+		$privileges = $this->role->get_user_privileges($user_data->id);		
 		
 		//if there is no user  (TODO : redo this, this is bullshit securitywise)
 		if(!$user_data){
@@ -25,7 +32,10 @@ class Users extends TNK_Controller {
 		
 		$data = array('_list' => $_list);
 		
-		//loading views
+
+		/************************************************************
+		*    			Loading views
+		//************************************************************/
 		$stats		= $this->load->view('lists/hiragana_list',$data,TRUE);
 		
 		$bloc  = '';
@@ -43,22 +53,28 @@ class Users extends TNK_Controller {
 			Alert Success
 		</div>';
 		
+		$privileges_view 		= $this->load->view('users/user_privileges',array( '_privileges' => $privileges),true);
+		$button_add_privilege	= $this->roles->get_add_privilege_to_user_widget(array('_username' =>$user_data->username));
 		//compose page
 		$this->add_block($bloc,self::CENTER_BLOCK);
 		$this->add_block($alert,self::CENTER_BLOCK);
+		$this->add_block($privileges_view,self::CENTER_BLOCK);
+		$this->add_block($button_add_privilege,self::CENTER_BLOCK);
 		$this->add_block($stats,self::CENTER_BLOCK);
 
 		$this->generate_page();
 	}
+
 	
-	function login(){
+	
+	public function login(){
 		$this->load->library('form_validation');
 		$data['content'] = $this->load->view('users/login.php',null,true);
 		$this->create_page($data);
 	}
 	
 	//we handle the display and the processing in the same function
-	function register($processing = null){
+	public function register($processing = null){
 		if($processing <> null){
 			$this->load->helper(array('form', 'url'));
 			$this->load->library('form_validation');

@@ -357,7 +357,7 @@
 	}
 	
 	//return the privilege from the user.
-	public function get_user_privilege($userID){
+	public function get_user_privileges($userID){
 		//crafting the query
 		$this->db->select(self::user_privilege_domain_ref.','.self::user_privilege_privilege_ref);
 		$this->db->from(self::user_privilege_table);

@@ -62,6 +62,7 @@ $route['ajax/roles/(:any)']				= 'roles/ajax/$1';
  $route['roles/domains/(:any)']			= 'roles/domain_details/$1';
  $route['roles/(:any)']					= 'roles/role_details/$1';
  //$route['roles/(:any)']					= 'roles/'
+ $route['privileges/(:any)']			= 'roles/privilege_managment/$1';
 /*********************************************************************
  *                        List routes
  * *******************************************************************/
@@ -73,7 +74,7 @@ $route['lists/(:any)']					= 'lists/display_list/$1';
 
 
 $route['default_controller'] 	= "test/quizz";
-$route['404_override'] 			= '';
+$route['404_override'] 			= 'test/page_not_found';
 
 
 /* End of file routes.php */
