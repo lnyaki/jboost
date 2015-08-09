@@ -247,9 +247,9 @@ class Test extends TNK_Controller {
 
 		$links = $this->view_generator->create_row_link($links,2,array(2),$prefix);
 		$links = $this->view_generator->create_row_link($links,3,array(1,4),$prefix);
-
+print_r($links);echo "<br/><br/>";
 		$result = $this->view_generator->generate_links($rows,$links);
-
+print_r($result);
 		$view = $this->view_generator->generate_array($rows,$toIgnore,$result);
 		
 		$this->add_block($view,self::CENTER_BLOCK);

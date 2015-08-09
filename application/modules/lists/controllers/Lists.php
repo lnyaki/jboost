@@ -10,17 +10,14 @@ class Lists extends TNK_Controller {
 			//load the library that generates tables from arrays of data
 			$this->load->library('View_generator');
 			
-			$prefix = base_url().'lists/';
-			
-			$list_array = $this->view_generator->to_array2($lists);
-			
+			$prefix = base_url().'lists';
+						
 			//set the links for the fields of the array
 			$links = array();
 			$links = $this->view_generator->create_row_link($links,2,array(2),$prefix);
+			$links = $this->view_generator->create_row_link($links,1,array(1),$prefix);
 
-			$link_array = $this->view_generator->generate_links($list_array[1],$links);
-
-			$view = $this->view_generator->generate_array($list_array[1],null,$link_array);
+			$view = $this->view_generator->generate_array($lists[1],null,$links);
 		
 			$this->add_block($view,self::CENTER_BLOCK);
 		}

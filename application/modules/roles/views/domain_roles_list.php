@@ -1,26 +1,34 @@
 <div>
 	<?php
 		if(isset($_roles)){
-			$this->load->helper('my_array');
-			$list = '';
-			
+			$this->load->library('View_generator');
+		
 			if(count($_roles)>0){
 				echo '<h3>Domain : '.$_roles[0]->domain.'</h3>';
 ?>
 <script>
+//getting the id of the domain from php. This will be used in the script
+//linked to this page.
 	var domainID = "<?php echo $_roles[0]->domain_ref;?>";
 </script>
-<?php
-				//get array  head
-				$thead = html_table_head(array_keys((array)$_roles[0]));
+<?php				
+				//Set the prefix to use, for the links (<a>)
+				$prefix = base_url().'roles';
+				//Set the links, before passing them in generate arrays
+				$links = $this->view_generator->create_row_link(null,3,array(3),$prefix);
+				//Set the name of the title of the data
+				$title_array = $this->view_generator->initialize_array_title('Test array',null);
+				$tarray = $this->view_generator->generate_array($_roles,null,$links,'');
+				echo $tarray;
 				
-				$links = array(base_url().'roles/',3);
-				//get array body
-				$tbody = html_table_body($_roles,null,null,$links);
+				//Test of titled arrays
 				
-				$table = html_table($thead,$tbody,'table table-hover');
 				
-				echo $table;
+				//Set the prefix to use, for the links (<a>)
+				$titles = $this->view_generator->initialize_array_title('','2','prefix!','postfix!');				
+				$response = $this->view_generator->generate_titled_array($titles,$_roles,null,$links,'');
+				
+				echo $response;
 			}
 			else{
 				echo "<h3>Domain :</h3>";

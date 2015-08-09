@@ -2,16 +2,74 @@
 if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class View_generator{
+	//Table head and table body html tags
 	const THEAD 		= 'thead';			//table head
 	const TBODY 		= 'tbody';			//table body
+	//Description of css class
 	const THCLASS		= 'thead_class';	//css class for the table head
 	const TBCLASS		= 'tbody_class';	//css class for the table body
 	const TABLECLASS	= 'table_class';	//css class for the table tag
+	//Modes of composition of html links
 	const CONCATENATION	= 'concatenation';	//specify that we want to concatenate fields to create link urls
-	const FIELDS		= 'fields';			//The constant 'fields' that will be used in the links array
-	const PREFIX		= 'prefix';			//The constant 'prefix' that will be used in the links array
+	//Types of constants to use when creating the array that contains the html title of content
+	const TITLE			= 'title';
+	const TITLE_PREFIX	= 'title_prefix';
+	const TITLE_POSTFIX	= 'title_postfix';
+	//MISC
+	const FIELDS			= 'fields';			//The constant 'fields' that will be used in the links array
+	const PREFIX			= 'prefix';			//The constant 'prefix' that will be used in the links array
+	const POSTFIX			= 'postfix';
+	const ARRAY_TITLE		= 'array_title';	//This constant is used as an index in the table that contains the title of an array.
+	const ARRAY_TITLE_ROW	= 'array_title_row';//Constant used as index to describe the array field from which the title should be extracted.
+	 /**********************************************************************
+	 * 
+	 *                        PUBLIC API
+	 *
+	 **********************************************************************/
+	public function generate_titled_array($titles,$rows,$toIgnore,$links,$classes = array()){
+		$final_content = '';
+		//initialize toIgnore, if null
+		$toIgnore = ($toIgnore == null)? array(): $toIgnore;
+		
+		//Create the title prefix and title postfix variables
+		$prefix 	= $titles[self::PREFIX];
+		$postfix	= $titles[self::POSTFIX];
+		
+		if($titles == null){
+			$final_content = $this->generate_array($rows,$toIgnore,$links,$classes);
+		}
+		//If the titles are set
+		else{
+			if(isset($titles[self::ARRAY_TITLE]) and $titles[self::ARRAY_TITLE] != ''){
+				$final_content .= '<h3>'.$prefix.$titles[self::ARRAY_TITLE].$postfix.'</h3>';
+			}
+			else if(isset($titles[self::ARRAY_TITLE_ROW])){
+				if(count($rows) > 0){
+										
+					$single_row = (array)$rows[0];
+					
+					$title_row = $titles[self::ARRAY_TITLE_ROW];
+					$title_element = $this->extract_relevant_fields($single_row,array($title_row));
+					$title_element = $title_element[0];
+					//set the title
+					$final_content .= '<h3>'.$prefix.$title_element.$postfix.'</h3>';
+					//Ignore this field (it shouldn't be displayed as it is a title)
+					if(!in_array($title_element,$toIgnore)){
+						$toIgnore[] = $title_row;
+					}
+				}
+			}
 
+			$final_content .= $this->generate_array($rows,$toIgnore,$links,$classes);
+		}
+		
+		return $final_content;
+	} 
 	public function generate_array($rows,$toIgnore = array(),$links,$classes = array()){
+		//Make sure that the $rows are on array form
+		$rows = $this->to_array($rows);
+		//Transform the raw link data into real links
+		$links = $this->generate_links($rows, $links);	
 		$i 		= 0;
 		
 		if($toIgnore == null){
@@ -36,6 +94,65 @@ class View_generator{
 		return $result;
 	}
 	
+	public function initialize_array_title($title,$title_row,$prefix ='',$postfix = ''){
+		$title_array = array();
+				
+		$prefix = ($prefix == null)?'': $prefix;
+		$postfix= ($postfix == null)?'':$postfix;
+		
+		$title_array[self::ARRAY_TITLE] 	= $title;
+		$title_array[self::ARRAY_TITLE_ROW]	= $title_row;
+		$title_array[self::PREFIX]			= $prefix;
+		$title_array[self::POSTFIX]			= $postfix;
+		return $title_array;
+	}
+	
+	//initializes an array that describes the field link that must be generated
+	public function create_row_link($array,$fieldNumber,$fieldsToUse,$prefix = ''){
+		if($array == null){
+			$array = array();
+		}
+		$array[strval($fieldNumber)] = array('fields' =>$fieldsToUse, 'prefix' => $prefix);
+		
+		return $array;
+	}
+	
+	//generate links (for tag <a>) based on an array of data.
+	public function generate_links($data,$fieldNumbers,$type = self::CONCATENATION){
+			
+		$links_array = array();
+
+		//for each row, calculate the link
+		foreach($data as $row){
+			$length = count($row);
+			$fieldIndex = 0;
+			$link = '';
+			
+			$rowLinksArray = array();
+			for($i = 0; $i<$length;$i++){
+				$fieldIndex	= $i+1;
+
+				if(isset($fieldNumbers[strval($fieldIndex)])){
+					$link = $this->generate_single_link($row, $fieldNumbers[strval($fieldIndex)],$type);		
+					$rowLinksArray[strval($fieldIndex)] = $link;
+				}
+			}
+			array_push($links_array,$rowLinksArray);
+		}
+		return $links_array;
+	}
+	
+	//Take an array A of rows, and returns an array B, composed of several sub array B1,B2,...,Bn.
+	//Each array Bx contains all the rows which have similar values for certain rows.
+	//In other words, this functions take an arrays and separates its content based on some values.
+	public function get_sub_arrays($rows,$criteria_fields,$case_sensitive = false){
+		
+	}
+	/**********************************************************************
+	 * 
+	 *                        PRIVATE FUNCTIONS
+	 *
+	 **********************************************************************/
 	//generate the '<thead>' tag, which is the head of the table
 	private function generate_table_head($rows,$toIgnore,$classes){
 		//if the row is empty, we return directly
@@ -108,13 +225,6 @@ class View_generator{
 		
 		return '<tr class="'.$rowClass.'">'.$html_row.'</tr>';
 	}//end of generate_row
-	
-	//initializes an array that describes the field link that must be generated
-	public function create_row_link($array,$fieldNumber,$fieldsToUse,$prefix = ''){
-		$array[strval($fieldNumber)] = array('fields' =>$fieldsToUse, 'prefix' => $prefix);
-		
-		return $array;
-	}
 
 	
 	//we take an array of the fields to ignore, as well as the index of a field.
@@ -135,31 +245,6 @@ class View_generator{
 		}
 		
 		return $exit;
-	}
-	
-	
-	//generate links (for tag <a>) based on an array of data.
-	public function generate_links($data,$fieldNumbers,$type = self::CONCATENATION){
-		$links_array = array();
-		
-		//for each row, calculate the link
-		foreach($data as $row){
-			$length = count($row);
-			$fieldIndex = 0;
-			$link = '';
-			
-			$rowLinksArray = array();
-			for($i = 0; $i<$length;$i++){
-				$fieldIndex	= $i+1;
-				
-				if(isset($fieldNumbers[strval($fieldIndex)])){
-					$link = $this->generate_single_link($row, $fieldNumbers[strval($fieldIndex)],$type);		
-					$rowLinksArray[strval($fieldIndex)] = $link;
-				}
-			}
-			array_push($links_array,$rowLinksArray);
-		}
-		return $links_array;
 	}
 	
 	//generate the link for a single field, of a single row, based on the array $fieldNumbers
@@ -198,30 +283,8 @@ class View_generator{
 		return $result;
 	}
 	
-	//Take an array, or array of objects, and returns an array, or array of arrays.
-	public function to_Array($data){
-		$corrected_array = array();
-		//test if object
-		if(is_object($data)){
-			$corrected_array = (array)$data;
-		}
-		else if(is_array($data)){
-			foreach($data as $row){
-				if(is_object($row)){
-					$corrected_array[] = (array)$row;
-				}
-				else{
-					$corrected_array[] = $row;
-				}
-			}
-		}
-		else{
-			$corrected_array[] = $data;
-		}
-		return $corrected_array;
-	}
-	
-	public function to_array2($data){
+	//Take an array, or array of objects, and returns an array, or array of arrays.	
+	public function to_array($data){
 		$array = json_decode(json_encode($data), true);
 		return $array;
 	}

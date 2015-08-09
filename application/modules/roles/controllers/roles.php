@@ -71,6 +71,9 @@ class Roles extends TNK_Controller {
 		$roles_view 		= $this->load->view('roles/domain_roles_list',array('_roles' => $roles),true);
 		$new_role_button	= $this->get_new_role_widget();
 
+
+
+
 		//Add views to the page
 		$this->add_block($roles_view,self::CENTER_BLOCK);
 		$this->add_block($new_role_button,self::CENTER_BLOCK);
