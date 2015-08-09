@@ -146,7 +146,47 @@ class View_generator{
 	//Each array Bx contains all the rows which have similar values for certain rows.
 	//In other words, this functions take an arrays and separates its content based on some values.
 	public function get_sub_arrays($rows,$criteria_fields,$case_sensitive = false){
-		
+		$previous_value 	= (count($rows)>0)? implode($this->extract_relevant_fields($rows[0], $criteria_fields)): '';
+		$return_array 	= array();
+		$local_array 	= array();
+		$extracted		= '';
+
+		//Loop on the data array ($rows0).
+		foreach ($rows as $row){
+			$extracted = implode($this->extract_relevant_fields($row, $criteria_fields));
+			//testing if the current relevant values of the row are equal to the previous one
+			if($previous_value == $extracted){echo 'TOT';
+				$local_array[]	= $row;
+			}
+			//if the current value is different from the previous one, we need to check
+			//if it corresponds to a previous value
+			else{
+				//First, we save the current array, because the element extracted is different, so this
+				//will create a new current_array. We need to save the current one.
+					
+					$return_array[$previous_value] = $local_array;
+					
+			//if the current value has previously been treated, we retrieve the corresponding sub-array
+				if(in_array($extracted, $return_array)){
+					//Third, we retrieve the sub-array corresponding to $extracted
+					$local_array 	= $return_array[$extracted];
+					//Forth, we add the current row to the current array
+					$local_array[]	= $row;
+				}
+				//if the current value is not yet in the return_array
+				else{
+					//reinitialize the array
+					$local_array = array($row);
+				}
+				//The current value and the extracted value are different, so the extracted value becomes the 'current value'
+				$previous_value = $extracted;
+				
+			}
+		}
+		//after the loop, we need to save the last element
+		$return_array[$extracted] = $local_array;
+				
+		return $return_array;
 	}
 	/**********************************************************************
 	 * 
