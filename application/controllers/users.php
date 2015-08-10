@@ -1,9 +1,17 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Users extends TNK_Controller {
-	
+	//Display the list of users
 	function index(){
-		echo "<div> ffs </div>";
+		$this->load->model('users_model','users');
+		//load data
+		$users = $this->users->get_users();
+		//load view
+		$user_view	= $this->load->view('users/users_list',array('_users' =>$users),true);
+		//add the view to the page
+		$this->add_block($user_view,self::CENTER_BLOCK);
+///$this->add_block("<h3> test hello</h3>");
+		$this->generate_page();
 	}
 	
 	function profile($username){

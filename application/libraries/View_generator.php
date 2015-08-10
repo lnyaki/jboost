@@ -75,8 +75,6 @@ class View_generator{
 		if($toIgnore == null){
 			$toIgnore = array();
 		}
-		//Make sur that the $rows array contains other arrays, and not objects
-		$rows = $this->to_Array($rows);
 		
 		//if the data provided is an empty array, we return
 		if(count($rows) == 0){
@@ -94,7 +92,9 @@ class View_generator{
 		return $result;
 	}
 	
-	public function initialize_array_title($title,$title_row,$prefix ='',$postfix = ''){
+	//This function creates an array that contains data about the title that will
+	//be used to illustrate other data such as html array or forms.
+	public function initialize_array_title($title,$title_row = '',$prefix ='',$postfix = ''){
 		$title_array = array();
 				
 		$prefix = ($prefix == null)?'': $prefix;
@@ -108,11 +108,11 @@ class View_generator{
 	}
 	
 	//initializes an array that describes the field link that must be generated
-	public function create_row_link($array,$fieldNumber,$fieldsToUse,$prefix = ''){
+	public function create_row_link($array,$linkfield,$fieldsToUse,$prefix = ''){
 		if($array == null){
 			$array = array();
 		}
-		$array[strval($fieldNumber)] = array('fields' =>$fieldsToUse, 'prefix' => $prefix);
+		$array[strval($linkfield)] = array('fields' =>$fieldsToUse, 'prefix' => $prefix);
 		
 		return $array;
 	}
@@ -155,7 +155,7 @@ class View_generator{
 		foreach ($rows as $row){
 			$extracted = implode($this->extract_relevant_fields($row, $criteria_fields));
 			//testing if the current relevant values of the row are equal to the previous one
-			if($previous_value == $extracted){echo 'TOT';
+			if($previous_value == $extracted){
 				$local_array[]	= $row;
 			}
 			//if the current value is different from the previous one, we need to check

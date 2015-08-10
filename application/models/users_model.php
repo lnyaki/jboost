@@ -1,11 +1,21 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
-class Users_model extends CI_Model{
+class Users_model extends TNK_Model{
 	const main_table 	= 'users';
+	const USER_TABLE	= 'users';
 	//call modes
 	public static $cm_01	= array('*');
 	public static $cm_02	= array('username','email','id');
 	
+	
+	//return the full list of users
+	public function get_users(){
+		$this->db->select('*');
+		$this->db->from(self::USER_TABLE);
+		$query = $this->db->get();
+		
+		return $this->extract_results($query);
+	}
 	//add a user
 	public function add_user($data){
 		if(!isset($data['username']) && !isset($data['email']) && !isset($data['password'])){
