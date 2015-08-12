@@ -3,13 +3,14 @@
 //class Roles_model extends CI_Model{
 	class Roles_model extends TNK_Model{
 	//Table names
-	const role_table			= 'security_role';
-	const domain_table			= 'security_domain';
-	const privilege_table		= 'security_privilege';
-	const role_privilege_table	= 'security_role_privilege';
-	const user_privilege_table	= 'security_user_privileges';
-	const user_roles_table		= 'security_user_roles';
-	const role_view				= 'security_roles_v';
+	const role_table				= 'security_role';
+	const domain_table				= 'security_domain';
+	const privilege_table			= 'security_privilege';
+	const role_privilege_table		= 'security_role_privilege';
+	const user_privilege_table		= 'security_user_privileges';
+	const user_roles_table			= 'security_user_roles';
+	const domain_privilege_table	= 'security_domain_privilege';
+	const role_view					= 'security_roles_v';
 	
 	//Domain Fields
 	const domain_id				= 'id';
@@ -36,7 +37,9 @@
 	const user_role_user_ref	= 'user_ref';
 	const user_role_role_ref	= 'role_ref';
 	
-
+	//Domain privilage
+	const domain_privilege_domain_ref		= 'domain_ref';
+	const domain_privilege_privilege_ref	= 'privilege_ref';
 	
 	//User privilege fields
 	const user_privilege_id				= 'id';
@@ -95,7 +98,6 @@
 		
 		//crafting the query
 		$this->db->select($role_name_alias.'.'.self::role_domain_ref.",$domain_name_alias.".self::domain_name." as $domain_name_alias,$role_name_alias.".self::role_name." as $role_name_alias");
-		//$this->db->from(self::domain_table.' as '.$domain_name_alias.','.self::role_table.' as '.$role_name_alias);
 		$this->db->from(self::domain_table.' as '.$domain_name_alias);
 		
 		if($listByID){
@@ -366,6 +368,47 @@
 		$query = $this->db->get();
 		
 		return $this->extract_results($query);
+	}
+	
+	//return the privileges for a domain
+	public function get_domain_privileges($domainID){
+		//crafting the query
+		$this->db->select('d.'.self::domain_name.',p.'.self::privilege_name);
+		$this->db->from(self::domain_table.' as d,'.self::domain_privilege_table.' as dp,'.self::privilege_table.' as p');
+		$this->db->where($domainID,self::domain_id);
+		$this->db->where('d.'.self::domain_id,'dp.'.self::domain_privilege_privilege_ref);
+		$this->db->where('dp.'.self::domain_privilege_privilege_ref,'p.'.self::privilege_name);
+		
+		$query = $this->db->get();
+		
+		return $this->extract_results($query);	
+	}
+	
+	//Return all the privileges, with their domain
+	public function get_all_domain_privileges(){$champ = 'dp.'.self::domain_privilege_domain_ref.'='.'d.'.self::domain_id;
+		//crafting the query
+		/* FOR some reason, this query doesn't work. I ended up using a join, but it doesn't work
+		 * either. This issue seems to lie with the backticks used by codeigniter. The resulting query is :
+		 * SELECT `d`.`name`, `p`.`name` 
+FROM (`security_domain_privilege` as dp) 
+JOIN `security_privilege` as p ON `dp`.`privilege_ref`=`p`.`name` 
+JOIN `security_domain` as d ON `dp`.`domain_ref`=`d`.`id` WHERE `d`.`id` = 'dp.domain_ref' AND `dp`.`privilege_ref` = 'p.name' 
+		 * 
+		$this->db->select('d.'.self::domain_name.',p.'.self::privilege_name);
+		$this->db->from(self::domain_privilege_table.' as dp');
+		$this->db->where('d.'.self::domain_id,'dp.'.self::domain_privilege_domain_ref);
+		$this->db->where('dp.'.self::domain_privilege_privilege_ref,'p.'.self::privilege_name);
+		$this->db->join(self::privilege_table.' as p', 'dp.'.self::domain_privilege_privilege_ref.'='.'p.'.self::privilege_name);
+		$this->db->join(self::domain_table.' as d', $champ);		
+		
+		
+		$this->db->order_by('d.'.self::domain_name,'desc');
+		$query = $this->db->get();
+		*/
+		$sql = "SELECT  `d`.`name` as Domain,  `p`.`name` as Privilege FROM (`security_domain` AS d,  `security_domain_privilege` AS dp,  `security_privilege` AS p) WHERE d.id = dp.domain_ref AND dp.privilege_ref = p.name";
+		$query = $this->db->query($sql);
+	
+		return $this->extract_results($query);	
 	}
 	
 	//Return true if a privilege corresponding to the parameters already exists in security_user_privileges

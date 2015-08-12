@@ -37,15 +37,19 @@ class Roles extends TNK_Controller {
 		$this->add_css('assets/css/website.css');
 
 		//load data
-		$domains = $this->role->list_domains();
+		$domains 		= $this->role->list_domains();
+		//$dom_privileges	= $this->role->get_all_domain_privileges();
 		
 		//load views
-		$domain_view 		= $this->load->view('roles/domain_list', array('_domains' => $domains),true);
-		$new_domain_button	= $this->get_new_domain_widget();
+		$domain_view 			= $this->load->view('roles/domain_list', array('_domains' => $domains),true);
+		$new_domain_button		= $this->get_new_domain_widget();
+		$view_domain_privileges	= $this->get_domain_privileges_widget();
 		//$this->load->view('roles/add_privilege_to_user_widget',null,true);
 		//Add the views to the page		
 		$this->add_block($domain_view, self::CENTER_BLOCK);
 		$this->add_block($new_domain_button,self::RIGHT_BLOCK);
+		$this->add_block($view_domain_privileges,self::CENTER_BLOCK);
+		
 
 		//add the script for the widget
 		$this->add_script2('domain_creation_click_function');
@@ -80,6 +84,30 @@ class Roles extends TNK_Controller {
 		
 		$this->add_script2('role_creation_click_function');
 		
+		$this->generate_page();
+	}
+	
+	//Display all privileges for all domains
+	public function privileges(){
+		$this->title('Privileges');
+		$this->load->model('roles/roles_model','role');
+		$this->load->library('View_generator');
+		//load data
+		$privileges = $this->role->get_all_domain_privileges();
+		//get the sub array based one the domain (first column).
+		$privileges_array = $this->view_generator->get_sub_arrays($privileges,array(1));
+		print_r($privileges);echo '<br/><br/>';
+		print_r($privileges_array);
+		
+		foreach($privileges_array as $row){
+			
+		}
+		
+		//load views
+		
+		//add views to the page
+		
+
 		$this->generate_page();
 	}
 	
@@ -136,6 +164,30 @@ class Roles extends TNK_Controller {
 	public function get_add_privilege_to_user_widget($data){
 		return $this->load->view('roles/add_privilege_to_user_widget',$data,true);
 		//return '<h3>test workaround</h3>';
+	}
+
+	//Here, we test the fact of generating html from the constroler, instead of
+	//going through a view
+	public function get_domain_privileges_widget(){
+		$this->load->model('roles/roles_model','role');
+		$this->load->library('View_generator');
+		
+		$data	= $this->role->get_all_domain_privileges();
+		
+		//with this result, we'll get the sub array, so that we can display a result for each domain
+		$sub_array = $this->view_generator->get_sub_arrays($data,array(1));
+		//initialize the title for each sub array to display
+		$titles	= $this->view_generator->initialize_array_title('',1,'Domain: ','');
+		//Set the links, before passing them in generate arrays
+		$prefix = base_url().'roles/privileges';
+		
+		$links = $this->view_generator->create_row_link(null,2,array(2),$prefix);
+				
+		$html = '';
+		foreach($sub_array as $row){
+			$html .= $this->view_generator->generate_titled_array($titles,$row,array(1),$links);
+		}
+		return $html;
 	}
 
 	public function get_test(){

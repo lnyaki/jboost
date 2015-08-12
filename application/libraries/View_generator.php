@@ -15,6 +15,14 @@ class View_generator{
 	const TITLE			= 'title';
 	const TITLE_PREFIX	= 'title_prefix';
 	const TITLE_POSTFIX	= 'title_postfix';
+	//constants for handling html forms generation
+	const FORM_ID_ELEMENT	= 'id_element';
+	const COLUMN_NAME		= 'column_name';
+	const FORM_ELEMENT_TYPE	= 'form_elt_type';
+	const TEXTFIELD			= 'textfield';
+	const TEXTAREA			= 'textarea';
+	const CHECKBOX			= 'checkbox';
+	const COMBOBOX			= 'combobox';
 	//MISC
 	const FIELDS			= 'fields';			//The constant 'fields' that will be used in the links array
 	const PREFIX			= 'prefix';			//The constant 'prefix' that will be used in the links array
@@ -188,6 +196,43 @@ class View_generator{
 				
 		return $return_array;
 	}
+
+
+
+	//Generate html form elements
+	public function generate_form_element($config){
+		if($config == null){
+			return null;
+		}
+		
+		$element = '';
+		
+		switch($config[self::FORM_ELEMENT_TYPE]){
+			case self::CHECKBOX :
+				$element = $this->generate_checkbox($config);
+				break;
+			
+			case self::COMBOBOX :
+				$element = $this->generate_combobox($config);
+				break;
+			
+			case self::TEXTFIELD :
+				$element = $this->generate_textfield($config);
+				break;
+			
+			case self::TEXTAREA :
+				$element = $this->generate_textarea($config);
+				break;
+				
+			default: break;
+		}
+		
+		return $element;
+	}
+
+	public function get_form_configuration($parameters){
+		
+	}
 	/**********************************************************************
 	 * 
 	 *                        PRIVATE FUNCTIONS
@@ -206,7 +251,7 @@ class View_generator{
 	
 	
 	//generates the '<tbody>' tab, which is the body of the table
-	private function generate_table_body($rows,$toIgnore,$links,$classes = array()){
+	private function generate_table_body($rows,$toIgnore,$links,$formData = null,$classes = array()){
 		//if the row is empty, we return directly
 		if(count($rows) == 0){
 			return "<p>Empty array table element.</p>";
@@ -221,14 +266,14 @@ class View_generator{
 			$elt 	= $rows[$i];
 			$link	= $links[$i];
 			//we obtain the html version of the current row
-			$result	.= $this->generate_row($elt,$toIgnore,$link,self::TBODY);
+			$result	.= $this->generate_row($elt,$toIgnore,$link,$formData,self::TBODY);
 		}
 		
 		return '<tbody class="'.$tclass.'">'.$result.'</tbody>';
 	}
 	
 	//generate a single table row (for <tr> and <th> tags)
-	private function generate_row($row,$toIgnore,$links,$table_part,$rowClass = ''){
+	private function generate_row($row,$toIgnore,$links,$table_part,$formData = array(),$rowClass = ''){
 		$rowIndex = 1;
 		$html_row 	= '';
 		$length 	= count($row);
@@ -263,6 +308,14 @@ class View_generator{
 			$rowIndex++;
 		}//end of for loop
 		
+		//At the end of this loop, we can check if we need to add some form elemnents
+	/*
+		if($table_part == self::THEAD and true){
+			$html_row .= '<th>'.$formData[self::COLUMN_NAME].'</th>';
+		}
+		else if(true){
+			$html_row .= '<td><input type="checkbox" name="" value=""></td>';
+		}*/
 		return '<tr class="'.$rowClass.'">'.$html_row.'</tr>';
 	}//end of generate_row
 

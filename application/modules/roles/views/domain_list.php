@@ -1,5 +1,3 @@
-<div>Hello</div>
-
 <div>
 	<?php
 		if(isset($_domains)){
