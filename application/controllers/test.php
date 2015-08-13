@@ -247,12 +247,35 @@ class Test extends TNK_Controller {
 
 		$links = $this->view_generator->create_row_link($links,2,array(2),$prefix);
 		$links = $this->view_generator->create_row_link($links,3,array(1,4),$prefix);
-print_r($links);echo "<br/><br/>";
-		$result = $this->view_generator->generate_links($rows,$links);
-print_r($result);
-		$view = $this->view_generator->generate_array($rows,$toIgnore,$result);
 		
+
+		//Prepare the additional array element to add in the html table
+		$elt_config1 	= array('name'		=> array(2)
+								,'value'	=> 'Toto'
+								,'id'		=> array(2,1)
+								);
+		
+		
+		$tableConfig 	= array();
+		$tableConfig[]	= $this->view_generator->form_element_configuration(View_generator::CHECKBOX,$elt_config1,'Test label','New Column');
+		print_r($tableConfig);
+		$view 			= $this->view_generator->generate_array($rows,null,$links,null,$tableConfig,'superArray');	
+		
+		//ensuite, creéer un bouton qui va prendre les rows sélectionnés (lui donner l'id du table)
+		$buttonInit = array('content'	=> 'Update privileges'
+							,'name'		=> 'buttonPrivileges'
+							,'value'	=> 'justAbutton'
+							,'class'	=> 'btn btn-success'
+							,'id'		=> 'superButton');
+		$button = $this->view_generator->generate_form_element($buttonInit,View_generator::BUTTON);
+		//$button .= '<script>var click_array = "superArray";<scritp>';
+		$this->add_script('<script>var click_array = "superArray";var click_button = "superButton";</script>');
+		$this->add_script2('click_function_test');
 		$this->add_block($view,self::CENTER_BLOCK);
+		$this->add_block($button,self::CENTER_BLOCK);
+		
+		//js script
+		$this->add_js('assets/js/lodash.compat.js');
 		
 		$this->generate_page();
 	}

@@ -17,12 +17,17 @@ class View_generator{
 	const TITLE_POSTFIX	= 'title_postfix';
 	//constants for handling html forms generation
 	const FORM_ID_ELEMENT	= 'id_element';
+	const FORM_DATA			= 'form_data';
 	const COLUMN_NAME		= 'column_name';
 	const FORM_ELEMENT_TYPE	= 'form_elt_type';
 	const TEXTFIELD			= 'textfield';
 	const TEXTAREA			= 'textarea';
 	const CHECKBOX			= 'checkbox';
-	const COMBOBOX			= 'combobox';
+	const DROPDOWN			= 'dropdown';
+	const RADIO				= 'radio';
+	const BUTTON 			= 'button';
+	const LABEL				= 'label';
+	const ELEMENT_DATA		= 'form_elt_data';
 	//MISC
 	const FIELDS			= 'fields';			//The constant 'fields' that will be used in the links array
 	const PREFIX			= 'prefix';			//The constant 'prefix' that will be used in the links array
@@ -34,7 +39,7 @@ class View_generator{
 	 *                        PUBLIC API
 	 *
 	 **********************************************************************/
-	public function generate_titled_array($titles,$rows,$toIgnore,$links,$classes = array()){
+	public function generate_titled_array($titles,$rows,$toIgnore = array(),$links = null,$classes = array(),$formData = null){
 		$final_content = '';
 		//initialize toIgnore, if null
 		$toIgnore = ($toIgnore == null)? array(): $toIgnore;
@@ -68,12 +73,12 @@ class View_generator{
 				}
 			}
 
-			$final_content .= $this->generate_array($rows,$toIgnore,$links,$classes);
+			$final_content .= $this->generate_array($rows,$toIgnore,$links,$classes,$formData);
 		}
 		
 		return $final_content;
 	} 
-	public function generate_array($rows,$toIgnore = array(),$links,$classes = array()){
+	public function generate_array($rows,$toIgnore = array(),$links = null,$classes = array(),$formData = null,$arrayID = "dataArray"){
 		//Make sure that the $rows are on array form
 		$rows = $this->to_array($rows);
 		//Transform the raw link data into real links
@@ -90,12 +95,12 @@ class View_generator{
 		}
 		
 		//get the head of the table
-		$table_head = $this->generate_table_head($rows[0],$toIgnore,$classes);
+		$table_head = $this->generate_table_head($rows[0],$toIgnore,$classes,$formData);
 		
 		//get the body of the table
-		$table_body	= $this->generate_table_body($rows,$toIgnore,$links,$classes);
+		$table_body	= $this->generate_table_body($rows,$toIgnore,$links,$classes,$formData);
 		
-		$result		= '<table class="table">'.$table_head.$table_body.'</table>';
+		$result		= '<table id='.$arrayID.' class="table">'.$table_head.$table_body.'</table>';
 	
 		return $result;
 	}
@@ -200,38 +205,71 @@ class View_generator{
 
 
 	//Generate html form elements
-	public function generate_form_element($config){
+	public function generate_form_element($config,$eltType){
 		if($config == null){
 			return null;
 		}
+		//http://stackoverflow.com/questions/1680721/how-to-load-helper-from-model-in-codeigniter
+		$ci = get_instance();
+		$ci->load->helper('form');
 		
 		$element = '';
 		
-		switch($config[self::FORM_ELEMENT_TYPE]){
+		switch($eltType){
 			case self::CHECKBOX :
-				$element = $this->generate_checkbox($config);
+				$element = form_checkbox($config);
 				break;
 			
-			case self::COMBOBOX :
-				$element = $this->generate_combobox($config);
+			case self::DROPDOWN :
+				$element = form_dropdown($config);
 				break;
-			
+				
+			case self::RADIO :
+				$element = form_radio($config);
+				break;
+				
 			case self::TEXTFIELD :
-				$element = $this->generate_textfield($config);
+				$element = form_input($config);
 				break;
 			
 			case self::TEXTAREA :
-				$element = $this->generate_textarea($config);
+				$element = $this->form_textarea($config);
+				break;
+			
+			case self::BUTTON :
+				$element = form_button($config);
 				break;
 				
-			default: break;
+			default: 
+				$element = '<label>Error: Unknown form element type specified :'.$cellType.'</label>';
+			break;
 		}
 		
 		return $element;
 	}
+	
+	//Take some information about the form element that we want to generate, and
+	//returns a "configuration array" that will be used in "get_form_configuration"
+	public function form_element_configuration($elementType,$data,$label = null,$column_name){
+		$element = array();
+		//Set the type of form element (checkbox, dropdown list, textarea, etc)
+		$element[self::FORM_ELEMENT_TYPE] 	= $elementType;
+		$element[self::LABEL]				= $label;		//set a label to go with the form element
+		$element[self::FORM_DATA]			= $data;		//The initialization data of the html form element
+		$element[self::COLUMN_NAME]			= $column_name; //The name to give to the column where this element will be added, in the table
+		
+		return $element;
+	}
+	
 
 	public function get_form_configuration($parameters){
 		
+	}
+
+	//Take an array, or array of objects, and returns an array, or array of arrays.	
+	public function to_array($data){
+		$array = json_decode(json_encode($data), true);
+		return $array;
 	}
 	/**********************************************************************
 	 * 
@@ -239,19 +277,19 @@ class View_generator{
 	 *
 	 **********************************************************************/
 	//generate the '<thead>' tag, which is the head of the table
-	private function generate_table_head($rows,$toIgnore,$classes){
+	private function generate_table_head($rows,$toIgnore,$classes,$formData = null){
 		//if the row is empty, we return directly
 		if(count($rows) == 0){
 			return "<p>Empty array table head.</p>";
 		}
 		$tclass= isset($classes[self::THCLASS])? $classes[self::THCLASS]: '';
 
-		return '<thead class="'.$tclass.'">'.$this->generate_row($rows,$toIgnore,null,self::THEAD).'</thead>';
+		return '<thead class="'.$tclass.'">'.$this->generate_row($rows,$toIgnore,null,$formData,self::THEAD).'</thead>';
 	}
 	
 	
 	//generates the '<tbody>' tab, which is the body of the table
-	private function generate_table_body($rows,$toIgnore,$links,$formData = null,$classes = array()){
+	private function generate_table_body($rows,$toIgnore,$links,$classes = array(),$formData = null){
 		//if the row is empty, we return directly
 		if(count($rows) == 0){
 			return "<p>Empty array table element.</p>";
@@ -273,13 +311,13 @@ class View_generator{
 	}
 	
 	//generate a single table row (for <tr> and <th> tags)
-	private function generate_row($row,$toIgnore,$links,$table_part,$formData = array(),$rowClass = ''){
+	private function generate_row($row,$toIgnore,$links,$formConfig = null,$table_part = self::TBODY,$rowClass = ''){
 		$rowIndex = 1;
 		$html_row 	= '';
 		$length 	= count($row);
 		
 		$keys	= array_keys($row);
-		
+
 		// [id] => 1 [First Name] => Alice [Last Name] => Fox [Job] => Entrepreneur
 		//we need to generate an html table raw
 		foreach($row as $key => $value){
@@ -309,17 +347,60 @@ class View_generator{
 		}//end of for loop
 		
 		//At the end of this loop, we can check if we need to add some form elemnents
-	/*
-		if($table_part == self::THEAD and true){
-			$html_row .= '<th>'.$formData[self::COLUMN_NAME].'</th>';
+	 	if($formConfig != null){
+	 		foreach($formConfig as $formElements){
+				$html_row .= $this->generate_form_table_cell($row,$formElements,$table_part);
+	 		}
 		}
-		else if(true){
-			$html_row .= '<td><input type="checkbox" name="" value=""></td>';
-		}*/
+
 		return '<tr class="'.$rowClass.'">'.$html_row.'</tr>';
 	}//end of generate_row
 
+	//generate a <td> or <th> cell, with a html form element inside
+	private function generate_form_table_cell($row,$config,$tablePart){
+		$elt ='';
+		
+		if($tablePart == self::THEAD){
+			if(isset($config[self::COLUMN_NAME])){
+				$elt = $config[self::COLUMN_NAME];
+			}
+			return '<th>'.$elt.'</th>';
+		}
+		else if($tablePart == self::TBODY){
+			$elt_config = $this->get_element_configuration($row,$config[self::FORM_DATA]);
+			$elt 		= $this->generate_form_element($elt_config,$config[self::FORM_ELEMENT_TYPE]);
+			return '<td>'.$elt.'</td>';
+		}
+		else{
+			return '<td info="[View_generator]generate_form_table_cell : unknown element type '.$cellType.'">Error</td>';
+		}
+	}
 	
+	//Take the row config provided by the user, and return a proper config arra
+	private function get_element_configuration($row,$rawConfig,$prefixe = '',$postfixe = ''){
+		$finalConfig = array();
+		
+		if($rawConfig == null or count($rawConfig) == 0){
+			return $finalConfig;	
+		}
+			
+		//we loop on each configuration parameter and process those which have an array as value
+		foreach($rawConfig as $key => $value){
+			if(is_string($value)){
+				$finalConfig[$key] = $value;
+			}
+			else if(is_array($value)){
+				$finalConfig[$key] = $prefixe.implode($this->extract_relevant_fields($row, $value)).$postfixe;
+			}
+			//Unexpected value here
+			else{
+				log_message('Error','[view_generator]get_element_configuration: Unexpected type of parameter.');
+			}
+		}
+		
+		return $finalConfig;
+	}
+
 	//we take an array of the fields to ignore, as well as the index of a field.
 	//We need to identify if the field should be ignored (i.e. present in the array)
 	private function toIgnore($fields_to_ignore,$field_index){
@@ -375,14 +456,7 @@ class View_generator{
 		
 		return $result;
 	}
-	
-	//Take an array, or array of objects, and returns an array, or array of arrays.	
-	public function to_array($data){
-		$array = json_decode(json_encode($data), true);
-		return $array;
-	}
-	
-	
+		
 }
 
 /* End of files View_generators.php */
