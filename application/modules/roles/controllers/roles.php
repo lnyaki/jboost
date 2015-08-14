@@ -90,26 +90,29 @@ class Roles extends TNK_Controller {
 	//Display all privileges for all domains
 	public function privileges(){
 		$this->title('Privileges');
-		$this->load->model('roles/roles_model','role');
-		$this->load->library('View_generator');
-		//load data
-		$privileges = $this->role->get_all_domain_privileges();
-		//get the sub array based one the domain (first column).
-		$privileges_array = $this->view_generator->get_sub_arrays($privileges,array(1));
-		print_r($privileges);echo '<br/><br/>';
-		print_r($privileges_array);
+		$this->add_js('assets/js/Ajax_test.js');
 		
-		foreach($privileges_array as $row){
-			
-		}
-		
+		//load data 
+		//initialize the data for the button that will send the ajax request based on the data from the table.
+		$buttonInit = array('content'	=> 'Add Privileges'
+							,'name'		=> 'buttonPrivileges'
+							,'value'	=> 'justAbutton'
+							,'class'	=> 'btn btn-success'
+							,'id'		=> 'addPrivileges');
 		//load views
+		$privileges_view	= $this->get_privileges_widget();
+		//get the html button
+		$button 			= $this->view_generator->generate_form_element($buttonInit,View_generator::BUTTON);
+		
+		$this->add_script2('roles','test_script');		
 		
 		//add views to the page
-		
+		$this->add_block($privileges_view,self::CENTER_BLOCK);
+		$this->add_block($button,self::CENTER_BLOCK);
 
 		$this->generate_page();
 	}
+	
 	
 	//Page with details on a single role
 	public function role_details($role_name){
@@ -189,7 +192,40 @@ class Roles extends TNK_Controller {
 		}
 		return $html;
 	}
-
+	
+	//Return a list of all the privileges, grouped by their domain
+	public function get_privileges_widget(){
+		$this->load->model('roles/roles_model','role');
+		$this->load->library('View_generator');
+		//load data
+		$privileges = $this->role->get_all_domain_privileges();
+		//get the sub array based one the domain (first column).
+		$privileges_sub_array = $this->view_generator->get_sub_arrays($privileges,array(1));
+		
+		//initialize the title for each sub array to display
+		$titles	= $this->view_generator->initialize_array_title(null,1,null,null);
+		/*
+		print_r($privileges);echo '<br/><br/>';
+		print_r($privileges_sub_array);
+		*/
+		$elt_config = array(
+			'name'		=> array(1,2),
+			'id'		=> array(1,2),
+			'domain'	=> array(1),
+			'privilege'	=> array(2)			
+		);
+		
+		$global_element_id = 'privileges_list';
+		$formData 	= array();
+		$formData[] = $this->view_generator->form_element_configuration(View_generator::CHECKBOX,$elt_config,'','');
+		//Html content
+		$html = '';
+		foreach($privileges_sub_array as $row){
+			$html .= $this->view_generator->generate_titled_array($titles,$row,null,null,null,$formData,$global_element_id);
+		}
+		return $html;
+	}
+	
 	public function get_test(){
 		return 'testok';
 	}

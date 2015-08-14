@@ -39,7 +39,7 @@ class View_generator{
 	 *                        PUBLIC API
 	 *
 	 **********************************************************************/
-	public function generate_titled_array($titles,$rows,$toIgnore = array(),$links = null,$classes = array(),$formData = null){
+	public function generate_titled_array($titles,$rows,$toIgnore = array(),$links = null,$classes = array(),$formData = null,$globalID = 'myId'){
 		$final_content = '';
 		//initialize toIgnore, if null
 		$toIgnore = ($toIgnore == null)? array(): $toIgnore;
@@ -49,7 +49,7 @@ class View_generator{
 		$postfix	= $titles[self::POSTFIX];
 		
 		if($titles == null){
-			$final_content = $this->generate_array($rows,$toIgnore,$links,$classes);
+			$final_content = $this->generate_array($rows,$toIgnore,$links,$classes,null,$globalID);
 		}
 		//If the titles are set
 		else{
@@ -73,7 +73,7 @@ class View_generator{
 				}
 			}
 
-			$final_content .= $this->generate_array($rows,$toIgnore,$links,$classes,$formData);
+			$final_content .= $this->generate_array($rows,$toIgnore,$links,$classes,$formData,$globalID);
 		}
 		
 		return $final_content;
@@ -112,6 +112,7 @@ class View_generator{
 				
 		$prefix = ($prefix == null)?'': $prefix;
 		$postfix= ($postfix == null)?'':$postfix;
+		$title	= ($title	== null)?'':$title;
 		
 		$title_array[self::ARRAY_TITLE] 	= $title;
 		$title_array[self::ARRAY_TITLE_ROW]	= $title_row;
