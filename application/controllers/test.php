@@ -115,12 +115,27 @@ class Test extends TNK_Controller {
 				//print_r($_SESSION);
 				//$this->add_single_stat(array(array()),$_SESSION['userID']);
 				break;
-
+			case 'test_ajax' :
+				$this->test_ajax();
+				break;
 			default :
 				echo 'Unknown ajax function '.$elt;
 		}
 	}
 	
+	private function test_ajax(){
+		echo "Appel reçu. Ok.";
+		$data = $this->input->post('data');
+		
+		if($data and is_array($data)){
+			foreach($data as $elt){
+				echo $elt.'<br/>';
+			}
+		}
+		else{
+			echo "Data not set or not an array.";
+		}
+	}
 	//fonction de test
 //	public function test($funct = 0,$f2){
 	public function tests($funct){
@@ -268,7 +283,7 @@ class Test extends TNK_Controller {
 							,'class'	=> 'btn btn-success'
 							,'id'		=> 'superButton');
 		$button = $this->view_generator->generate_form_element($buttonInit,View_generator::BUTTON);
-		//$button .= '<script>var click_array = "superArray";<scritp>';
+		$this->add_js('assets/js/Ajax_test.js');
 		$this->add_script('<script>var click_array = "superArray";var click_button = "superButton";</script>');
 		$this->add_script2('click_function_test');
 		$this->add_block($view,self::CENTER_BLOCK);
