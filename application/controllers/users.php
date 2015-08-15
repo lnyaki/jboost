@@ -239,7 +239,8 @@ class Users extends TNK_Controller {
 				$raw_privileges		= $this->role->get_user_privileges($result->id);
 				$user_privileges	= $this->view_generator->get_sub_arrays($raw_privileges,array(1));
 				
-				
+				$user_privileges = $this->load_user_privileges($result->id);
+
 				$this->session->set_userdata('username',$result->username);
 				$this->session->set_userdata('id',$result->id);
 				$this->session->set_userdata('username',$result->username);

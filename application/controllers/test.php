@@ -119,6 +119,25 @@ class Test extends TNK_Controller {
 		}
 	}
 	
+	public function test_security(){
+		$this->load->library('View_generator');
+		$this->set_page_restriction('Lists','comment');
+		//$this->set_page_restriction('Lists', 'vote');
+		
+		$this->load_user_privileges('5');
+		
+		$view;
+		if($this->has_access_to_page()){
+			$view = '<p> Access OK!';
+		}
+		else{
+			$view = '<p> Forbidden access';
+		}
+		
+		$this->add_block($view);
+		$this->generate_page();
+	}
+	
 	private function test_ajax(){
 		echo "Appel reçu. Ok.";
 		$data = $this->input->post('data');

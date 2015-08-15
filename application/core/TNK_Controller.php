@@ -145,13 +145,37 @@ class TNK_Controller extends MX_Controller{
 		//using codeigniter session for security reasons
 		$raw_privileges		= $this->role->get_user_privileges($userID);
 		//make sure that the content is an array
-		$raw_privileges		= json_decode(json_encode($data), true);
-		$user_privileges	= $this->view_generator->get_sub_arrays($raw_privileges,array(1));
+		$raw_privileges		= json_decode(json_encode($raw_privileges), true);
+		
+		//Format the raw privilege array received from db.
+		$user_privileges 	= $this->format_privileges_array($raw_privileges);
 		
 		//Set the privilege array in the user sessions
 	 	$this->session->set_userdata('privileges',$user_privileges);
 	 	
 	 }
+	 
+	 //We receive the privilege array from db, and format it into a 2-dimension array.
+	 //The first dimension is the module, and second dimension is the privilege.
+	 private function format_privileges_array($raw_privileges){
+	 	//Make sure that everyting is an array in $raw_privileges
+	 	$raw_privileges = $this->view_generator->to_array($raw_privileges);
+		//Use get_sub_array to group the array based on the module
+		$raw_privileges	= $this->view_generator->get_sub_arrays($raw_privileges,array(1));
+		$formatted_array = array();
+		
+		foreach($raw_privileges as $module => $array){
+			$formatted_array[$module]	= array();
+			
+			//loop on the privileges of this module
+			foreach($array as $key => $privilege){
+				array_push($formatted_array[$module],$privilege[Roles_model::privilege]);
+			}
+		}
+
+		return $formatted_array;
+	 }
+	 
 	 
 	 //This function returns true if the user in the session has the privilege passed
 	 //as parameter. Returns false otherwise.
@@ -168,6 +192,18 @@ class TNK_Controller extends MX_Controller{
 		}
 		return $response;
 	 }
+	 
+	 //Add a restriction on a page (user which don't have the corresponding module won't be
+	 //able to view the content of the page)
+	 public function set_page_restriction($module,$privilege){
+	 	$this->set_access_restriction($module, $privilege,self::PAGE);
+	 }
+	 
+	 //Add a restriction on a view.
+	 public function set_view_restriction($module,$privilege){
+	 	$this->set_access_restriction($module,$privilege,self::VIEW);
+	 }
+	 
 	 
 	 //This function specifies that a page, or view, is only
 	 //accessible to the person who has the corresponding privilege
@@ -193,24 +229,26 @@ class TNK_Controller extends MX_Controller{
 		
 		//check if an entry on this module already exist
 		if(isset($tab[$module])){
-			$tab[$module][$privilege];
+			$tab[$module][] = $privilege;
 		}
 		//if there no entry for this module yet, we create one
 		else{
-			$tab['module'] = array($privilege => '');
+			$tab[$module] = array($privilege);
 		}
 	 }
 	 
-	 private function has_access_to_page(){
+	 public function has_access_to_page(){
 	 	return $this->has_access(self::PAGE);
 	 }
 	 
-	 private function has_access_to_view(){
+	 public function has_access_to_view(){
 	 	return $this->has_access(self::VIEW);
 	 }
 	 //This function checks if the user has the right to all the privileges specified
 	 //by function set_access_restriction.
 	 private function has_access($context){
+	 	$this->load->library('session');
+
 	 	$contextPrivileges;
 
 	 	if($context = self::PAGE){
@@ -226,7 +264,7 @@ class TNK_Controller extends MX_Controller{
 		
 		$userPrivileges 	= $this->session->userdata(self::PRIVILEGES);
 		
-		return $this->has_All_Access($userPrivileges,$contextPrivileges);
+		return $this->has_all_Access($userPrivileges,$contextPrivileges);
 	 }
 	 
 	 private function has_all_access($userPrivileges,$contextPrivileges){
@@ -264,7 +302,8 @@ class TNK_Controller extends MX_Controller{
 						$localPrivilege = $modulePrivileges[$j];
 						
 						//Does the user have the same privilege?
-						if(!isset($userPrivileges[$key][$localPrivilege])){
+						//if(!isset($userPrivileges[$key][$localPrivilege])){
+						if(!in_array($localPrivilege, $userPrivileges[$key])){
 							$sortie = true;
 						}
 						$j++;
@@ -279,6 +318,7 @@ class TNK_Controller extends MX_Controller{
 				}
 				$i++;
 			}
+			return !$exit;
 		}
 	 }
 	 

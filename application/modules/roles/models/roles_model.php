@@ -51,6 +51,8 @@
 	const privilege_name		= 'name';
 	const privilege_deleted		= 'deleted';
 	
+	//Reference to some words
+	const privilege				= 'privilege';
 	//delete lines below, when sure that it has no impact.
 	const main_table 		= 'roles01';
 	//const privileges_table	= 'roles01';
@@ -366,7 +368,7 @@
 	//return the privilege from the user.
 	public function get_user_privileges($userID){
 		//crafting the query
-		$this->db->select('d.'.self::domain_name.' as domain,'.self::user_privilege_domain_ref.' as domainID,'.self::user_privilege_privilege_ref.' as privilege');
+		$this->db->select('d.'.self::domain_name.' as domain,'.self::user_privilege_domain_ref.' as domainID,'.self::user_privilege_privilege_ref.' as '.self::privilege);
 		$this->db->from(self::user_privilege_table);
 		$this->db->where(self::user_privilege_user_ref,$userID);
 		$this->db->join(self::domain_table.' d', 'd.'.self::domain_id.'='.self::user_privilege_domain_ref);
