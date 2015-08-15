@@ -1,6 +1,6 @@
 <script>
-	$button 			= $('#'+click_button);
-	$array				= $('#'+click_array);
+	var $button 			= $('#'+click_button);
+	var $array				= $('#'+click_array);
 	console.log(click_array);
 	console.log($button);
 	
@@ -8,7 +8,7 @@
 	$button.click(function(){
 		console.log('click!');
 		var tab = new Array();
-		$checked_elements 	= $array.find('input[type="checkbox"]:checked');
+		var $checked_elements 	= $array.find('input[type="checkbox"]:checked');
 		_.each($checked_elements,function(elt){
 			console.log($(elt).attr('name'));
 			tab.push($(elt).attr('name'));

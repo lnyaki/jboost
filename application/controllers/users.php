@@ -15,6 +15,8 @@ class Users extends TNK_Controller {
 	}
 	
 	function profile($username){
+		//load sessions library
+		$this->load->library('session');
 		//load the requiered model
 		$this->load->model('users_model');
 		$this->load->model('kana/Kana_model');
@@ -41,6 +43,17 @@ class Users extends TNK_Controller {
 		$data = array('_list' => $_list);
 		
 
+		$priv = $this->session->userdata('privileges');
+		
+		print_r($priv);
+		//test if user can vote
+		if(isset($priv['Lists']['vote'])){
+			echo "User can vote!";
+		}
+		else{
+			echo "we show the 404";
+			//show_404();
+		}
 		/************************************************************
 		*    			Loading views
 		//************************************************************/
@@ -196,7 +209,7 @@ class Users extends TNK_Controller {
 		}
 	}
 
-	function process_login(){
+	function process_login(){		
 		$this->load->helper(array('form', 'url'));
 		$this->load->library('form_validation');
 		
@@ -208,7 +221,10 @@ class Users extends TNK_Controller {
 			echo "login form validation : FAIL";
 		}
 		else{
+			$this->load->library('session');
 			$this->load->model('users_model');
+			$this->load->model('roles/roles_model','role');
+			$this->load->library('View_generator');
 			$this->load->helper('table');
 			//we need to check the user's credentials
 			$result = $this->users_model->get_user(array('email' 	=> $this->input->post('email')
@@ -218,6 +234,17 @@ class Users extends TNK_Controller {
 				$_SESSION['username'] 	= $result->username;
 				$_SESSION['email']		= $result->email;
 				$_SESSION['id']			= $result->id;
+				
+				//using codeigniter session for security reasons
+				$raw_privileges		= $this->role->get_user_privileges($result->id);
+				$user_privileges	= $this->view_generator->get_sub_arrays($raw_privileges,array(1));
+				
+				
+				$this->session->set_userdata('username',$result->username);
+				$this->session->set_userdata('id',$result->id);
+				$this->session->set_userdata('username',$result->username);
+				$this->session->set_userdata('privileges',$user_privileges);
+
 				redirect('/test/quizz');
 			}
 			//user not found -> invalid credentials (probably)

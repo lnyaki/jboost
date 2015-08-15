@@ -288,13 +288,18 @@
 	 	return $res;
 	 }
 	 
+	 public function add_multiple_privileges_to_user2($privileges){
+	 	return $this->db->insert_batch(self::user_privilege_table,$privileges);
+	 }
+	 
+	 //TODO : change. This below is really ADD a ROLE, not ADD multiple privileges
 	 //Add multiple privileges to a user
-	 public function add_multiple_privileges_to_user($rolePrivileges,$userID){
+	 public function add_multiple_privileges_to_user($newPrivileges,$userID){
 	 	//We need to get the privilege which don't already exist for this user.
-	 	$privileges_to_add = $this->get_privileges_to_add($rolePrivileges,$userID);
+	 	$privileges_to_add = $this->get_privileges_to_add($newPrivileges,$userID);
 		
 		echo "<br/>Role privileges <br/>";
-		print_r($rolePrivileges);
+		print_r($newPrivileges);
 		echo "<br/>PRIVILEGES TO ADD<br/>";
 		print_r($privileges_to_add);
 		
@@ -361,10 +366,10 @@
 	//return the privilege from the user.
 	public function get_user_privileges($userID){
 		//crafting the query
-		$this->db->select(self::user_privilege_domain_ref.','.self::user_privilege_privilege_ref);
+		$this->db->select('d.'.self::domain_name.' as domain,'.self::user_privilege_domain_ref.' as domainID,'.self::user_privilege_privilege_ref.' as privilege');
 		$this->db->from(self::user_privilege_table);
 		$this->db->where(self::user_privilege_user_ref,$userID);
-		
+		$this->db->join(self::domain_table.' d', 'd.'.self::domain_id.'='.self::user_privilege_domain_ref);
 		$query = $this->db->get();
 		
 		return $this->extract_results($query);
@@ -405,7 +410,7 @@ JOIN `security_domain` as d ON `dp`.`domain_ref`=`d`.`id` WHERE `d`.`id` = 'dp.d
 		$this->db->order_by('d.'.self::domain_name,'desc');
 		$query = $this->db->get();
 		*/
-		$sql = "SELECT  `d`.`name` as Domain,  `p`.`name` as Privilege FROM (`security_domain` AS d,  `security_domain_privilege` AS dp,  `security_privilege` AS p) WHERE d.id = dp.domain_ref AND dp.privilege_ref = p.name";
+		$sql = "SELECT  `d`.`name` as Domain,  `p`.`name` as Privilege, `d`.`id` as domainID FROM (`security_domain` AS d,  `security_domain_privilege` AS dp,  `security_privilege` AS p) WHERE d.id = dp.domain_ref AND dp.privilege_ref = p.name";
 		$query = $this->db->query($sql);
 	
 		return $this->extract_results($query);	
@@ -452,7 +457,7 @@ JOIN `security_domain` as d ON `dp`.`domain_ref`=`d`.`id` WHERE `d`.`id` = 'dp.d
 
 		if(count($privilegesToAdd)>0){
 			//get the privilege of the user
-			$userPrivileges	= $this->get_user_privilege($userID);
+			$userPrivileges	= $this->get_user_privileges($userID);
 			
 			return $this->get_new_user_privileges($userPrivileges,$privilegesToAdd);
 		}

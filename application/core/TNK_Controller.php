@@ -119,7 +119,39 @@ class TNK_Controller extends MX_Controller{
 					'_footer' 		=> $footer,
 					'_scripts'		=> $scripts);
 	}
-	
+	/**********************************************************
+	 * 			SECURITY and PRIVILEGES -- START
+	 * 
+	 *********************************************************/
+	 //This function load the user privileges from db and processes them so that they
+	 //can be correctly accessed later on.
+	 public function load_user_privileges($userID){
+	 	
+	 }
+	 
+	 //This function returns true if the user in the session has the privilege passed
+	 //as parameter. Returns false otherwise.
+	 public function has_privilege($module,$privilege){
+	 	
+	 }
+	 
+	 //This function specifies that a page, or view, is only
+	 //Accessible to the person who has the corresponding privilege
+	 private function set_access_restriction($module,$privilege){
+	 	
+	 }
+	 
+	 //This function checks if the user has the right to all the privileges specified
+	 //by function set_access_restriction.
+	 private function has_access(){
+	 	
+	 }
+	 
+	 
+	/**********************************************************
+	 * 			SECURITY and PRIVILEGES -- END
+	 * 
+	 *********************************************************/ 
 	
 	public function create_page($data2){
 		$scripts['_js']		= $this->js;

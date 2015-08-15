@@ -90,21 +90,33 @@ class Roles extends TNK_Controller {
 	//Display all privileges for all domains
 	public function privileges(){
 		$this->title('Privileges');
+		$this->load->library('View_generator');
+		//load the javascript
 		$this->add_js('assets/js/Ajax_test.js');
-		
+		$this->add_js('assets/js/lodash.compat.js');
+
+
 		//load data 
 		//initialize the data for the button that will send the ajax request based on the data from the table.
+		$buttonID 	= 'addPrivileges';
 		$buttonInit = array('content'	=> 'Add Privileges'
 							,'name'		=> 'buttonPrivileges'
 							,'value'	=> 'justAbutton'
 							,'class'	=> 'btn btn-success'
-							,'id'		=> 'addPrivileges');
-		//load views
-		$privileges_view	= $this->get_privileges_widget();
+							,'id'		=> $buttonID);
+		
 		//get the html button
 		$button 			= $this->view_generator->generate_form_element($buttonInit,View_generator::BUTTON);
 		
-		$this->add_script2('roles','test_script');		
+		//load views
+		$context_id			= 'priv_arrays';
+		$privileges_view	= $this->get_privileges_widget($context_id);
+		
+		$userID = '5';
+		
+		//load scripts
+		$this->add_script("<script>var contextID = '$context_id'; var buttonID = '$buttonID';var userID ='$userID';</script>");
+		$this->add_script2('roles','add_privileges_click_function'); //loading the js for attaching actions to the button.
 		
 		//add views to the page
 		$this->add_block($privileges_view,self::CENTER_BLOCK);
@@ -117,7 +129,7 @@ class Roles extends TNK_Controller {
 	//Page with details on a single role
 	public function role_details($role_name){
 		$this->load->model('roles/roles_model','role');
-		
+		echo "DANS role details";
 		//$privileges = $this->role->list_privileges_of_role($domainID,$role_name);
 		$privileges = $this->role->list_privileges_of_role_by_name($role_name);
 		
@@ -171,7 +183,7 @@ class Roles extends TNK_Controller {
 
 	//Here, we test the fact of generating html from the constroler, instead of
 	//going through a view
-	public function get_domain_privileges_widget(){
+	public function get_domain_privileges_widget($context_id){
 		$this->load->model('roles/roles_model','role');
 		$this->load->library('View_generator');
 		
@@ -190,11 +202,11 @@ class Roles extends TNK_Controller {
 		foreach($sub_array as $row){
 			$html .= $this->view_generator->generate_titled_array($titles,$row,array(1),$links);
 		}
-		return $html;
+		return "<div id='$context_id'>$html</div>";
 	}
 	
 	//Return a list of all the privileges, grouped by their domain
-	public function get_privileges_widget(){
+	public function get_privileges_widget($contextID){
 		$this->load->model('roles/roles_model','role');
 		$this->load->library('View_generator');
 		//load data
@@ -203,25 +215,24 @@ class Roles extends TNK_Controller {
 		$privileges_sub_array = $this->view_generator->get_sub_arrays($privileges,array(1));
 		
 		//initialize the title for each sub array to display
-		$titles	= $this->view_generator->initialize_array_title(null,1,null,null);
-		/*
-		print_r($privileges);echo '<br/><br/>';
-		print_r($privileges_sub_array);
-		*/
-		$elt_config = array(
-			'name'		=> array(1,2),
-			'id'		=> array(1,2),
-			'domain'	=> array(1),
-			'privilege'	=> array(2)			
-		);
+		$titles	= $this->view_generator->initialize_array_title(null,1,null,null);		
+				
+		//Prepare the additional array element to add in the html table
+		$checkBox_config = array('name'			=> array(2)	//second field is the name of the privilege
+								,'privilege'	=> array(2)
+								,'domain'		=> array(1) //first field is the name of the domain
+								,'domainID'		=> array(3)
+								,'id'			=> array(2,1)
+								,'userID'		=> '5'
+								);
 		
 		$global_element_id = 'privileges_list';
 		$formData 	= array();
-		$formData[] = $this->view_generator->form_element_configuration(View_generator::CHECKBOX,$elt_config,'','');
+		$formData[] = $this->view_generator->form_element_configuration(View_generator::CHECKBOX,$checkBox_config,'','');
 		//Html content
 		$html = '';
 		foreach($privileges_sub_array as $row){
-			$html .= $this->view_generator->generate_titled_array($titles,$row,null,null,null,$formData,$global_element_id);
+			$html .= $this->view_generator->generate_titled_array($titles,$row,null,null,null,$formData,$contextID);
 		}
 		return $html;
 	}
@@ -268,12 +279,40 @@ class Roles extends TNK_Controller {
 				break;
 			
 			case 'delete_role' : break;
+			
+			case 'add_privilege_to_user' : 
+				$data	= $this->input->post('data');
+				
+				$this->add_privilege_to_user($data);
+				
+				break;
 			default: ;
 		}
 		
 		//return $ajaxOperationOk;
 	}
-
+	
+	//Call the roles.model to add privileges to the user
+	private function add_privilege_to_user($data){
+	//we arrive here through an ajax call	
+		$this->load->model('roles/roles_model','role');
+		
+		
+		$priv_array = array();
+		//format array in order to add privileges
+		foreach($data as $row){
+			$domainID 	= isset($row['domainID'])?$row['domainID']:'';
+			$privilege	= isset($row['privilege'])?$row['privilege']:'';
+			$userID		= isset($row['userID'])?$row['userID']:'';
+			
+			$priv_array[] = array(Roles_model::user_privilege_user_ref 		=> $userID
+								, Roles_model::user_privilege_domain_ref 	=> $domainID
+								, Roles_model::user_privilege_privilege_ref => $privilege);
+		}
+		
+		$this->role->add_multiple_privileges_to_user($priv_array,$userID);
+	}
+	
 	public function test_db(){
 		//test for domain creation : ok
 		//$this->role->create_domain(array('name' => 'test_dammit2', 'description' => 'ça marchait, et là ça ne marche plus'));
@@ -346,11 +385,14 @@ class Roles extends TNK_Controller {
 		//s$this->role->add_role_to_user(3,5);
 		
 		//Test for getting the privilege of a user
-		//$test = $this->role->get_user_privilege(5);
-		//print_r($test);
+		$test = $this->role->get_user_privileges(5);
+		
+		foreach($test as $row){
+			print_r($row);
+		}
 		
 		//Test for getting the privileges of a role
-		print_r($this->role->list_privileges_of_role(1));
+		//print_r($this->role->list_privileges_of_role(1));
 	}
 }
 

@@ -58,12 +58,14 @@ $route['ajax/roles/(:any)']				= 'roles/ajax/$1';
  * *******************************************************************/
  //tmp
  //$route['roles/dom']					= 'roles/dom';
+ $route['roles/test']					= 'roles/test';
  $route['domains']						= 'roles/domains';
  $route['roles/domains/(:any)']			= 'roles/domain_details/$1';
  $route['roles/(:any)']					= 'roles/role_details/$1';
  $route['privileges']					= 'roles/privileges';
  $route['privileges/(:any)']			= 'roles/privilege_managment/$1';
-/*********************************************************************
+
+ /*********************************************************************
  *                        List routes
  * *******************************************************************/
 $route['lists/create']					= 'lists/create_list';

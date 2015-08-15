@@ -109,12 +109,8 @@ class Test extends TNK_Controller {
 				else{
 					echo "The user is not logged in";
 				}
-				
-				
-				//echo "************ Pokemon ******************";
-				//print_r($_SESSION);
-				//$this->add_single_stat(array(array()),$_SESSION['userID']);
 				break;
+			
 			case 'test_ajax' :
 				$this->test_ajax();
 				break;
