@@ -125,7 +125,7 @@ class Test extends TNK_Controller {
 		$this->load->library('roles/Security');
 		
 		$this->security->set_page_restriction('Lists','comment');
-		//$this->security->set_page_restriction('Lists', 'vote');
+		$this->security->set_page_restriction('Lists', 'vote');
 		
 		$this->security->load_user_privileges('5');
 		

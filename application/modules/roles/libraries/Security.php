@@ -33,14 +33,18 @@ class Security{
 		
 		//using codeigniter session for security reasons
 		$raw_privileges		= $this->ci->role->get_user_privileges($userID);
+		echo "<br/>";echo "<br/>";
+		print_r($raw_privileges);echo "<br/>";echo "<br/>";
 		//make sure that the content is an array
 		$raw_privileges		= json_decode(json_encode($raw_privileges), true);
 		
 		//Format the raw privilege array received from db.
 		$user_privileges 	= $this->format_privileges_array($raw_privileges);
+		echo "PRIVILEGES : ";echo "<br/>";
+		print_r($user_privileges);
 		
 		//Set the privilege array in the user sessions
-	 	$this->ci->session->set_userdata('privileges',$user_privileges);
+	 	$this->ci->session->set_userdata(self::PRIVILEGES,$user_privileges);
 	 	
 	 }
 	 
@@ -91,6 +95,18 @@ class Security{
 	 //Add a restriction on a view.
 	 public function set_view_restriction($module,$privilege){
 	 	$this->set_access_restriction($module,$privilege,self::VIEW);
+	 }
+	 
+	 
+	 public function is_logged_in(){
+	 	$this->ci->load->library('session');
+		
+		if(!$this->ci->session->userdata(self::PRIVILEGES)){
+			return false;
+		}
+		else{
+			return true;
+		}	
 	 }
 	 
 	 

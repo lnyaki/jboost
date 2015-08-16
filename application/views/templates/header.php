@@ -11,7 +11,11 @@
       	
 		<div class="navbar-right">
 			<p style="padding-top:10px;">
-      		<?php if(isset($_SESSION['id'])){
+      		<?php 
+      		
+      			$this->load->library('roles/Security');
+				if($this->security->is_logged_in()){
+      			//if(isset($_SESSION['id'])){
 					echo 'Welcome '.$_SESSION['username'];
 					echo '<a href="'.base_url().'disconnect">Log out </a>';
 				}
@@ -47,7 +51,8 @@
    		 <div class="collapse navbar-collapse navHeaderCollapse" id="bs-example-navbar-collapse-1">
       		<ul class="nav navbar-nav">
         	<?php
-        	if(isset($_SESSION['id'])){
+        	if($this->security->is_logged_in()){
+        	//if(isset($_SESSION['id'])){
         		echo '<li><a href='.base_url().'users/'.$_SESSION['username'].'>Profile</a>';
         	}
         	?>

@@ -143,6 +143,8 @@ class Users extends TNK_Controller {
 	}
 	
 	function disconnect(){
+		$this->load->library('session');
+		$this->session->sess_destroy();
 		session_destroy();
 		redirect('/test/quizz');
 	}
@@ -198,7 +200,7 @@ class Users extends TNK_Controller {
 					$_SESSION['email']		= $result->email;
 					$_SESSION['id']			= $result->id;
 					//print_r($_SESSION);
-					redirect('/test/quizz');
+					//redirect('/test/quizz');
 				}
 			}
 			//if user exists, we go back on registration page
@@ -225,6 +227,7 @@ class Users extends TNK_Controller {
 			$this->load->model('users_model');
 			$this->load->model('roles/roles_model','role');
 			$this->load->library('View_generator');
+			$this->load->library('roles/Security');
 			$this->load->helper('table');
 			//we need to check the user's credentials
 			$result = $this->users_model->get_user(array('email' 	=> $this->input->post('email')
@@ -239,12 +242,19 @@ class Users extends TNK_Controller {
 				$raw_privileges		= $this->role->get_user_privileges($result->id);
 				$user_privileges	= $this->view_generator->get_sub_arrays($raw_privileges,array(1));
 				
-				$user_privileges = $this->load_user_privileges($result->id);
+				//Load the user privilege (no need to assign anyting to a var, in happens in the background)
+				$this->security->load_user_privileges($result->id);
 
+				echo "user ID : ".$result->id; echo "<br/>";
+				echo "Raw privileges : ";
+				echo "<br/>";
+				print_r($raw_privileges);echo "<br/>";
+				echo "Privileges : "; echo "<br/>";
+				print_r($user_privileges);
 				$this->session->set_userdata('username',$result->username);
 				$this->session->set_userdata('id',$result->id);
 				$this->session->set_userdata('username',$result->username);
-				$this->session->set_userdata('privileges',$user_privileges);
+				//$this->session->set_userdata('privileges',$user_privileges);
 
 				redirect('/test/quizz');
 			}
@@ -253,7 +263,7 @@ class Users extends TNK_Controller {
 				echo "ERR : user not found.<br/>";
 				echo 'email : '.$this->input->post('email').'<br/>';
 				echo 'password : '.sha1_salt($this->input->post('pass'));
-				//redirect('/login');
+				redirect('/login');
 			}
 		}
 		
