@@ -4,6 +4,7 @@ class Lists extends TNK_Controller {
 
 	public function index(){
 		$this->load->model('kana/Kana_model','model');
+
 		$lists = $this->model->get_kana_lists();
 				
 		if($lists){
@@ -17,15 +18,18 @@ class Lists extends TNK_Controller {
 			$links = $this->view_generator->create_row_link($links,2,array(2),$prefix);
 			$links = $this->view_generator->create_row_link($links,1,array(1),$prefix);
 
-			$view = $this->view_generator->generate_array($lists[1],null,$links);
-		
+			$view 	= $this->view_generator->generate_array($lists[1],null,$links);
+			$button	= $this->new_list_button_widget();
+			
 			$this->add_block($view,self::CENTER_BLOCK);
+			$this->add_block($button,self::CENTER_BLOCK);
 		}
 		else{
 		//output warning or something
 		}
 		$this->generate_page();
 	}
+
 
 	public function display_list2($list_name){
 		$this->load->model('kana/Kana_model','model');
@@ -65,7 +69,26 @@ class Lists extends TNK_Controller {
 	//Generate the html page
 		$this->generate_page();
 	}
+	
+	
+/****************************************************************************
+ * 						Widgets
+ * 
+ ****************************************************************************/
 
+	public function new_list_button_widget(){
+		$this->load->library('View_generator');
+
+		$data = array(
+			'content'	=> 'Create new list',
+			'id'		=> 'newListButton',
+			'class'		=> 'btn btn-success',
+		);
+		$path 	= base_url().'lists/create';
+
+		return "<a href='$path'>".$this->view_generator->generate_form_element($data,View_generator::BUTTON)."</a>";
+	}
+	
 	//get the update-list widget
 	public function update_list_widget(){
 		return $this->view('lists/update_list_view',null);
@@ -87,7 +110,69 @@ class Lists extends TNK_Controller {
 
 
 	public function create_list_widget(){
+		$this->add_script2('Lists','add_element_click_function.php');
 		return $this->load->view('lists/create_list_view',array(),TRUE);
+	}
+	
+	public function new_list_widget(){
+		$this->load->library('View_generator');
+		
+		//--------------------------------------------
+		//			Initialize the option arrays
+		//--------------------------------------------
+		$config_textfield	= array('name'		=> 'list');
+		$config_label		= array('content'	=> 'List Name :',
+									'for'		=> 'list');
+		$config_textarea	= array('id'		=> 'textArea',
+									'name'		=> 'textArea',
+									'style'		=> 'width : 100%;');
+		$config_button1		= array('name'		=> 'buttonAdd',
+									'id'		=> 'btn_add_element',
+									'class'		=> 'btn btn-primary',
+									'content'	=> 'Add Elements');
+		$config_button2		= array('name'		=> 'btn_create_list',
+									'id'		=> 'btn_create_list',
+									'class'		=> 'btn btn-primary',
+									'content'	=> 'Create List');
+		$config_multilist	= array('name'		=> 'items[]',
+									'id'		=> 'select',
+									'style'		=> 'width : 100%;height : 30em;',
+									'multiple' 	=> 'multiple');
+		
+		
+		
+		//--------------------------------------------
+		//			Generate form elements
+		//--------------------------------------------
+		//generate a text field
+		$textfield		= $this->view_generator->generate_form_element($config_textfield,View_generator::TEXTFIELD);	
+		//generate a label for this field
+		$label			= $this->view_generator->generate_form_element($config_label,View_generator::LABEL);
+		//generate a textarea
+		$textarea		= $this->view_generator->generate_form_element($config_textarea,View_generator::TEXTAREA);
+		//generate the "add elements" button
+		$button1		= $this->view_generator->generate_form_element($config_button1,View_generator::BUTTON);
+		//generate the list element
+		$multilist		= $this->view_generator->generate_form_element($config_multilist,View_generator::MULTILIST);
+		//generate the "create list" button
+		$button2		= $this->view_generator->generate_form_element($config_button2,View_generator::BUTTON);
+	
+		//Row 1 : no special width for elements, so we can call the function directly, without initialization
+		$row1 = $this->view_generator->bootstrap_form_row(array($label,$textfield));
+		//Initialize elements, then generate the row
+		$row2_config = array();
+		$this->view_generator->add_form_element_to_row($row2_config,$textarea,4);
+		$this->view_generator->add_form_element_to_row($row2_config,$button1,4);
+		$this->view_generator->add_form_element_to_row($row2_config,$multilist,4);
+
+		$row2 	= $this->view_generator->bootstrap_form_row($row2_config);
+		//Row 3
+		$row3 	= $this->view_generator->bootstrap_form_row(array($button2));
+		
+		$formInit = array($row1,$row2,$row3);
+
+		return $this->view_generator->generate_form($formInit);
+	
 	}
 	
 	//create a new list of characters (kana, kanji)
@@ -97,15 +182,13 @@ class Lists extends TNK_Controller {
 		$this->add_js('assets/js/module_manager.js');
 		$this->add_js('assets/js/module.js');
 		$this->add_js('assets/js/html_lists.js',true);
-		
 	//load the views
 		$create_list_view	= $this->create_list_widget();
-
-		
+		$new_list			= $this->new_list_widget();
 	//add the content of the views to the page
 		$this->add_block($create_list_view	, self::CENTER_BLOCK);
-		$this->add_block(''					, self::LEFT_BLOCK);
-		$this->add_block(''					, self::RIGHT_BLOCK);
+		$this->add_block($new_list,self::CENTER_BLOCK);
+		
 
 	//Generate the html page
 		$this->generate_page();

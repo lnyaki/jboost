@@ -5,16 +5,20 @@ class View_generator{
 	//Table head and table body html tags
 	const THEAD 		= 'thead';			//table head
 	const TBODY 		= 'tbody';			//table body
+	
 	//Description of css class
 	const THCLASS		= 'thead_class';	//css class for the table head
 	const TBCLASS		= 'tbody_class';	//css class for the table body
 	const TABLECLASS	= 'table_class';	//css class for the table tag
+	
 	//Modes of composition of html links
 	const CONCATENATION	= 'concatenation';	//specify that we want to concatenate fields to create link urls
+	
 	//Types of constants to use when creating the array that contains the html title of content
 	const TITLE			= 'title';
 	const TITLE_PREFIX	= 'title_prefix';
 	const TITLE_POSTFIX	= 'title_postfix';
+	
 	//constants for handling html forms generation
 	const FORM_ID_ELEMENT	= 'id_element';
 	const FORM_DATA			= 'form_data';
@@ -27,7 +31,11 @@ class View_generator{
 	const RADIO				= 'radio';
 	const BUTTON 			= 'button';
 	const LABEL				= 'label';
+	const MULTILIST			= 'multi_list';
 	const ELEMENT_DATA		= 'form_elt_data';
+	//constants for form rows generation
+	const ROW_WIDTH			= 'row_width';
+	const FORM_ELEMENT		= 'form_element';
 	//MISC
 	const FIELDS			= 'fields';			//The constant 'fields' that will be used in the links array
 	const PREFIX			= 'prefix';			//The constant 'prefix' that will be used in the links array
@@ -234,19 +242,74 @@ class View_generator{
 				break;
 			
 			case self::TEXTAREA :
-				$element = $this->form_textarea($config);
+				$element = form_textarea($config);
 				break;
 			
 			case self::BUTTON :
 				$element = form_button($config);
 				break;
 				
+			case self::LABEL :
+				$element	= form_label($config['content'],$config['for']);
+				break;
+			
+			case self::MULTILIST :
+				//$element 	= form_multiselect($config['name'],array(),'',"id='".$config['id']."'");
+				$element = $this->generate_html_tag('select',$config);
+				break;
+				
 			default: 
-				$element = '<label>Error: Unknown form element type specified :'.$cellType.'</label>';
+				$element = '<label>Error: Unknown form element type specified :'.$eltType.'</label>';
 			break;
 		}
-		
 		return $element;
+	}
+
+	private function generate_html_tag($tag,$parameters){
+		
+		$options = '';
+		foreach($parameters as $name => $value){
+			$options .= "$name='$value' ";
+		}
+		return "<$tag $options></$tag>";
+	}
+	
+	//Take an array of form elements and generate a form row (bootstrap)
+	public function bootstrap_form_row($form_elements,$rowClass = 'row'){
+		$elements = '';
+
+		foreach($form_elements as $row){
+		
+			//If that specific index for detailed row elements is set, we have the normal situation
+			if(is_array($row)){
+				$form_elt 	= $row[self::FORM_ELEMENT];
+				$elt_width	= $row[self::ROW_WIDTH];
+			
+				$elements	.= "<div class='col-md-$elt_width'>$form_elt</div>";
+				
+				
+			}
+			//If the expected index is not set, we have regular elements and we don't specify a width
+			else{
+				$elements	.= $row;
+			}
+		}
+			
+		return "<div class='$rowClass'>$elements</div>";
+	}
+	
+	public function add_form_element_to_row(&$row,$formElement,$widthNumber){
+		$row[]	= array(self::FORM_ELEMENT => $formElement, self::ROW_WIDTH => $widthNumber);
+	}
+	
+	public function generate_form($formElements,$action ='',$method='post'){
+		$form = '';
+		
+		foreach ($formElements as $elt) {
+			$form .= $elt;
+		}
+		
+		return "<form action='$action' method='$method'>$form</form>";
 	}
 	
 	//Take some information about the form element that we want to generate, and

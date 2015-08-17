@@ -65,13 +65,13 @@ class TNK_Controller extends MX_Controller{
 				$this->left			.= $block;
 				break;
 			case self::RIGHT_BLOCK :
-				$this->right 			.= $block;
+				$this->right 		.= $block;
 				break;
 			case self::CENTER_BLOCK :
 				$this->center 		.= $block;
 				break;
 			case self::FOOTER_BLOCK :
-				$this->footer			.= $block;
+				$this->footer		.= $block;
 				break;
 			default : 
 				$this->add_block($block,self::CENTER_BLOCK);
@@ -211,6 +211,10 @@ class TNK_Controller extends MX_Controller{
 		
 	}
 	
+	public function add_module_js($module,$file,$default = false){
+		$this->add_js($module.'/assets/js/'.$file,$default);
+	}
+	
 	public function add_script($script, $language = 'js'){
 		
 		if($this->script!=null){
@@ -340,7 +344,6 @@ class TNK_Controller extends MX_Controller{
 	private function add_default_js(){
 		$this->add_js('assets/js/jquery-2.0.3.min.js',true);
 		$this->add_js('assets/js/bootstrap.min.js',true);
-	
 	}
 	
 }
