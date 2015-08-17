@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class Lists_model extends CI_Model{
-	const main_table 	= 'list';
+	const LIST_TABLE 	= 'list';
 	
 	//call modes
 	public static $cm_01	= array('*');
@@ -11,7 +11,7 @@ class Lists_model extends CI_Model{
 	public function get_lists(){
 		
 		$sql 	= 'SELECT'.$cm_01;
-		$sql	.= ' FROM '.self::main_table;
+		$sql	.= ' FROM '.self::LIST_TABLE;
 	}
 	
 	//return the set of all the official lists (approved by us)
@@ -24,16 +24,35 @@ class Lists_model extends CI_Model{
 		
 	}
 	
-	//create a list named $list_name
+	//create a list named $list_name, and linked items
 	public function create_list($list_name, $items){
-		$sql = "create table ? ";
-		$this->db->insert(self::main_table,$items);
+		$this->db->trans_start();
+		//We need to create an entry in the list table, as well as add the items in list details
+			$this->db->insert(self::LIST_ITEMS,$items);
+			
+			$this->db->insert(self::LIST_TABLE,$items);
+		
+		$this->db->trans_complete();
 		
 		return $this->db->query($sql, array($list_name));
 	}
 	
+	//This function takes an array of items and formats them so that they can be inserted in tables
+	private function form_data_to_list_item($items){
+		$formatted = array();
+		
+		foreach($items as $key => $value){
+			$fieldName 	= $value['key'];
+			$fieldValue	= $value['value'];
+			
+			$formatted[] = array($fieldName => $fieldValue);
+		}
+		
+		return $formatted;
+	}
+	
 	public function add_items($items){
-		return $this->db->insert_batch(self::main_table,$items);
+		return $this->db->insert_batch(self::LIST_TABLE,$items);
 	}
 	
 	//Add a single item to the list $list_id

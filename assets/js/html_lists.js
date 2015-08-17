@@ -3,7 +3,7 @@
  * 
  * Require : lodash, jquery
  */
-var Module	= {};
+var Module	= Module || {};
 
 Module.List = (function(){
 		var List = function(){
@@ -36,13 +36,13 @@ Module.List = (function(){
 				//if separator exists in the line
 				if(regex.test(line)){
 					var index	= line.indexOf(separator);
-					key		= line.substr(0,index);
+					key		= line.substr(0,index).trim();
 					//returns empty string if we go out of bounds
-					value	= line.substr(index+1);
+					value	= line.substr(index+1).trim();
 				}
 				//if separator doesn't exist, the whole line is the key.
 				else{
-					key 	= line;
+					key 	= line.trim();
 					value 	= '';
 				}
 				
@@ -75,15 +75,18 @@ Module.List = (function(){
 			};
 			
 			//add an element to a 'select' list
-			var add_element_list = function(list,value,content){
-				$(list).append('<option value='+value+'>'+content+'</option>');
+			var add_element_list = function(list,key,value){
+				console.log("Add elements list ");
+				$(list).append('<option name="'+key+'[key]" value='+key+'>'+value+'</option>');
+				$(list).append('<input type="hidden" name="'+key+'[value]" value="'+key+'"');
 			};
 			
 			//add an array of item to the html select element (list)
 			var add_array_list 		= function(list,items){
+				console.log("Add elements list 2");
 				console.log(items);
 				_.each(items,function(elt){
-					$(list).append('<option value='+elt.key+'>'+elt.key+' --> '+elt.value+'</option>');
+					$(list).append('<option  name= "'+elt.key+'" value="'+elt.key+'#'+elt.value+'">'+elt.key+' --> '+elt.value+'</option>');
 				});
 			};
 			

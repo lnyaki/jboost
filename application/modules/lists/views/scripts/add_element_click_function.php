@@ -9,6 +9,7 @@
 			var lines = list.textarea_read_line('#textArea');
 			//appeler line_to_item en boucle (pour chaque ligne du tableau)
 			var tmp = list.lines_to_item(lines,':');
+			console.log('item : ');
 			console.log(tmp);
 			
 			//add the items to the list

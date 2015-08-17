@@ -110,12 +110,17 @@ class Lists extends TNK_Controller {
 
 
 	public function create_list_widget(){
+		$this->add_js('assets/js/html_lists.js',true);
+		//$this->add_module_js('Lists','html_lists.js',true);
 		$this->add_script2('Lists','add_element_click_function.php');
 		return $this->load->view('lists/create_list_view',array(),TRUE);
 	}
 	
 	public function new_list_widget(){
 		$this->load->library('View_generator');
+		//They will need to be added later, but i comment them for now
+		//$this->add_js('assets/js/html_lists.js',true);
+		//$this->add_script2('Lists','add_element_click_function.php');
 		
 		//--------------------------------------------
 		//			Initialize the option arrays
@@ -161,9 +166,9 @@ class Lists extends TNK_Controller {
 		$row1 = $this->view_generator->bootstrap_form_row(array($label,$textfield));
 		//Initialize elements, then generate the row
 		$row2_config = array();
-		$this->view_generator->add_form_element_to_row($row2_config,$textarea,4);
-		$this->view_generator->add_form_element_to_row($row2_config,$button1,4);
-		$this->view_generator->add_form_element_to_row($row2_config,$multilist,4);
+		$this->view_generator->add_form_element_to_row($row2_config,$textarea,5);
+		$this->view_generator->add_form_element_to_row($row2_config,$button1,2);
+		$this->view_generator->add_form_element_to_row($row2_config,$multilist,5);
 
 		$row2 	= $this->view_generator->bootstrap_form_row($row2_config);
 		//Row 3
@@ -171,7 +176,7 @@ class Lists extends TNK_Controller {
 		
 		$formInit = array($row1,$row2,$row3);
 
-		return $this->view_generator->generate_form($formInit);
+		return "<div class='panel'><h3>Php generated</h3>".$this->view_generator->generate_form($formInit)."</div>";
 	
 	}
 	
@@ -181,13 +186,12 @@ class Lists extends TNK_Controller {
 		$this->add_js('assets/js/lodash.compat.js');
 		$this->add_js('assets/js/module_manager.js');
 		$this->add_js('assets/js/module.js');
-		$this->add_js('assets/js/html_lists.js',true);
 	//load the views
 		$create_list_view	= $this->create_list_widget();
 		$new_list			= $this->new_list_widget();
 	//add the content of the views to the page
 		$this->add_block($create_list_view	, self::CENTER_BLOCK);
-		$this->add_block($new_list,self::CENTER_BLOCK);
+		//$this->add_block($new_list,self::CENTER_BLOCK);
 		
 
 	//Generate the html page
@@ -213,18 +217,52 @@ class Lists extends TNK_Controller {
 	//action to take when receiving data from the creation form
 	public function creation_form(){
 		$this->load->model('lists/Lists_model','model');
-		$items = $this->input->post('list');
+		$listname 	= $this->input->post('list');
+		$items 		= $this->input->post('items');
+
 		
+		echo "Lists.creation_form"; echo "<br/>";
+
 		//temp code
-		echo $items."<br/>";
-		var_dump($_POST);
+		print_r($items); echo "<br/>";
+		echo "Whole post array <br/>";
+		var_dump($_POST);echo "<br/>";
+		echo "List name : $listname";echo "<br/>";
+		echo "Items : ";echo "<br/>";
+		print_r($items);echo "<br/>";
 	
+		//The items are of the form key#value ==> we need to format them into a proper array
+		$formatted_items	= $this->format_raw_items($items);
 		//create the list
-		$list	= $this->input->post('list');
-		//$this->model->create_list($list,$data);
+		
+		//$this->model->create_list($list,$items);
 		
 		//add the elements (from the "items" object)
-		//$this->model->add_item($items);
+		//$this->model->add_items($items);
+	}
+	
+	//Take an array of items of the form key#value and return a proper array $key => $values
+	private function format_raw_items($items){
+		$formatted	= array();
+		if($items == null) return $formatted;
+		
+		foreach ($items as $raw_item) {
+			
+			$temp 	= explode('#', $raw_item);
+			$key	= $temp[0];
+			$value 	= implode('#',array_slice($temp,1));
+			
+			$formatted[$key] = $value;
+			echo "INITIAL : $raw_item"; echo "<br/>";
+			echo "Exploded :";echo "<br/>";
+			print_r($temp);echo "<br/>";
+			echo "Key : $key";echo "<br/>";
+			echo "Value : $value";echo "<br/>";
+			
+			echo "<br/>";
+			//
+		}
+		return $formatted;
 	}
 	
 }

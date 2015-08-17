@@ -190,6 +190,7 @@ class TNK_Controller extends MX_Controller{
 	//$default indicate if the js must be added to the default list of js files
 	public function add_js($js,$default = FALSE){
 		$js = base_url().$js;
+
 		//if we must add to the default js array
 		if($default){
 			if($this->default_js!=null){
@@ -212,6 +213,7 @@ class TNK_Controller extends MX_Controller{
 	}
 	
 	public function add_module_js($module,$file,$default = false){
+		echo "HEY, default = $default";
 		$this->add_js($module.'/assets/js/'.$file,$default);
 	}
 	
