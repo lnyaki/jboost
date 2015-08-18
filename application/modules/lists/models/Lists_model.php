@@ -67,8 +67,18 @@ class Lists_model extends TNK_Model{
 	}
 	
 	//return the content of the list specified in param
-	public function get_list_content($list){
+	public function get_list_items($listname){
+		$this->db->select('pi.question, ia.answer');
+		$this->db->from('list_items as pi, list_items_answers as ia,list_full_items as fi, list_link_items as link, list');
+		$this->db->where('pi.id','fi.item_ref',false);
+		$this->db->where('fi.id','ia.full_item_ref',false);
+		$this->db->where('link.item_ref','fi.id',false);
+		$this->db->where('list.id','link.list_ref',false);
+		$this->db->where('list.name',$listname);
 		
+		$res	= $this->db->get();
+		
+		return $this->extract_results($res);
 	}
 	
 	//create a list named $list_name, and linked items

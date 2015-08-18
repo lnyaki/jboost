@@ -60,11 +60,13 @@ class Lists extends TNK_Controller {
 		
 	//load the views
 		$character_list_view	= $this->display_list_widget($list_name);
+		$list 					= $this->get_list_items_widget($list_name);
 		$update_view			= $this->update_list_widget();
 		$update_view2			= $this->update_list_widget2();
 		
 	//add the content of the views to the page
 		$this->add_block($character_list_view	,self::CENTER_BLOCK);
+		$this->add_block($list					,self::CENTER_BLOCK);
 		$this->add_block($update_view			,self::CENTER_BLOCK);
 		$this->add_block($update_view2			,self::CENTER_BLOCK);
 	
@@ -77,6 +79,17 @@ class Lists extends TNK_Controller {
  * 						Widgets
  * 
  ****************************************************************************/
+	public function get_list_items_widget($listname){
+		//Load models and libraries
+		$this->load->library('View_generator','generator');
+		$this->load->model('lists/Lists_model','list');
+		$list_items	= $this->list->get_list_items($listname);
+		
+		$view = $this->view_generator->generate_array($list_items,null);
+		
+		return $view;	
+	}
+	
 	//This function returns an array of all the lists.
 	public function list_names_widget(){
 		//Load models and libraries
@@ -123,6 +136,14 @@ class Lists extends TNK_Controller {
 		$kana_list				= $this->model->get_kana_list($list_name);
 		
 		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $kana_list));
+	
+	$this->load->model('Lists/Lists_model','list');
+	//1 : load data from the list module (not the kana)
+	$data	= $this->list->load_list_items($list_name);
+	//2 : generate the html array
+	
+	//3 : return the html array
+	
 	}
 
 
