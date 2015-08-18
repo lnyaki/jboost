@@ -299,12 +299,12 @@
 	 public function add_multiple_privileges_to_user($newPrivileges,$userID){
 	 	//We need to get the privilege which don't already exist for this user.
 	 	$privileges_to_add = $this->get_privileges_to_add($newPrivileges,$userID);
-		
+		/*
 		echo "<br/>Role privileges <br/>";
 		print_r($newPrivileges);
 		echo "<br/>PRIVILEGES TO ADD<br/>";
 		print_r($privileges_to_add);
-		
+		*/
 		if(count($privileges_to_add) == 0){
 			return true;
 		}
@@ -340,7 +340,6 @@
 		$this->db->from(self::privilege_table);		
 		
 		$query = $this->db->get();
-		print_r($this->extract_results($query));
 		
 		return $this->extract_results($query);
 	}
@@ -359,7 +358,6 @@
 		
 		$query	= $this->db->get();
 		
-		print_r($this->extract_results($query));
 		echo $this->db->last_query();
 		
 		return $this->extract_results($query);

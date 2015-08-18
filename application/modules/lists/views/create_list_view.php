@@ -16,6 +16,7 @@
 				<select multiple name="items[]" id="select" style="width : 100%;height : 30em;">
 				</select>
 			</div>
+			<input type='hidden' name='type' value='kana'/>
 		</div>
 		<div class="row">
 			<div class= "col-md-3">

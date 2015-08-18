@@ -89,8 +89,9 @@ class View_generator{
 	public function generate_array($rows,$toIgnore = array(),$links = null,$classes = array(),$formData = null,$arrayID = "dataArray"){
 		//Make sure that the $rows are on array form
 		$rows = $this->to_array($rows);
+		
 		//Transform the raw link data into real links
-		$links = $this->generate_links($rows, $links);	
+		$links = $this->generate_links($rows, $links);
 		$i 		= 0;
 		
 		if($toIgnore == null){
@@ -141,9 +142,12 @@ class View_generator{
 	
 	//generate links (for tag <a>) based on an array of data.
 	public function generate_links($data,$fieldNumbers,$type = self::CONCATENATION){
-			
 		$links_array = array();
-
+		
+		if(!is_array($data)) {
+			message_log('error','[view_generator]Generate_links : The first parameter should be an array.');
+		}
+		
 		//for each row, calculate the link
 		foreach($data as $row){
 			$length = count($row);

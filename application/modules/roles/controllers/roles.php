@@ -129,7 +129,6 @@ class Roles extends TNK_Controller {
 	//Page with details on a single role
 	public function role_details($role_name){
 		$this->load->model('roles/roles_model','role');
-		echo "DANS role details";
 		//$privileges = $this->role->list_privileges_of_role($domainID,$role_name);
 		$privileges = $this->role->list_privileges_of_role_by_name($role_name);
 		
@@ -183,7 +182,7 @@ class Roles extends TNK_Controller {
 
 	//Here, we test the fact of generating html from the constroler, instead of
 	//going through a view
-	public function get_domain_privileges_widget($context_id){
+	public function get_domain_privileges_widget($context_id =''){
 		$this->load->model('roles/roles_model','role');
 		$this->load->library('View_generator');
 		

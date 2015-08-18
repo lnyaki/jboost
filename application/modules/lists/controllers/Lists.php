@@ -4,9 +4,9 @@ class Lists extends TNK_Controller {
 
 	public function index(){
 		$this->load->model('kana/Kana_model','model');
-
 		$lists = $this->model->get_kana_lists();
-				
+		
+		
 		if($lists){
 			//load the library that generates tables from arrays of data
 			$this->load->library('View_generator');
@@ -20,9 +20,11 @@ class Lists extends TNK_Controller {
 
 			$view 	= $this->view_generator->generate_array($lists[1],null,$links);
 			$button	= $this->new_list_button_widget();
+			$listnames	= $this->list_names_widget();
 			
 			$this->add_block($view,self::CENTER_BLOCK);
 			$this->add_block($button,self::CENTER_BLOCK);
+			$this->add_block($listnames,self::CENTER_BLOCK);
 		}
 		else{
 		//output warning or something
@@ -75,7 +77,22 @@ class Lists extends TNK_Controller {
  * 						Widgets
  * 
  ****************************************************************************/
-
+	//This function returns an array of all the lists.
+	public function list_names_widget(){
+		//Load models and libraries
+		$this->load->library('View_generator','generator');
+		$this->load->model('lists/Lists_model','list');
+		//Load list data
+		$real_lists = $this->list->get_lists();
+		
+		//create links
+		$prefix = base_url().'lists';
+		$links = $this->view_generator->create_row_link(array(),2,array(2),$prefix);
+		
+		$widget = $this->view_generator->generate_array($real_lists,null,$links);
+		
+		return $widget;
+	}
 	public function new_list_button_widget(){
 		$this->load->library('View_generator');
 
@@ -219,7 +236,7 @@ class Lists extends TNK_Controller {
 		$this->load->model('lists/Lists_model','model');
 		$listname 	= $this->input->post('list');
 		$items 		= $this->input->post('items');
-
+		$list_type	= $this->input->post('type');
 		
 		echo "Lists.creation_form"; echo "<br/>";
 
@@ -232,37 +249,31 @@ class Lists extends TNK_Controller {
 		print_r($items);echo "<br/>";
 	
 		//The items are of the form key#value ==> we need to format them into a proper array
-		$formatted_items	= $this->format_raw_items($items);
+		$formatted_items	= $this->format_raw_items($items,$list_type);
 		//create the list
-		
-		//$this->model->create_list($list,$items);
-		
-		//add the elements (from the "items" object)
-		//$this->model->add_items($items);
+		$this->model->create_list($listname,$formatted_items[0],$formatted_items[1]);
+		redirect(base_url().'lists');
 	}
 	
 	//Take an array of items of the form key#value and return a proper array $key => $values
-	private function format_raw_items($items){
-		$formatted	= array();
+	private function format_raw_items($items,$itemType = ''){
+		$listItems	= array();
+		$answers	= array();
 		if($items == null) return $formatted;
 		
 		foreach ($items as $raw_item) {
-			
+			$elt	= array();
 			$temp 	= explode('#', $raw_item);
 			$key	= $temp[0];
 			$value 	= implode('#',array_slice($temp,1));
 			
-			$formatted[$key] = $value;
-			echo "INITIAL : $raw_item"; echo "<br/>";
-			echo "Exploded :";echo "<br/>";
-			print_r($temp);echo "<br/>";
-			echo "Key : $key";echo "<br/>";
-			echo "Value : $value";echo "<br/>";
+			$elt = array(Lists_model::LIST_ITEMS_QUESTION 	=> $key
+						,Lists_model::LIST_ITEMS_TYPE		=> $itemType);
 			
-			echo "<br/>";
-			//
+			$listItems[]	= $elt;
+			$answers[]		= $value;
 		}
-		return $formatted;
+		return array($listItems,$answers);
 	}
 	
 }
