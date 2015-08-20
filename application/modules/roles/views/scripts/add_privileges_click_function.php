@@ -1,4 +1,12 @@
 <script>
+//Get data passed to this view
+<?php
+	$_userID = isset($_userID)? $_userID:'';
+	$_buttonID	= isset($_buttonID)? $_buttonID:'';
+	echo "var userID 	= '$_userID';\n";
+	echo "var buttonID	= '$_buttonID';\n";
+	echo "//WAZZAAA\n";
+?>
 //contextID is previously set up in the controller roles/privileges
 	var $context 	= $('#'+contextID);
 	

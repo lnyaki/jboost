@@ -32,24 +32,6 @@ class Lists extends TNK_Controller {
 		$this->generate_page();
 	}
 
-
-	public function display_list2($list_name){
-		$this->load->model('kana/Kana_model','model');
-		$kana_list	= $this->model->get_kana_list($list_name);
-		
-		//initialize the left and right side
-			$data2['_left_aside']	= '';
-			$data2['_right_aside']	= '';
-			
-			//load the list view to put in the content view
-			$data2['_content'] 		 = $this->load->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $kana_list),TRUE);
-			$data2['_content']		.= $this->load->view('lists/update_list_view',null,TRUE);
-			
-			$data['content']		= $this->load->view('templates/content.php',$data2,true);
-			
-			$this->create_page($data);
-	}
-	
 	public function display_list($list_name){
 	//load js files
 		$this->add_js('assets/js/lodash.compat.js');
@@ -121,7 +103,15 @@ class Lists extends TNK_Controller {
 	
 	//get the update-list widget
 	public function update_list_widget(){
-		return $this->view('lists/update_list_view',null);
+		$this->load->library('roles/Security');
+		$this->security->set_view_restriction('Lists','update_own');
+		
+		if($this->security->has_access_to_view()){
+			return $this->view('lists/update_list_view',null);	
+		}
+		else{
+			return '';
+		}
 	}
 	
 	//get the update-list widget
@@ -220,6 +210,13 @@ class Lists extends TNK_Controller {
 	
 	//create a new list of characters (kana, kanji)
 	public function create_list(){
+	//Check privileges
+		$this->load->library('roles/Security');
+	//Specify the pages restrictions
+		$this->security->set_page_restriction('Lists','create');
+	if(!$this->security->has_access_to_page()){
+		show_404();
+	}
 	//load js files
 		$this->add_js('assets/js/lodash.compat.js');
 		$this->add_js('assets/js/module_manager.js');

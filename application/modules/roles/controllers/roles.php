@@ -90,39 +90,71 @@ class Roles extends TNK_Controller {
 	//Display all privileges for all domains
 	public function privileges(){
 		$this->title('Privileges');
-		$this->load->library('View_generator');
 		//load the javascript
 		$this->add_js('assets/js/Ajax_test.js');
 		$this->add_js('assets/js/lodash.compat.js');
+		//load user controller
 
-
-		//load data 
-		//initialize the data for the button that will send the ajax request based on the data from the table.
-		$buttonID 	= 'addPrivileges';
-		$buttonInit = array('content'	=> 'Add Privileges'
-							,'name'		=> 'buttonPrivileges'
-							,'value'	=> 'justAbutton'
-							,'class'	=> 'btn btn-success'
-							,'id'		=> $buttonID);
-		
-		//get the html button
-		$button 			= $this->view_generator->generate_form_element($buttonInit,View_generator::BUTTON);
-		
-		//load views
 		$context_id			= 'priv_arrays';
+		//load data 
+		//load views
 		$privileges_view	= $this->get_privileges_widget($context_id);
+		$button				= $this->widget_button_add_privilege();
 		
-		$userID = '5';
-		
-		//load scripts
-		$this->add_script("<script>var contextID = '$context_id'; var buttonID = '$buttonID';var userID ='$userID';</script>");
-		$this->add_script2('roles','add_privileges_click_function'); //loading the js for attaching actions to the button.
 		
 		//add views to the page
 		$this->add_block($privileges_view,self::CENTER_BLOCK);
 		$this->add_block($button,self::CENTER_BLOCK);
 
 		$this->generate_page();
+	}
+
+	public function widget_button_add_privilege($buttonID = 'addPrivileges',$userID){
+		$this->load->library('View_generator');
+		
+	
+		$userID = is_object($userID)?$userID->id:'';
+		
+		//load scripts
+		$this->add_script("<script>var buttonID = '$buttonID';var userID ='$userID';</script>");
+		$this->add_script2('roles','add_privileges_click_function',array('_userID' => $userID,'_buttonID' => $buttonID)); //loading the js for attaching actions to the button.
+		
+		//initialize the data for the button that will send 
+		//the ajax request based on the data from the table.
+		$buttonInit = array('content'	=> 'Add Privileges'
+							,'name'		=> 'buttonPrivileges'
+							,'value'	=> 'justAbutton'
+							,'class'	=> 'btn btn-success'
+							,'id'		=> $buttonID);
+		
+		
+		//get the html button
+		return  $this->view_generator->generate_form_element($buttonInit,View_generator::BUTTON);
+		
+			
+	}
+	
+	public function privilege_managment($username){	
+		//load the javascript
+		$this->add_js('assets/js/Ajax_test.js');
+		$this->add_js('assets/js/lodash.compat.js');
+		$this->load->model('users_model');
+		$this->load->module('users');
+
+		$context_id			= 'priv_arrays';
+		$button_id			= 'addPrivilegeButton';
+		$userID = $this->users_model->get_user(array('username' => $username),'username');
+		
+		//load views
+		$userPrivileges		= $this->users->widget_user_privileges($username);
+		$privileges_view	= $this->get_privileges_widget($context_id);
+		$button				= $this->widget_button_add_privilege($button_id,$userID);
+		
+		$this->add_block($privileges_view);
+		$this->add_block($button);
+		$this->add_block($userPrivileges,self::RIGHT_BLOCK);
+		$this->add_block($userPrivileges,self::LEFT_BLOCK);
+		$this->generate_page();	
 	}
 	
 	
@@ -208,6 +240,9 @@ class Roles extends TNK_Controller {
 	public function get_privileges_widget($contextID){
 		$this->load->model('roles/roles_model','role');
 		$this->load->library('View_generator');
+		//
+		$this->add_script("<script>var contextID = '$contextID';</script>");
+		
 		//load data
 		$privileges = $this->role->get_all_domain_privileges();
 		//get the sub array based one the domain (first column).

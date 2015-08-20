@@ -98,23 +98,11 @@ class Security{
 	 }
 	 
 	 
-	 public function is_logged_in(){
-	 	$this->ci->load->library('session');
-		
-		if(!$this->ci->session->userdata(self::PRIVILEGES)){
-			return false;
-		}
-		else{
-			return true;
-		}	
-	 }
-	 
-	 
 	 //This function specifies that a page, or view, is only
 	 //accessible to the person who has the corresponding privilege
 	 private function set_access_restriction($module,$privilege,$context = self::PAGE){
 	 	$tab = null;
-		
+				
 		if($context == self::PAGE){
 			$tab = &$this->page_privileges;
 		}
@@ -156,10 +144,10 @@ class Security{
 
 	 	$contextPrivileges;
 
-	 	if($context = self::PAGE){
+	 	if($context === self::PAGE){
 	 		$contextPrivileges = &$this->page_privileges;
 	 	}
-		else if($context = self::VIEW){
+		else if($context === self::VIEW){
 			$contextPrivileges = &$this->view_privileges;
 		}
 		else{
@@ -225,6 +213,17 @@ class Security{
 			}
 			return !$exit;
 		}
+	 }
+
+	public function is_logged_in(){
+	 	$this->ci->load->library('session');
+		
+		if(!$this->ci->session->userdata(self::PRIVILEGES)){
+			return false;
+		}
+		else{
+			return true;
+		}	
 	 }
 	 
 	 

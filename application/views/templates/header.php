@@ -5,9 +5,7 @@
 				<a href="/">Japanese <span>Boost</span></a>
 			</h1>
 			<p class="animated fadeInRight">Learn japanese, the fun way</p>
-		</div>	
-		
-	
+		</div>		
       	
 		<div class="navbar-right">
 			<p style="padding-top:10px;">
@@ -15,7 +13,6 @@
       		
       			$this->load->library('roles/Security');
 				if($this->security->is_logged_in()){
-      			//if(isset($_SESSION['id'])){
 					echo 'Welcome '.$_SESSION['username'];
 					echo '<a href="'.base_url().'disconnect">Log out </a>';
 				}
@@ -52,12 +49,16 @@
       		<ul class="nav navbar-nav">
         	<?php
         	if($this->security->is_logged_in()){
-        	//if(isset($_SESSION['id'])){
         		echo '<li><a href='.base_url().'users/'.$_SESSION['username'].'>Profile</a>';
         	}
         	?>
         		<li><a href='<?php echo base_url();?>lists'>Lists</a></li>
         		<li><a href='http://www.japanese-boost.com/blog'>Blog</a></li>
+        	<?php
+        	if($this->security->has_privilege('Website_administration','consult')){
+        		echo "<li><a href='".base_url()."administration/'>Administration</a></li>";
+        	}
+        	?>
       		</ul>
 
       	</div>

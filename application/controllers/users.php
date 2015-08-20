@@ -43,18 +43,7 @@ class Users extends TNK_Controller {
 		$data = array('_list' => $_list);
 		
 
-		$priv = $this->session->userdata('privileges');
-		
-		print_r($priv);
-		//test if user can vote
-		if(isset($priv['Lists']['vote'])){
-			echo "User can vote!";
-		}
-		else{
-			echo "we show the 404";
-			//show_404();
-		}
-		/************************************************************
+		/************************************************
 		*    			Loading views
 		//************************************************************/
 		$stats		= $this->load->view('lists/hiragana_list',$data,TRUE);
@@ -86,7 +75,15 @@ class Users extends TNK_Controller {
 		$this->generate_page();
 	}
 
-	
+	public function widget_user_privileges($username){
+		$this->load->model('roles/roles_model','role');
+		$this->load->model('users_model');
+		$userdata	= $this->users_model->get_user(array('username' => $username),'username');
+		//get user privileges
+		$privileges = $this->role->get_user_privileges($userdata->id);		
+		
+		return $this->load->view('users/user_privileges',array( '_privileges' => $privileges),true);
+	}
 	
 	public function login(){
 		$this->load->library('form_validation');

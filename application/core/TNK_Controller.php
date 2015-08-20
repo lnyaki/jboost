@@ -228,18 +228,18 @@ class TNK_Controller extends MX_Controller{
 	}
 	
 	//This add_script functions is an improvement over the previous one. You only specify the path
-	public function add_script2($module,$file = null){
+	public function add_script2($module,$file = null,$data = array()){
 		$script = '';
 		$base = 'scripts/';
 		
 		//if only the first arg is set, it means that it is a regular call, and we must
 		//get the file from app/views/xxx
 		if($file == null){
-			$script = $this->load->view($base.$module,null,true);	
+			$script = $this->load->view($base.$module,$data,true);	
 		}
 		//if the 2 args are set, it means that we need to go check in the module views.
 		else{
-			$script = $this->load->view($module.'/'.$base.$file,null,true);	
+			$script = $this->load->view($module.'/'.$base.$file,$data,true);	
 		}
 
 		$this->add_script($script);
