@@ -499,7 +499,7 @@ JOIN `security_domain` as d ON `dp`.`domain_ref`=`d`.`id` WHERE `d`.`id` = 'dp.d
 	private function is_privilege_in($privilege,$privilegeList){
 		$exit 	= false;
 		$i		= 0;
-		
+
 		$length = count($privilegeList);
 		//If the privlege list is empty, then the privilege is not in the list(we return false)
 		if($length == 0){
@@ -510,8 +510,8 @@ JOIN `security_domain` as d ON `dp`.`domain_ref`=`d`.`id` WHERE `d`.`id` = 'dp.d
 			$row = (array)$privilegeList[$i];
 			
 			//if the $privilege can be found in $privilegeList, we return 'true';
-			if(	$row[self::role_domain_ref] 				== $privilege[self::user_privilege_domain_ref] and
-				$row[self::role_privilege_privilege_ref] 	== $privilege[self::user_privilege_privilege_ref]
+			if(	$row[self::role_view_domain] 	== $privilege[self::user_privilege_domain_ref] and
+				$row[self::role_view_privilege]	== $privilege[self::user_privilege_privilege_ref]
 			){
 				$exit = true;
 			}

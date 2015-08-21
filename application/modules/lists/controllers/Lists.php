@@ -39,7 +39,6 @@ class Lists extends TNK_Controller {
 		$this->add_js('assets/js/module.js');
 		$this->add_js('assets/js/test-page.js');
 		$this->add_js('assets/js/html_lists.js',true);
-		
 	//load the views
 		$character_list_view	= $this->display_list_widget($list_name);
 		$list 					= $this->get_list_items_widget($list_name);
@@ -120,12 +119,8 @@ class Lists extends TNK_Controller {
 	}
 
 	public function display_list_widget($list_name){
-	//load the kana_model so that we can get kana data
-		$this->load->model('kana/Kana_model','model');	
-	//load a kana list from database
-		$kana_list				= $this->model->get_kana_list($list_name);
-		
-		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $kana_list));
+	//TODO : this is legacy. It just offers the list title now. TO remove when i have some time
+		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => array()));
 	
 	$this->load->model('Lists/Lists_model','list');
 	//1 : load data from the list module (not the kana)
@@ -256,29 +251,45 @@ class Lists extends TNK_Controller {
 		$items 		= $this->input->post('items');
 		$list_type	= $this->input->post('type');
 		
-		echo "Lists.creation_form"; echo "<br/>";
-
-		//temp code
-		print_r($items); echo "<br/>";
-		echo "Whole post array <br/>";
-		var_dump($_POST);echo "<br/>";
-		echo "List name : $listname";echo "<br/>";
-		echo "Items : ";echo "<br/>";
-		print_r($items);echo "<br/>";
-	
 		//The items are of the form key#value ==> we need to format them into a proper array
 		$formatted_items	= $this->format_raw_items($items,$list_type);
+		
 		//create the list
-		$this->model->create_list($listname,$formatted_items[0],$formatted_items[1]);
+		$this->model->create_list($listname,$formatted_items);
 		redirect(base_url().'lists');
+		
 	}
 	
 	//Take an array of items of the form key#value and return a proper array $key => $values
 	private function format_raw_items($items,$itemType = ''){
 		$listItems	= array();
+		if($items == null) return $formatted;
+		
+		//For each item element received from the html FORM
+		foreach ($items as $raw_item) {
+			$elt		= array();
+			$temp 		= explode('#', $raw_item);
+			$key		= $temp[0];
+			$value 		= implode('#',array_slice($temp,1));
+			$answers 	= array($value);
+			
+			$answersList = array();		
+				foreach($answers as $answer){
+					$answersList[]	= array(Lists_model::LIST_ITEMS_TYPE => $itemType
+											,Lists_model::LIST_ITEMS_ANSWER => $answer);	
+				}
+			$listItems[$key]	= $answersList;
+		}
+		return $listItems;
+	}
+	
+	//Take an array of items of the form key#value and return a proper array $key => $values
+	private function format_raw_items2($items,$itemType = ''){
+		$listItems	= array();
 		$answers	= array();
 		if($items == null) return $formatted;
 		
+		//For each item element received from the html FORM
 		foreach ($items as $raw_item) {
 			$elt	= array();
 			$temp 	= explode('#', $raw_item);

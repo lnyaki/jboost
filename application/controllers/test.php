@@ -312,6 +312,14 @@ class Test extends TNK_Controller {
 		
 		$this->generate_page();
 	}
+
+	public function test_items(){
+		$this->load->model('Lists/Lists_model','list');
+		
+		$item = 'toto';
+		
+		echo $this->list->smart_add_plain_item($item);
+	}
 }
 
 

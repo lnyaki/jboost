@@ -143,11 +143,11 @@ class Roles extends TNK_Controller {
 
 		$context_id			= 'priv_arrays';
 		$button_id			= 'addPrivilegeButton';
-		$userID = $this->users_model->get_user(array('username' => $username),'username');
-		
+		$userData 	= $this->users_model->get_user(array('username' => $username),'username');
+		$userID 	= $userData->id;
 		//load views
 		$userPrivileges		= $this->users->widget_user_privileges($username);
-		$privileges_view	= $this->get_privileges_widget($context_id);
+		$privileges_view	= $this->get_privileges_widget($context_id,$userID);
 		$button				= $this->widget_button_add_privilege($button_id,$userID);
 		
 		$this->add_block($privileges_view);
@@ -237,7 +237,7 @@ class Roles extends TNK_Controller {
 	}
 	
 	//Return a list of all the privileges, grouped by their domain
-	public function get_privileges_widget($contextID){
+	public function get_privileges_widget($contextID,$userID){
 		$this->load->model('roles/roles_model','role');
 		$this->load->library('View_generator');
 		//
@@ -257,7 +257,7 @@ class Roles extends TNK_Controller {
 								,'domain'		=> array(1) //first field is the name of the domain
 								,'domainID'		=> array(3)
 								,'id'			=> array(2,1)
-								,'userID'		=> '5'
+								,'userID'		=> $userID
 								);
 		
 		$global_element_id = 'privileges_list';

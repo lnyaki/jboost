@@ -28,6 +28,7 @@ class Lists_model extends TNK_Model{
 	const LIST_ITEMS_QUESTION			= 'question';
 	const LIST_ITEMS_ANSWER				= 'answer';
 	const LIST_ITEMS_TYPE				= 'type';
+	const LIST_ITEMS_ID					= 'id';
 	//List_full_items table
 	const LIST_FULL_ITEMS_ID			= 'id';
 	const LIST_FULL_ITEM2_REF			= 'item_ref';
@@ -82,7 +83,7 @@ class Lists_model extends TNK_Model{
 	}
 	
 	//create a list named $list_name, and linked items
-	public function create_list($list_name, $items,$answers){
+	public function create_list2($list_name, $items,$answers){
 		$this->db->trans_start();
 		//First, we create the new list, and get its id back
 		$this->db->insert(self::LIST_TABLE,array(self::LIST_NAME => $list_name));
@@ -96,7 +97,7 @@ class Lists_model extends TNK_Model{
 			$answer = $answers[$i];
 			$item = $items[$i];
 			$i++;
-			//Second, we create the actual item
+			//Second, we create the actual plain item
 			$this->db->insert(self::LIST_ITEMS_TABLE,$item);
 			$simpleItemID = $this->db->insert_id();
 		
@@ -117,6 +118,62 @@ class Lists_model extends TNK_Model{
 		
 		return $list_id;
 	}
+	
+	
+	//Create a list. Each item to add has an array of answers
+	public function create_list($listname,$items){
+		$this->db->trans_start();
+		//First, we create the new list, and get its id back
+		$this->db->insert(self::LIST_TABLE,array(self::LIST_NAME => $listname));
+		$list_id = $this->db->insert_id();
+		//echo "**************** Create_list ************** <br/>";
+		//echo "*** List Created : ID $list_id <br/>";
+	
+		//Each item is an array with the item, and an array of its answers
+		foreach($items as $item => $answers){
+			$this->add_single_item($item,$answers,$list_id);
+		}
+		
+		return $this->db->trans_complete();
+	}
+	
+	public function add_single_item($item,$answers,$list_id){
+		//echo "******** Add single item ********<br/>";
+		$this->db->trans_start();
+		//1. Add the plain item
+		$itemID = $this->smart_add_plain_item($item);
+		//echo "*** ITEM : $item<br/>";
+		//echo "*** PLAIN ITEM ID : $itemID <br/>";
+		//2. Add the full item (TODO:FOR NOW, WE DUPLICATE. WE MAY CHANGE THAT LATER).
+		$fullItemID	= $this->add_full_item($itemID);
+		//echo "*** FULL ITEM ID : $fullItemID <br/>";
+		//3. We add the answers
+		$this->add_item_answers($fullItemID, $answers);
+		//4. Link the item to the list
+		$this->db->insert(self::LIST_LINK_ITEMS_TABLE,array(self::LIST_LINK_ITEMS2_REF => $fullItemID,
+															self::LIST_LINK_ITEMS_LIST_REF => $list_id));
+		$this->db->trans_complete();
+		//echo "******** END add single item ********<br/><br/>";
+	}
+	
+	public function add_full_item($plainItemID){
+		$this->db->insert(self::LIST_FULL_ITEMS_TABLE,array(self::LIST_FULL_ITEM2_REF => $plainItemID));
+		return $this->db->insert_id();
+	}
+	
+	private function add_item_answers($fullItemID,$answers){
+		//Add the full item id to the $answers array
+		$this->add_row_to_array(self::LIST_ITEMS_ANSWERS_FULLITEM_REF,$fullItemID,$answers);
+		//Perform the insert
+		return $this->db->insert_batch(self::LIST_ITEMS_ANSWERS_TABLE,$answers);
+	}
+	
+	public function add_row_to_array($rowname,$staticValue,&$array){
+		foreach($array as &$row){
+			$row[$rowname]	= $staticValue;
+		}		
+	}
+	
 	
 	//This function takes an array of items and formats them so that they can be inserted in tables
 	private function form_data_to_list_item($items){
@@ -140,6 +197,56 @@ class Lists_model extends TNK_Model{
 	public function add_item($item){
 		//TODO : get the technical segment here.
 		return $this->add_items(array('name' => $item));
+	}
+	
+	//Checks if a plain item exists. If yes, it returns its id. If no, the item is added, and
+	//its id is retrieved.
+	public function smart_add_plain_item($item){
+		$this->db->select(self::LIST_ITEMS_ID);
+		$this->db->from(self::LIST_ITEMS_TABLE);
+		$this->db->where(self::LIST_ITEMS_QUESTION,$item);
+		
+		$res = $this->db->get();
+		$res = $res->result();
+		print_r($res);
+		$itemID = 0;
+		
+		//If the item doesn't already exist
+		if(count($res)===0){
+			$this->db->insert(self::LIST_ITEMS_TABLE,array(self::LIST_ITEMS_QUESTION => $item));
+			
+			$itemID = $this->db->insert_id();
+		}
+		//if item already exists, extract the id
+		else{
+			$itemID = $res[0]->id;
+		}	
+		
+		return $itemID;
+	}
+	
+	public function smart_add_full_item($itemID){
+		$this->db->select(self::LIST_FULL_ITEMS_ID);
+		$this->db->from(self::LIST_FULL_ITEMS_TABLE);
+		$this->db->where(self::LIST_FULL_ITEM2_REF,$itemID);
+		
+		$res = $this->db->get();
+		$res = $res->result();
+		print_r($res);
+		$fullItemID = 0;
+		
+		//If there is no full item for this item
+		if(count($res) === 0){
+			$this->db->insert(self::LIST_FULL_ITEMS_TABLE,array(self::LIST_FULL_ITEM2_REF => $itemID));
+			
+			$fullItemID = $this->db->insert_id();
+		}
+		//If there is one or more existing full items
+		else{
+			$fullItemID = $res;
+		}
+		
+		return $fullItemID;
 	}
 	
 	//This function adds a plain item in table list_items. A plain item is the "key" part
