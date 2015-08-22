@@ -58,23 +58,23 @@ $route['ajax/roles/(:any)']				= 'roles/ajax/$1';
  * *******************************************************************/
  //tmp
  //$route['roles/dom']					= 'roles/dom';
- $route['roles']						= 'Roles';
+ $route['roles']						= 'roles';
  $route['roles/test']					= 'roles/test';
- $route['domains']						= 'Roles/domains';
- $route['roles/domains/(:any)']			= 'Roles/domain_details/$1';
- $route['roles/(:any)']					= 'Roles/role_details/$1';
- $route['privileges']					= 'Roles/privileges';
- $route['privileges/(:any)']			= 'Roles/privilege_managment/$1';
+ $route['domains']						= 'roles/domains';
+ $route['roles/domains/(:any)']			= 'roles/domain_details/$1';
+ $route['roles/(:any)']					= 'roles/role_details/$1';
+ $route['privileges']					= 'roles/privileges';
+ $route['privileges/(:any)']			= 'roles/privilege_managment/$1';
 
  /*********************************************************************
  *                        List routes
  * *******************************************************************/
-$route['lists']							= 'Lists';
-$route['lists/create']					= 'Lists/create_list';
-$route['lists/process/create/(:any)']	= 'Lists/creation_form/$1';
-$route['lists/update']					= 'Lists/update_list';
-$route['lists/process/create']			= 'Lists/creation_form';
-$route['lists/(:any)']					= 'Lists/display_list/$1';
+$route['lists']							= 'lists';
+$route['lists/create']					= 'lists/create_list';
+$route['lists/process/create/(:any)']	= 'lists/creation_form/$1';
+$route['lists/update']					= 'lists/update_list';
+$route['lists/process/create']			= 'lists/creation_form';
+$route['lists/(:any)']					= 'lists/display_list/$1';
 
 
 

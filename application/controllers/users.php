@@ -19,18 +19,18 @@ class Users extends TNK_Controller {
 		$this->load->library('session');
 		//load the requiered model
 		$this->load->model('users_model');
-		$this->load->model('Kana/Kana_model');
-		$this->load->model('Roles/roles_model','role');
+		$this->load->model('kana/kana_model');
+		$this->load->model('roles/roles_model','role');
 		
 		//load module to access view from other modules
-		$this->load->module('Roles');
+		$this->load->module('roles');
 		/************************************************************
 		*    			Load data
 		//************************************************************/
 		//display basic info about the user, for now
 		$user_data = $this->users_model->get_user(array('username' => $username),'username');
 		//get kana stats
-		$_list = $this->Kana_model->get_stats($user_data->id);
+		$_list = $this->kana_model->get_stats($user_data->id);
 		//get user privileges
 		$privileges = $this->role->get_user_privileges($user_data->id);		
 		
@@ -76,7 +76,7 @@ class Users extends TNK_Controller {
 	}
 
 	public function widget_user_privileges($username){
-		$this->load->model('Roles/roles_model','role');
+		$this->load->model('roles/roles_model','role');
 		$this->load->model('users_model');
 		$userdata	= $this->users_model->get_user(array('username' => $username),'username');
 		//get user privileges
@@ -143,7 +143,7 @@ class Users extends TNK_Controller {
 		$this->load->library('session');
 		$this->session->sess_destroy();
 		session_destroy();
-		redirect('/test/quizz');
+		redirect(base_url().'test/quizz');
 	}
 	
 	function registerlogin(){
@@ -222,9 +222,9 @@ class Users extends TNK_Controller {
 		else{
 			$this->load->library('session');
 			$this->load->model('users_model');
-			$this->load->model('Roles/roles_model','role');
+			$this->load->model('roles/roles_model','role');
 			$this->load->library('View_generator');
-			$this->load->library('Roles/Security');
+			$this->load->library('roles/Security');
 			$this->load->helper('table');
 			//we need to check the user's credentials
 			$result = $this->users_model->get_user(array('email' 	=> $this->input->post('email')

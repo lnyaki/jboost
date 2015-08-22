@@ -11,9 +11,11 @@
 			<p style="padding-top:10px;">
       		<?php 
       		
-      			$this->load->library('Roles/Security');
+      			$this->load->library('roles/Security');
 				if($this->security->is_logged_in()){
-					echo 'Welcome '.$_SESSION['username'];
+					$this->load->library('session');
+					$username = $this->session->userdata('username');
+					echo 'Welcome '.$username;
 					echo '<a href="'.base_url().'disconnect">Log out </a>';
 				}
 				else{
@@ -49,7 +51,7 @@
       		<ul class="nav navbar-nav">
         	<?php
         	if($this->security->is_logged_in()){
-        		echo '<li><a href='.base_url().'users/'.$_SESSION['username'].'>Profile</a>';
+        		echo '<li><a href='.base_url().'users/'.$username.'>Profile</a>';
         	}
         	?>
         		<li><a href='<?php echo base_url();?>lists'>Lists</a></li>

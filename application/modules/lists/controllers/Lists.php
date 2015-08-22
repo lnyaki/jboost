@@ -39,7 +39,9 @@ class Lists extends TNK_Controller {
 		$this->add_js('assets/js/test-page.js');
 		$this->add_js('assets/js/html_lists.js',true);
 	//load the views
+		//TODO : displayList_widget is deprecated : to remove
 		$character_list_view	= $this->display_list_widget($list_name);
+		//remove call to function above
 		$list 					= $this->get_list_items_widget($list_name);
 		$update_view			= $this->update_list_widget();
 		$update_view2			= $this->update_list_widget2();
@@ -62,7 +64,7 @@ class Lists extends TNK_Controller {
 	public function get_list_items_widget($listname){
 		//Load models and libraries
 		$this->load->library('View_generator','generator');
-		$this->load->model('Lists/Lists_model','list');
+		$this->load->model('lists/lists_model','list');
 		$list_items	= $this->list->get_list_items($listname);
 		
 		$view = $this->view_generator->generate_array($list_items,null);
@@ -74,7 +76,7 @@ class Lists extends TNK_Controller {
 	public function list_names_widget(){
 		//Load models and libraries
 		$this->load->library('View_generator','generator');
-		$this->load->model('Lists/Lists_model','list');
+		$this->load->model('lists//lists_model','list');
 		//Load list data
 		$real_lists = $this->list->get_lists();
 		
@@ -94,7 +96,7 @@ class Lists extends TNK_Controller {
 			'id'		=> 'newListButton',
 			'class'		=> 'btn btn-success',
 		);
-		$path 	= base_url().'Lists/create';
+		$path 	= base_url().'lists/create';
 
 		return "<a href='$path'>".$this->view_generator->generate_form_element($data,View_generator::BUTTON)."</a>";
 	}
@@ -102,11 +104,11 @@ class Lists extends TNK_Controller {
 	//get the update-list widget
 	public function update_list_widget(){
 		//TODO : add call to a script here, to handle the sending of data (form?)
-		$this->load->library('Roles/Security');
+		$this->load->library('roles/Security');
 		$this->security->set_view_restriction('Lists','update_own');
 		
 		if($this->security->has_access_to_view()){
-			return $this->view('Lists/update_list_view',null);	
+			return $this->view('lists/update_list_view',null);	
 		}
 		else{
 			return '';
@@ -115,14 +117,14 @@ class Lists extends TNK_Controller {
 	
 	//get the update-list widget
 	public function update_list_widget2(){
-		return $this->view('Lists/update_list_view2',null);
+		return $this->view('lists/update_list_view2',null);
 	}
 
 	public function display_list_widget($list_name){
 	//TODO : this is legacy. It just offers the list title now. TO remove when i have some time
-		return $this->view('Lists/character_list_view',array('_list_name' => $list_name, '_list' => array()));
+		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => array()));
 	
-	$this->load->model('Lists/Lists_model','list');
+	$this->load->model('lists/lists_model','list');
 	//1 : load data from the list module (not the kana)
 	$data	= $this->list->load_list_items($list_name);
 	//2 : generate the html array
@@ -135,8 +137,8 @@ class Lists extends TNK_Controller {
 	public function create_list_widget(){
 		$this->add_js('assets/js/html_lists.js',true);
 		//$this->add_module_js('Lists','html_lists.js',true);
-		$this->add_script2('Lists','add_element_click_function.php');
-		return $this->load->view('Lists/create_list_view',array(),TRUE);
+		$this->add_script2('lists','add_element_click_function.php');
+		return $this->load->view('lists/create_list_view',array(),TRUE);
 	}
 	
 	public function new_list_widget(){
@@ -206,7 +208,7 @@ class Lists extends TNK_Controller {
 	//create a new list of characters (kana, kanji)
 	public function create_list(){
 	//Check privileges
-		$this->load->library('Roles/Security');
+		$this->load->library('roles/Security');
 	//Specify the pages restrictions
 		$this->security->set_page_restriction('Lists','create');
 	if(!$this->security->has_access_to_page()){
@@ -246,7 +248,7 @@ class Lists extends TNK_Controller {
 	
 	//action to take when receiving data from the creation form
 	public function creation_form(){
-		$this->load->model('Lists/Lists_model','model');
+		$this->load->model('lists/lists_model','model');
 		$listname 	= $this->input->post('list');
 		$items 		= $this->input->post('items');
 		$list_type	= $this->input->post('type');

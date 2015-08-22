@@ -19,7 +19,7 @@ class Test extends TNK_Controller {
 		$this->add_js('assets/js/test-page.js');
 		
 		//get email list widget
-		$this->load->module("Email_list");
+		$this->load->module("email_list");
 		$widget = $this->email_list->get_widget();
 		$widget2 = "<h2> Hello widget</h2>";
 		$this->add_block($widget,self::RIGHT_BLOCK);
@@ -49,7 +49,7 @@ class Test extends TNK_Controller {
 		$this->add_css('assets/css/quizz.css');
 		
 		//get email list widget
-		$this->load->module("Email_list");
+		$this->load->module("email_list");
 		$widget	= $this->email_list->get_widget();
 		$this->add_block($widget,self::RIGHT_BLOCK);
 		
@@ -69,14 +69,14 @@ class Test extends TNK_Controller {
 	}
 	
 	private function load_items($post){
-		$this->load->model('kana/Kana_model');
+		$this->load->model('kana/kana_model');
 		$tmp = $this->Kana_model->get_kana_list($post['list_name']);
 
 		echo json_encode($tmp);
 	}
 	
 	public function add_stats($post,$userID){
-		$this->load->model('kana/Kana_model');
+		$this->load->model('kana/kana_model');
 		
 		$this->Kana_model->add_stats($post['stats'],$userID);
 	}
@@ -122,7 +122,7 @@ class Test extends TNK_Controller {
 	
 	public function test_security(){
 		$this->load->library('View_generator');
-		$this->load->library('Roles/Security');
+		$this->load->library('roles/Security');
 		
 		$this->security->set_page_restriction('Lists','comment');
 		$this->security->set_page_restriction('Lists', 'vote');

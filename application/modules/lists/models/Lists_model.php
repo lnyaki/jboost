@@ -51,7 +51,7 @@ class Lists_model extends TNK_Model{
 	//return the set of all the different lists
 	public function get_lists(){
 		
-		$sql 	= 'SELECT'.self::$cm_01;
+		$sql 	= 'SELECT *';
 		$sql	.= ' FROM '.self::LIST_TABLE;
 		
 		$this->db->select(self::$cm_01);
