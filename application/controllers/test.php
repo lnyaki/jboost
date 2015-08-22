@@ -19,7 +19,7 @@ class Test extends TNK_Controller {
 		$this->add_js('assets/js/test-page.js');
 		
 		//get email list widget
-		$this->load->module("email_list");
+		$this->load->module("Email_list");
 		$widget = $this->email_list->get_widget();
 		$widget2 = "<h2> Hello widget</h2>";
 		$this->add_block($widget,self::RIGHT_BLOCK);
@@ -49,7 +49,7 @@ class Test extends TNK_Controller {
 		$this->add_css('assets/css/quizz.css');
 		
 		//get email list widget
-		$this->load->module("email_list");
+		$this->load->module("Email_list");
 		$widget	= $this->email_list->get_widget();
 		$this->add_block($widget,self::RIGHT_BLOCK);
 		
@@ -122,7 +122,7 @@ class Test extends TNK_Controller {
 	
 	public function test_security(){
 		$this->load->library('View_generator');
-		$this->load->library('roles/Security');
+		$this->load->library('Roles/Security');
 		
 		$this->security->set_page_restriction('Lists','comment');
 		$this->security->set_page_restriction('Lists', 'vote');

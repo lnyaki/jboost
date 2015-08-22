@@ -19,11 +19,11 @@ class Users extends TNK_Controller {
 		$this->load->library('session');
 		//load the requiered model
 		$this->load->model('users_model');
-		$this->load->model('kana/Kana_model');
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Kana/Kana_model');
+		$this->load->model('Roles/roles_model','role');
 		
 		//load module to access view from other modules
-		$this->load->module('roles');
+		$this->load->module('Roles');
 		/************************************************************
 		*    			Load data
 		//************************************************************/
@@ -76,7 +76,7 @@ class Users extends TNK_Controller {
 	}
 
 	public function widget_user_privileges($username){
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 		$this->load->model('users_model');
 		$userdata	= $this->users_model->get_user(array('username' => $username),'username');
 		//get user privileges
@@ -222,9 +222,9 @@ class Users extends TNK_Controller {
 		else{
 			$this->load->library('session');
 			$this->load->model('users_model');
-			$this->load->model('roles/roles_model','role');
+			$this->load->model('Roles/roles_model','role');
 			$this->load->library('View_generator');
-			$this->load->library('roles/Security');
+			$this->load->library('Roles/Security');
 			$this->load->helper('table');
 			//we need to check the user's credentials
 			$result = $this->users_model->get_user(array('email' 	=> $this->input->post('email')

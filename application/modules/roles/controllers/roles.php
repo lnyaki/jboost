@@ -3,11 +3,11 @@
 class Roles extends TNK_Controller {
 		
 	public function index(){
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 
 		$result = $this->role->list_roles();
 		
-		$view = $this->load->view('roles/role_list',array('_roles' => $result), true);
+		$view = $this->load->view('Roles/role_list',array('_roles' => $result), true);
 		
 		$this->add_block($view,self::CENTER_BLOCK);
 		$this->generate_page();
@@ -27,7 +27,7 @@ class Roles extends TNK_Controller {
 	
 	//page that lists all the domains
 	public function domains(){
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 
 		//load the js
 		$this->add_js('assets/js/Ajax_test.js');
@@ -41,10 +41,10 @@ class Roles extends TNK_Controller {
 		//$dom_privileges	= $this->role->get_all_domain_privileges();
 		
 		//load views
-		$domain_view 			= $this->load->view('roles/domain_list', array('_domains' => $domains),true);
+		$domain_view 			= $this->load->view('Roles/domain_list', array('_domains' => $domains),true);
 		$new_domain_button		= $this->get_new_domain_widget();
 		$view_domain_privileges	= $this->get_domain_privileges_widget();
-		//$this->load->view('roles/add_privilege_to_user_widget',null,true);
+		//$this->load->view('Roles/add_privilege_to_user_widget',null,true);
 		//Add the views to the page		
 		$this->add_block($domain_view, self::CENTER_BLOCK);
 		$this->add_block($new_domain_button,self::RIGHT_BLOCK);
@@ -59,7 +59,7 @@ class Roles extends TNK_Controller {
 	
 	//Page with details on a single domain
 	public function domain_details($domain_name){
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 		
 		//load the js
 		$this->add_js('assets/js/Ajax_test.js');
@@ -72,7 +72,7 @@ class Roles extends TNK_Controller {
 		$roles = $this->role->list_domain_roles($domain_name,false);
 		
 		//loading the views
-		$roles_view 		= $this->load->view('roles/domain_roles_list',array('_roles' => $roles),true);
+		$roles_view 		= $this->load->view('Roles/domain_roles_list',array('_roles' => $roles),true);
 		$new_role_button	= $this->get_new_role_widget();
 
 
@@ -160,11 +160,11 @@ class Roles extends TNK_Controller {
 	
 	//Page with details on a single role
 	public function role_details($role_name){
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 		//$privileges = $this->role->list_privileges_of_role($domainID,$role_name);
 		$privileges = $this->role->list_privileges_of_role_by_name($role_name);
 		
-		$privileges_view 		= $this->load->view('roles/role_privilege_list',array('_privileges' => $privileges),true);
+		$privileges_view 		= $this->load->view('Roles/role_privilege_list',array('_privileges' => $privileges),true);
 		
 		//Add views to the page
 		$this->add_block($privileges_view,self::CENTER_BLOCK);
@@ -177,7 +177,7 @@ class Roles extends TNK_Controller {
 	
 	public function test(){
 		//load the role model
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 		
 		$this->test_db();
 		
@@ -198,24 +198,24 @@ class Roles extends TNK_Controller {
  *********************************************************************/
 	//Button for creating a new domain
 	public function get_new_domain_widget(){
-		return $this->load->view('roles/create_domain_widget',null,true);		
+		return $this->load->view('Roles/create_domain_widget',null,true);		
 	}
 
 	//button for creating a new role
 	public function get_new_role_widget(){
-		return $this->load->view('roles/create_role_widget',null,true);
+		return $this->load->view('Roles/create_role_widget',null,true);
 	}
 
 	//button for adding privileges to a user
 	public function get_add_privilege_to_user_widget($data){
-		return $this->load->view('roles/add_privilege_to_user_widget',$data,true);
+		return $this->load->view('Roles/add_privilege_to_user_widget',$data,true);
 		//return '<h3>test workaround</h3>';
 	}
 
 	//Here, we test the fact of generating html from the constroler, instead of
 	//going through a view
 	public function get_domain_privileges_widget($context_id =''){
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 		$this->load->library('View_generator');
 		
 		$data	= $this->role->get_all_domain_privileges();
@@ -225,7 +225,7 @@ class Roles extends TNK_Controller {
 		//initialize the title for each sub array to display
 		$titles	= $this->view_generator->initialize_array_title('',1,'Domain: ','');
 		//Set the links, before passing them in generate arrays
-		$prefix = base_url().'roles/privileges';
+		$prefix = base_url().'Roles/privileges';
 		
 		$links = $this->view_generator->create_row_link(null,2,array(2),$prefix);
 				
@@ -238,7 +238,7 @@ class Roles extends TNK_Controller {
 	
 	//Return a list of all the privileges, grouped by their domain
 	public function get_privileges_widget($contextID,$userID){
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 		$this->load->library('View_generator');
 		//
 		$this->add_script("<script>var contextID = '$contextID';</script>");
@@ -280,7 +280,7 @@ class Roles extends TNK_Controller {
 		$ajaxOperationOk = '0';
 
 		//We load the model, so we can call the DB functions.
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 			
 		switch($function){			
 			//We receive the ajax call for the creation of a new domain
@@ -329,7 +329,7 @@ class Roles extends TNK_Controller {
 	//Call the roles.model to add privileges to the user
 	private function add_privilege_to_user($data){
 	//we arrive here through an ajax call	
-		$this->load->model('roles/roles_model','role');
+		$this->load->model('Roles/roles_model','role');
 		
 		
 		$priv_array = array();
