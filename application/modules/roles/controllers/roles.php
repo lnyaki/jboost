@@ -98,13 +98,7 @@ class Roles extends TNK_Controller {
 		$context_id			= 'priv_arrays';
 		//load data 
 		//load views
-		$privileges_view	= $this->get_privileges_widget($context_id);
-		$button				= $this->widget_button_add_privilege();
-		
-		
 		//add views to the page
-		$this->add_block($privileges_view,self::CENTER_BLOCK);
-		$this->add_block($button,self::CENTER_BLOCK);
 
 		$this->generate_page();
 	}
