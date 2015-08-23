@@ -5,16 +5,7 @@
 		
 			if(count($_roles)>0){
 				echo '<h3>Domain : '.$_roles[0]->domain.'</h3>';
-?>
-<script>
-//getting the id of the domain from php. This will be used in the script
-//linked to this page.
-	var domainID = "<?php echo $_roles[0]->domain_ref;?>";
-</script>
-<?php				
-				
-			
-				
+	
 				//Test the new sub arrays function
 				//Set the prefix to use, for the links (<a>)
 				$prefix = base_url().'roles';
@@ -31,7 +22,7 @@
 				}
 			}
 			else{
-				echo "<h3>Domain :</h3>";
+				echo "<h3>Domain : Empty domain</h3>";
 				echo "<p>This domain is empty. It doesn't contain any role.";
 			}
 			

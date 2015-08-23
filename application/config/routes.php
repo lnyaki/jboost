@@ -61,8 +61,8 @@ $route['ajax/roles/(:any)']				= 'roles/ajax/$1';
  $route['roles']						= 'roles';
  $route['roles/test']					= 'roles/test';
  $route['domains']						= 'roles/domains';
+ $route['domains/(:any)/(:any)']		= 'roles/role_details/$1/$2';
  $route['roles/domains/(:any)']			= 'roles/domain_details/$1';
- $route['roles/(:any)']					= 'roles/role_details/$1';
  $route['privileges']					= 'roles/privileges';
  $route['privileges/(:any)']			= 'roles/privilege_managment/$1';
 

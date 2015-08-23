@@ -1,39 +1,6 @@
 <?php
 
 class Test extends TNK_Controller {
-
-
-	public function view(){
-		//loading views
-		$data['content'] 	= $this->load->view('test/view_test_links',null,TRUE);
-		$this->title("Test page");
-		
-		$this->create_page($data);
-		
-	}
-	
-	public function page(){
-		//js script
-		$this->add_js('assets/js/lodash.compat.js');
-		$this->add_js('assets/js/test.js');
-		$this->add_js('assets/js/test-page.js');
-		
-		//get email list widget
-		$this->load->module("email_list");
-		$widget = $this->email_list->get_widget();
-		$widget2 = "<h2> Hello widget</h2>";
-		$this->add_block($widget,self::RIGHT_BLOCK);
-		$this->add_block($widget2,self::RIGHT_BLOCK);
-		
-		//center block
-		$block = "<div> Hello world!</div>";
-		$block2 = "<h3> Go belgium</h3>";
-		$this->add_block($block2,self::CENTER_BLOCK);
-		$this->add_block($block ,self::CENTER_BLOCK);
-		
-		
-		$this->generate_page();
-	}
 	
 	public function quizz(){
 		//js script
@@ -119,6 +86,11 @@ class Test extends TNK_Controller {
 		}
 	}
 	
+	public function domain(){
+		$this->load->model('roles/roles_model','role');
+		
+		echo $this->role->get_domain_id('Privileges');
+	}
 	
 	public function test_security(){
 		$this->load->library('View_generator');
@@ -136,6 +108,7 @@ class Test extends TNK_Controller {
 		else{
 			$view = '<p> Forbidden access';
 		}
+		show_404('Hey jude!');
 		
 		$this->add_block($view);
 		$this->generate_page();
@@ -291,7 +264,6 @@ class Test extends TNK_Controller {
 		
 		$tableConfig 	= array();
 		$tableConfig[]	= $this->view_generator->form_element_configuration(View_generator::CHECKBOX,$elt_config1,'Test label','New Column');
-		print_r($tableConfig);
 		$view 			= $this->view_generator->generate_array($rows,null,$links,null,$tableConfig,'superArray');	
 		
 		//ensuite, creéer un bouton qui va prendre les rows sélectionnés (lui donner l'id du table)

@@ -64,6 +64,28 @@
 	/******************************************************************************
 	 *                       Domain functions
 	 * ****************************************************************************/
+	 //Returns the id of a domain, based on a name.
+	 public function get_domain_id($domainName){
+	 	$this->db->select(self::domain_id);
+		$this->db->from(self::domain_table);
+		$this->db->where(self::domain_name,$domainName);
+		
+		$result = $this->db->get();
+
+		if(count($result) == 0){
+			message_log('error','Domain name $domainName doesn\'t exist in table '.self::domain_table);
+		}
+		else if(count($result)==1){
+			$result = $this->extract_results($result,self::ARRAY_RESULT);
+			//return just the id.
+			return $result = $result[0][self::domain_id];
+		}
+		else{
+			message_log('error','Sevaral rows returned ('.count($result).') when searching for domain '.$domainName.' in table '.self::domain_table);
+		}
+		
+		return null;
+	 }
 	//Tested : ok
 	//Function that creates a new domain (new entry in table security_domain).
 	public function create_domain($data){
@@ -232,17 +254,17 @@
 		return $this->extract_results($query);
 	}
 	
-	public function list_privileges_of_role_by_name($roleName){
+	public function list_privileges_of_role_by_name($domain,$roleName){
 		$privilege = 'p';
 		$role = 'r';
 		//crafting the query
 		$this->db->select(self::role_table.'.'.self::role_name." as role_name,$role.".self::role_privilege_role_ref.", $role.".self::role_privilege_privilege_ref);
 		$this->db->from(self::role_privilege_table." as $role");
-		//$this->db->where($role.'.'.self::role_privilege_role_, $roleName);
 		$this->db->where(self::role_table.'.'.self::role_name,$roleName);
+		$this->db->where(self::domain_table.'.'.self::domain_name,$domain);
 		$this->db->join(self::privilege_table.' as p', $role.'.'.self::role_privilege_privilege_ref.'='.$privilege.'.'.self::privilege_name);
 		$this->db->join(self::role_table,self::role_table.'.'.self::role_id.'='.$role.'.'.self::role_privilege_role_ref);
-		
+		$this->db->join(self::domain_table,self::role_table.'.'.self::role_domain_ref.'='.self::domain_table.'.'.self::domain_id);
 		$query = $this->db->get();
 		
 		return $this->extract_results($query);

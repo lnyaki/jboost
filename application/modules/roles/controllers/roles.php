@@ -27,7 +27,7 @@ class Roles extends TNK_Controller {
 	
 	//page that lists all the domains
 	public function domains(){
-		$this->load->model('roles/roles_model1','role');
+		$this->load->model('roles/roles_model','role');
 
 		//load the js
 		$this->add_js('assets/js/Ajax_test.js');
@@ -69,22 +69,28 @@ class Roles extends TNK_Controller {
 		$this->add_css('assets/css/website.css');
 		
 		//loading data
-		$roles = $this->role->list_domain_roles($domain_name,false);
+		$roles 		= $this->role->list_domain_roles($domain_name,false);
+		$domainID	= $this->role->get_domain_id($domain_name);
 		
 		//loading the views
-		$roles_view 		= $this->load->view('roles/domain_roles_list',array('_roles' => $roles),true);
-		$new_role_button	= $this->get_new_role_widget();
+		$roles_view 		= $this->widget_get_domain_roles_list($roles);
+		$new_role_button	= $this->get_new_role_widget($domainID);
 
 
 
 
 		//Add views to the page
 		$this->add_block($roles_view,self::CENTER_BLOCK);
+		$this->add_block("<h3>Problem above</h3>");
 		$this->add_block($new_role_button,self::CENTER_BLOCK);
 		
-		$this->add_script2('role_creation_click_function');
+		$this->add_script2('roles','role_creation_click_function');
 		
 		$this->generate_page();
+	}
+	
+	public function widget_get_domain_roles_list($roles){
+		return $this->load->view('roles/domain_roles_list',array('_roles' => $roles),true);	
 	}
 	
 	//Display all privileges for all domains
@@ -153,10 +159,10 @@ class Roles extends TNK_Controller {
 	
 	
 	//Page with details on a single role
-	public function role_details($role_name){
+	public function role_details($domain_name,$role_name){
 		$this->load->model('roles/roles_model','role');
 		//$privileges = $this->role->list_privileges_of_role($domainID,$role_name);
-		$privileges = $this->role->list_privileges_of_role_by_name($role_name);
+		$privileges = $this->role->list_privileges_of_role_by_name($domain_name,$role_name);
 		
 		$privileges_view 		= $this->load->view('roles/role_privilege_list',array('_privileges' => $privileges),true);
 		
@@ -197,8 +203,8 @@ class Roles extends TNK_Controller {
 	}
 
 	//button for creating a new role
-	public function get_new_role_widget(){
-		return $this->load->view('roles/create_role_widget',null,true);
+	public function get_new_role_widget($domainID){
+		return $this->load->view('roles/create_role_widget',array('_domain_id' => $domainID),true);
 	}
 
 	//button for adding privileges to a user
@@ -315,6 +321,9 @@ class Roles extends TNK_Controller {
 				$this->add_privilege_to_user($data);
 				
 				break;
+			case 'create_privilege' :
+				break;
+
 			default: ;
 		}
 		
