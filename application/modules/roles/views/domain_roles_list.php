@@ -4,11 +4,12 @@
 			$this->load->library('View_generator');
 		
 			if(count($_roles)>0){
-				echo '<h3>Domain : '.$_roles[0]->domain.'</h3>';
+				$domainName = $_roles[0]->domain;
+				echo '<h3>Domain : '.$domainName.'</h3>';
 	
 				//Test the new sub arrays function
 				//Set the prefix to use, for the links (<a>)
-				$prefix = base_url().'roles';
+				$prefix = base_url()."domains/$domainName";
 				$sub_array = $this->view_generator->get_sub_arrays($_roles,array(2));
 		
 				
