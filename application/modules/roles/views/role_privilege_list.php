@@ -5,7 +5,7 @@
 			$list = '';
 			
 			if(count($_privileges)>0){
-				echo '<h3>Role : '.$_privileges[0]->role_name.'</h3>';
+				echo '<h3>Role : ['.$_domainName.']'.$_privileges[0]->role_name.'</h3>';
 				//get array  head
 				$thead = html_table_head(array_keys((array)$_privileges[0]));
 				

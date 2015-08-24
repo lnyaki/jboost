@@ -3,9 +3,10 @@
 <?php
 	$_userID = isset($_userID)? $_userID:'';
 	$_buttonID	= isset($_buttonID)? $_buttonID:'';
+	$_contextID	= isset($_contextID)? $_contextID:'';
 	echo "var userID 	= '$_userID';\n";
 	echo "var buttonID	= '$_buttonID';\n";
-	echo "//WAZZAAA\n";
+	echo "var contextID = '$_contextID';\n";
 ?>
 //contextID is previously set up in the controller roles/privileges
 	var $context 	= $('#'+contextID);

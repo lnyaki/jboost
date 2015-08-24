@@ -109,7 +109,7 @@ class View_generator{
 		//get the body of the table
 		$table_body	= $this->generate_table_body($rows,$toIgnore,$links,$classes,$formData);
 		
-		$result		= '<table id='.$arrayID.' class="table">'.$table_head.$table_body.'</table>';
+		$result		= '<table id="'.$arrayID.'" class="table">'.$table_head.$table_body.'</table>';
 	
 		return $result;
 	}
