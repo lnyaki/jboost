@@ -48,9 +48,17 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
+//****** Dev ********
 $db['default']['username'] = 'root';
 $db['default']['password'] = '';
+//*********************/
+
+//******* Production *********
+//$db['default']['username'] = 'jboost';
+//$db['default']['password'] = 'kJWvBD*/fWBN4y48cDI524Tiuouk19HD';
+//*************************/
+
+$db['default']['hostname'] = 'localhost';
 $db['default']['database'] = 'jboost';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
@@ -63,6 +71,7 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
+
 
 
 /* End of file database.php */
