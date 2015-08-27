@@ -3,6 +3,8 @@
 ignore/
 wordpress/
 application/logs/
+application/config/config.php
+application/config/database.php
 
 # Compiled source #
 ###################

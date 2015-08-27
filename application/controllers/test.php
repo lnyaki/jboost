@@ -1,5 +1,5 @@
 <?php
-
+use Everyman\Neo4j;
 class Test extends TNK_Controller {
 	
 	public function quizz(){
@@ -92,6 +92,23 @@ class Test extends TNK_Controller {
 		echo $this->role->get_domain_id('Privileges');
 	}
 	
+	public function test_neo4j(){
+		$this->load->library('everyman');		
+		$client = new Everyman\Neo4j\Client('localhost', 7474);
+		$keanu = new Everyman\Neo4j\Node($client);
+		
+		//$client->getTransport()->useHttps()->setAuth('neo4j', 'decaloteur');
+		$client->getTransport()->setAuth('neo4j', 'decaloteur');
+		
+ 		//print_r($client->getServerInfo());
+		//create a node
+		$node = $client->makeNode();
+		$node->setProperty('name', 'Roronoa Zorro');
+		$node->save();
+		
+		echo "NodeID : ".$node->getId();
+		$this->generate_page();
+	}
 	public function test_security(){
 		$this->load->library('View_generator');
 		$this->load->library('roles/Security');
