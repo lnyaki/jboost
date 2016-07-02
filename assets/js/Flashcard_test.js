@@ -243,6 +243,7 @@
 			input_method	= input_type;
 		};
 		
+		//Handled arguments : q2a, a2q
 		var set_quizz_direction	= function(direction){
 			quizz_direction = direction;
 		};
@@ -267,28 +268,35 @@
 			quizz = the_quizz;
 		};
 		
+		/* Modify this function if we get more complex quizz items (like several possible answers)
+		 * 
+		 */
 		//sets the items being quizzed
 		var set_item			 = function(item){
-			current_item = item;
+			//Set the model
+			set_item_model(item);
 			
-			if(quizz_direction == "q2a"){
-				set_item_text(current_item.item);	
+			//Set the view
+			if(quizz_direction === "q2a"){
+				set_item_view(item.item);
 			}
-			else if(quizz_direction == "a2q"){
-				set_item_text(current_item.answer);
+			else if(quizz_direction === "a2q"){
+				set_item_view(item.answer);
 			}
 			else{
 				console.log("[Flashcard.set_item] ERR : Unknown quizz direction : "+quizz_direction);
 			}
-			
-			
 			
 			console.log("##################### Current Item : ######################");
 			console.log(current_item);
 			console.log("Direction : "+quizz_direction);
 		};
 		
-		var set_item_text		= function(text){
+		var set_item_model		= function(item){
+			current_item = item;
+		};
+		
+		var set_item_view		= function(text){
 			$(ITEM_DIV).text(text);
 		};
 		

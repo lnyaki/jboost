@@ -5,6 +5,8 @@ wordpress/
 application/logs/
 application/config/config.php
 application/config/database.php
+vendor/
+node_modules/
 
 # Compiled source #
 ###################
