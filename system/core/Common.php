@@ -254,7 +254,14 @@ if ( ! function_exists('get_config'))
 			}
 		}
 
-		return $_config[0] =& $config;
+		//return $_config[0] =& $config;		//Causes error after update to wampserver64
+		
+		//LNY Trying to correct an error that appeared after updating to wampserver64 :
+		//Message: Only variable references should be returned by reference
+		//Filename: core/Common.php
+		//Line Number: 257
+		$_config[0]	= & $config;
+		return $_config[0];
 	}
 }
 

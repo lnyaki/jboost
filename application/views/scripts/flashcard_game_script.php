@@ -49,10 +49,19 @@
 	
 	var click_option	= function(){
 		$(options).hide();
+		//Initializing quizz based on options. Loading a list of items
 		quizz.initialize();
 		
-		$(card).show('slide');
-		$(card_view).show('slide');
+		//Check if the list was loaded correctly (not empty list).
+		if(quizz.list_loaded === true){
+			$(card).show('slide');
+			$(card_view).show('slide');
+		}
+		//If list not correctly loaded
+		else{
+			console.log("LIST NOT LOADED");
+		}
+		
 	};
 	
 	//set the click option for radio buttons, depending on radio button group
@@ -80,27 +89,6 @@
 				quizz.click_radio($('#menu_time'), this);
 			}
 	);
-	
-	
-	//test the attr function
-	console.log($(btn_question2answer));
-	console.log('Test sur l\'attribut "toto"');
-	console.log('Toto présent : '+$(btn_question2answer).attr('toto'));
-	//console.log('HasAttr : '+document.getElementById("btn-question2answer").hasAttribute('toto'));
-	if($(btn_question2answer).attr('toto') == true){
-		console.log("Attribut est là");
-	}
-	else if($(btn_question2answer).attr('toto') == undefined){
-		console.log("Attribut undefined");
-	}
-	else if(!!$(btn_question2answer).attr('toto') == false){
-		console.log("False");
-	}
-	else if(!!$(btn_question2answer).attr('toto') == true){
-		console.log("true");
-	}
-	else console.log("valeur inconnue");
-	
 	
 	//USE RADIO INSTEAD OF BUTTONS
 	
@@ -159,6 +147,41 @@
 		}
 	};
 	
+	
+	//This function allow the selection, by clicking, of one element among many, based on the id
+	//of the container (named context here)
+	var select_one_element	= function(event){
+		//get clicked element
+		var clicked_element = event.target;
+		//get all the siblings of that element
+		var siblings		= $(clicked_element).siblings();
+	
+		//actually select the clicked element
+		if($(clicked_element).attr('selected') !== 'selected'){
+			console.log("Selecting new element");
+			//actually select the clicked element
+			$(clicked_element).removeClass('btn-default');
+			$(clicked_element).removeClass("directionNotSelected");
+			$(clicked_element).addClass("btn-success");
+			$(clicked_element).addClass("directionSelected");
+			$(clicked_element).attr("selected","selected");	
+			
+			//unselect other elements
+			_.each( siblings, function(sib){
+				$(sib).removeAttr("selected");
+				$(sib).removeClass("directionSelected");
+				$(sib).removeClass("btn-success");
+				$(sib).addClass("directionNotSelected");
+				$(sib).addClass('btn-default');
+			});
+		}
+		else{
+			console.log("Element already selected.");
+		}
+	}
+	
+	
+	
 	var restart_function	= function(){
 		//hidding the end screen
 		$(end_screen).hide();
@@ -176,6 +199,8 @@
 	// governate the direction of the quizz (ex : from kana to romaji, or romaji to kana)
 	$(btn_question2answer).click(quizz_direction_click);
 	$(btn_answer2question).click(quizz_direction_click);
+	//set the click option for the list buttons
+	$('.clickable').click(select_one_element);	
 	
 	//TODO : remove this button and generate it dynamically, depending
 	// on the input type.

@@ -30,6 +30,13 @@
 
 
 ?>
+	<fieldset>
+		<legend>Lists</legend>
+		<div id="list_choice">
+			<button type="button" id="btn-hiragana" class="btn btn-success clickable directionSelected" selected='selected' >Hiragana</button>
+			<button type="button" id="btn-katakana" class="btn btn-default clickable directionNotSelected">Katakana</button>
+		</div>
+	</fieldset>
 	<fieldset id="menu_repetitions">
 		<legend>Repetitions</legend>
 		<div class="radio">
