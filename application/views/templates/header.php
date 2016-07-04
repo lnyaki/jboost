@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="header-full-title">
 			<h1 class="animated fadeInRight">
-				<a href="/">[OLD version]Japanese <span>Boost</span></a>
+				<a href="/">Japanese <span>Boost</span></a>
 			</h1>
 			<p class="animated fadeInRight">Learn japanese, the fun way</p>
 		</div>		

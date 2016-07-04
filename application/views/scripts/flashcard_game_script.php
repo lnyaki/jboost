@@ -60,6 +60,7 @@
 		//If list not correctly loaded
 		else{
 			console.log("LIST NOT LOADED");
+			$(card).show('slide');
 		}
 		
 	};

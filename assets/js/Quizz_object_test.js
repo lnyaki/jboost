@@ -191,6 +191,7 @@ Quizz.prototype	= (function () {
 		console.log("*** List name : "+list_name);
 	
 		//get time per answer
+		/*
 		var answer_time = $('#menu_time').find('[checked="checked"][name="option_time"]');
 		if($(answer_time).size() == 1){
 			response_time	= $(answer_time).attr('value');
@@ -199,6 +200,7 @@ Quizz.prototype	= (function () {
 		else{
 			console.log("ERR: Answer time : incorrect number of entries found : "+ $(answer_time).size());
 		}
+		*/
 			
 	};
 		

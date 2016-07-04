@@ -1,6 +1,6 @@
 <?php
 use Everyman\Neo4j;
-class Test extends TNK_Controller {
+class Quizz extends TNK_Controller {
 	
 	public function quizz(){
 		//js script
@@ -30,7 +30,7 @@ class Test extends TNK_Controller {
 		//center block
 		$this->add_block($block,self::CENTER_BLOCK);
 		
-		$this->title("Quizz page");
+		$this->title("QuizPage");
 		
 		$this->generate_page();
 	}
