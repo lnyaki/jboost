@@ -244,16 +244,6 @@ class Quizz extends TNK_Controller {
 		$this->generate_page();
 	}
 	
-	public function page_not_found(){
-		$this->title("Page not found");
-		
-		//get view
-		$view = '<p>Page not found</>';
-		
-		$this->add_block($view,self::CENTER_BLOCK);
-		$this->generate_page();
-	}
-	
 	public function view_generator(){
 		$this->load->library('View_generator');
 		

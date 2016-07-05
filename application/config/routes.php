@@ -79,7 +79,7 @@ $route['lists/(:any)']					= 'lists/display_list/$1';
 
 
 $route['default_controller'] 	= "quizz/quizz";
-$route['404_override'] 			= 'test/page_not_found';
+$route['404_override'] 			= 'page_not_found_404';
 
 
 /* End of file routes.php */
