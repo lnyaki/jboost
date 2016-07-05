@@ -1,7 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
 use GraphAware\Neo4j\Client\ClientBuilder;
-use Everyman\Neo4j;
 
 class Test extends TNK_Controller {
 
@@ -66,6 +65,30 @@ class Test extends TNK_Controller {
     			->build();
 		$query = "MATCH (n:user) RETURN n.username";
 		$result = $client->run($query);
+		
+		var_dump($result->getRecords());
+	}
+	
+	public function create_node($name){
+		$user 		= 'neo4j';
+		$password	= 'decaloteur';
+		$host		= 'test.jboost.me:7474';
+		
+		$client = ClientBuilder::create()
+    			->addConnection('default', 'http://'.$user.':'.$password.'@'.$host)
+    			->build();
+		$query	= "CREATE (n:TEST{name: '".$name."'}) return n";
+		$result	= $client->run($query);
+		
+		var_dump($result->getRecord());
+		
+	}
+	
+	public function connection(){
+		$db	= $this->load->database('neo4j://neo4j:decaloteur@test.jboost.me/jboost_graph:7474',true);
+		//$db = $this->load->database('jboost_graph');
+		$query = "MATCH (n:user) RETURN n.username";
+		$result = $db->run($query);
 		
 		var_dump($result->getRecords());
 	}
