@@ -1,5 +1,8 @@
 <?php
+require_once 'vendor/autoload.php';
+use GraphAware\Neo4j\Client\ClientBuilder;
 use Everyman\Neo4j;
+
 class Test extends TNK_Controller {
 
 	//Get quizz items from the db.
@@ -50,6 +53,21 @@ class Test extends TNK_Controller {
 	private function ajax_quizz(){
 		echo $this->input->post('item').'<br/>';
 		echo $this->input->post('answer').'<br/>';
+	}
+	
+	//Function to test graphaware (neo4j)
+	public function graph(){
+		$user 		= 'neo4j';
+		$password	= 'decaloteur';
+		$host		= 'test.jboost.me:7474';
+		
+		$client = ClientBuilder::create()
+    			->addConnection('default', 'http://'.$user.':'.$password.'@'.$host)
+    			->build();
+		$query = "MATCH (n:user) RETURN n.username";
+		$result = $client->run($query);
+		
+		var_dump($result->getRecords());
 	}
 }
 
