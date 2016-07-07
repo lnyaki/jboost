@@ -1,11 +1,12 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Users extends TNK_Controller {
+class Users extends Neo4j_controller {
 	//Display the list of users
 	function index(){
 		$this->load->model('users_model','users');
 		//load data
 		$users = $this->users->get_users();
+		
 		//load view
 		$user_view	= $this->load->view('users/users_list',array('_users' =>$users),true);
 		//add the view to the page
@@ -21,6 +22,10 @@ class Users extends TNK_Controller {
 		$this->load->model('users_model');
 		$this->load->model('kana/kana_model');
 		$this->load->model('roles/roles_model','role');
+		
+		
+		//test 
+		$this->users_model->graph_test();
 		
 		//load module to access view from other modules
 		$this->load->module('roles');

@@ -2,7 +2,8 @@
 require_once 'vendor/autoload.php';
 use GraphAware\Neo4j\Client\ClientBuilder;
 
-class Test extends TNK_Controller {
+//class Test extends TNK_Controller {
+class Test extends Neo4j_controller {
 
 	//Get quizz items from the db.
 	private function load_items($post){
@@ -80,17 +81,79 @@ class Test extends TNK_Controller {
 		$query	= "CREATE (n:TEST{name: '".$name."'}) return n";
 		$result	= $client->run($query);
 		
-		var_dump($result->getRecord());
+		print_r($result->getRecord());
 		
 	}
 	
 	public function connection(){
-		$db	= $this->load->database('neo4j://neo4j:decaloteur@test.jboost.me/jboost_graph:7474',true);
+		$db	= $this->load->database('jboost_graph');
+		//$db	= $this->load->database('jboost');
+		print_r($db);
 		//$db = $this->load->database('jboost_graph');
 		$query = "MATCH (n:user) RETURN n.username";
 		$result = $db->run($query);
 		
-		var_dump($result->getRecords());
+		print_r($result->getRecords());
+	}
+	
+	public function autoconnect(){
+		$db = $this->neo4j->get_db();
+		
+		$query = "match (n:user) return n.username";
+		
+		var_dump($db->run($query)->getRecords());
+	}
+	
+	public function auto(){
+		echo "Victory<br/>";
+		$db = $this->get_db();
+		$query = "match (n:user) return n";
+		
+		print_r($db->run($query)->getRecords());
+	}
+	
+	public function lib(){
+		$this->load->library('neo4j');
+		
+		$this->neo4j->test();
+	}
+	
+	//same test as lib, but with autoloaded library
+	public function konnect(){
+		$this->neo4j->connect();
+		$db = $this->neo4j->get_db();
+		$result = $db->run("MATCH (n:user) RETURN n.username");
+		print_r($result->getRecords());
+	}
+	
+	//test neo4j controller
+	public function controller(){
+		echo "We should have loaded the db in the controller<br/><br/>";
+		
+		$db = $this->neo4j->get_db();
+		$query = "match (n:user) return n";
+		
+		print_r($db->run($query)->getRecords());
+	}
+	
+	public function test_config(){
+        $CI =& get_instance();
+        $CI->load->database('jboost_graph');
+        echo $CI->db->dbdriver;
+	}
+	
+	public function vide(){
+		$db = $this->neo4j->get_db();
+		$result = $db->run("MATCH (n:user) RETURN n.username");
+		print_r($result->getRecords());
+	//	$this->neo4j->config();
+	}
+	
+	public function graph_test(){
+		$this->load->model('users_model','users');
+		print_r($this->users->graph_test());
+		
+		
 	}
 }
 

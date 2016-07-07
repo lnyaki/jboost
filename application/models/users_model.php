@@ -71,4 +71,13 @@ class Users_model extends TNK_Model{
 		$sql = 'select 1 from '.self::main_table.' where email = ?';
 		return $this->db->simple_query($sql,array($email));
 	}
+	
+	//
+	public function graph_test(){
+		$db = $this->neo4j->get_db();
+		
+		$query = "match (n:user) return n";
+		echo "Graph test : <br/>";
+		return $db->run($query)->getRecords();
+	}
 }
