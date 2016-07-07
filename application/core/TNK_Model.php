@@ -24,6 +24,27 @@ class TNK_Model extends CI_Model{
 		
 		
 		return $extracted;
-	}	
+	}
+	
+	public function extract_results_g($results){
+		$extracted = array();
+		
+		foreach($results->records() as $record){
+			//row array
+			$row = array();
+			//get keys
+			$keys = $record->keys();
+			
+			//for each key, get the value, and add it to a 'row' array
+			foreach($keys as $key){
+				$row[$key] = $record->value($key);
+			}
+			
+			//add the 'row' array to $extracted
+			array_push($extracted,$row);
+		}
+		
+		return $extracted;
+	}
 }
 

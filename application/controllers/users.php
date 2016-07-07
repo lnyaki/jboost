@@ -5,13 +5,19 @@ class Users extends Neo4j_controller {
 	function index(){
 		$this->load->model('users_model','users');
 		//load data
-		$users = $this->users->get_users();
+		//$users = $this->users->get_users();
+		$graphUsers = $this->users->get_users_g();
+		
+		
 		
 		//load view
-		$user_view	= $this->load->view('users/users_list',array('_users' =>$users),true);
+		//$user_view	= $this->load->view('users/users_list',array('_users' =>$users),true);
+		$user_view_g 	= $this->load->view('users/users_list_g',array('_users' =>$graphUsers),true);
+		
 		//add the view to the page
-		$this->add_block($user_view,self::CENTER_BLOCK);
-///$this->add_block("<h3> test hello</h3>");
+		//$this->add_block($user_view,self::CENTER_BLOCK);
+		$this->add_block($user_view_g,self::CENTER_BLOCK);
+
 		$this->generate_page();
 	}
 	
@@ -23,10 +29,7 @@ class Users extends Neo4j_controller {
 		$this->load->model('kana/kana_model');
 		$this->load->model('roles/roles_model','role');
 		
-		
-		//test 
-		$this->users_model->graph_test();
-		
+
 		//load module to access view from other modules
 		$this->load->module('roles');
 		/************************************************************
@@ -53,26 +56,12 @@ class Users extends Neo4j_controller {
 		//************************************************************/
 		$stats		= $this->load->view('lists/hiragana_list',$data,TRUE);
 		
-		$bloc  = '';
-		$bloc  = "<div> Hello, user profile : ".$user_data->username."</div>";
-		$bloc .= '<ul>';
-		$bloc .= '<li>username : '.$user_data->username.'</li>';
-		$bloc .= '<li>email : '.$user_data->email.'</li>';
-		$bloc .= '</ul>';
-		
-		//test alerts
-		$alert = '<div id="alert-success" class="alert alert-success alert-dismissible" role="alert"> 
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-			Alert Success
-		</div>';
-		
+
+		$userTitle				= $this->load->view('users/user_title',array('_usertitle' => $user_data->username),true);
 		$privileges_view 		= $this->load->view('users/user_privileges',array( '_privileges' => $privileges),true);
 		$button_add_privilege	= $this->roles->get_add_privilege_to_user_widget(array('_username' =>$user_data->username));
 		//compose page
-		$this->add_block($bloc,self::CENTER_BLOCK);
-		$this->add_block($alert,self::CENTER_BLOCK);
+		$this->add_block($userTitle,self::CENTER_BLOCK);
 		$this->add_block($privileges_view,self::CENTER_BLOCK);
 		$this->add_block($button_add_privilege,self::CENTER_BLOCK);
 		$this->add_block($stats,self::CENTER_BLOCK);

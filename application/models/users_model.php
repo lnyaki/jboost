@@ -16,6 +16,16 @@ class Users_model extends TNK_Model{
 		
 		return $this->extract_results($query);
 	}
+	
+	//return the full list of user
+	public function get_users_g(){
+		$db = $this->neo4j->get_db();
+		
+		$query = 'match (n:user) return n.username as username,n.password as password,n.date_of_birth as birthdate,n.gender as gender';
+		$result	= $db->run($query);
+		
+		return $this->extract_results_g($result);
+	}
 	//add a user
 	public function add_user($data){
 		if(!isset($data['username']) && !isset($data['email']) && !isset($data['password'])){
@@ -70,14 +80,5 @@ class Users_model extends TNK_Model{
 	public function user_exists($email){
 		$sql = 'select 1 from '.self::main_table.' where email = ?';
 		return $this->db->simple_query($sql,array($email));
-	}
-	
-	//
-	public function graph_test(){
-		$db = $this->neo4j->get_db();
-		
-		$query = "match (n:user) return n";
-		echo "Graph test : <br/>";
-		return $db->run($query)->getRecords();
 	}
 }

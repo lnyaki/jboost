@@ -2,6 +2,16 @@
 
 class Lists_model_graph extends TNK_Model{
 	
+	//Return all sublists of list $list
+	public function get_sublists($list){
+		$db = $this->neo4j->get_db();
+		
+		$query = "match (n:item_list{name:'$list'})-[:sublist*]->(sublist:item_list) sublist.name as list";
+		$result	= $db->run($query);
+		
+		return $this->extract_results_g($result);	
+	}
+	
 	public function get_all_list_names(){}
 	
 	public function get_list_content($listname){}
