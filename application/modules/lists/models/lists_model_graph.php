@@ -12,9 +12,48 @@ class Lists_model_graph extends TNK_Model{
 		return $this->extract_results_g($result);	
 	}
 	
-	public function get_all_list_names(){}
+	public function get_all_list_names(){
+		$db 	= $this->neo4j->get_db();
+		$query	= "match (n:item_list{name:'Lists'})-[:sub_list*]->(list:item_list{public:true}) return list.name as Name order by list.name";
+		$result	= $db->run($query);
+		return $this->extract_results_g($result);
+	}
 	
-	public function get_list_content($listname){}
+	//Return all the elements of that list (including elements from sublists)
+	public function get_list_content($listname, $sublist_content = true){
+		$db = $this->neo4j->get_db();
+		
+		$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(item:item) where list.name =~ '(?i)".$listname."'";
+		$query .= " return item.value as value";
+		
+		$result = $db->run($query);
+		return $this->extract_results_g($result);
+	}
+	
+	//Returns list of kana elements (kana --> romaji)
+	public function get_kana_list_content($listname){
+		$db = $this->neo4j->get_db();
+		
+		$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(kana:item)-[:romaji]->(romaji:item) where list.name =~ '(?i)".$listname."'";
+		$query .= " return kana.value as kana, romaji.value as romaji ORDER BY kana asc";
+		
+		$result = $db->run($query);
+		return $this->extract_results_g($result);
+	}
+	
+	//Returns list of kanji elements (kanji --> onyomi,kunyomi,translation)
+	public function get_kanji_list(){
+		
+	}
+	
+	//Returns list of words (word --> hiragana, definition, category)
+	public function get_word_list(){
+		
+	}
+	
+	public function get_quizz_list(){
+		
+	}
 	
 	public function create_list($listname){}
 	

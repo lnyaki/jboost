@@ -69,6 +69,11 @@ class Users extends Neo4j_controller {
 		$this->generate_page();
 	}
 
+	//Display the dashboard for users (contains all relevant data for business level)
+	public function dashboard(){
+		
+	}
+	
 	public function widget_user_privileges($username){
 		$this->load->model('roles/roles_model','role');
 		$this->load->model('users_model');

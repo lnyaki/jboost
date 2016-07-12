@@ -385,7 +385,7 @@ class View_generator{
 		$length 	= count($row);
 		
 		$keys	= array_keys($row);
-
+	
 		// [id] => 1 [First Name] => Alice [Last Name] => Fox [Job] => Entrepreneur
 		//we need to generate an html table raw
 		foreach($row as $key => $value){
@@ -516,7 +516,8 @@ class View_generator{
 			
 			//if the field must be selected
 			if($found){
-				array_push($result,$field);
+				//We are dealing with links, so we need to turn whitespaces into underscores
+				array_push($result,str_replace(' ','_',$field));
 			}	
 			
 			$fieldIndex++;

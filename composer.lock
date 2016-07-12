@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dbc5d263705008ccda52198e07fd2be4",
-    "content-hash": "e2843c5d624290031c02c79357f7cf69",
+    "hash": "f7e558b12f3439ae4ed97eabc81af7d2",
+    "content-hash": "bc365732b4c91ff499cf062fb5fb2de4",
     "packages": [
         {
             "name": "graphaware/neo4j-bolt",
@@ -101,16 +101,16 @@
         },
         {
             "name": "graphaware/neo4j-php-client",
-            "version": "4.4.4",
+            "version": "4.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/graphaware/neo4j-php-client.git",
-                "reference": "5e745a6ceb369082fbe10b2a25b2e1e6fb44b149"
+                "reference": "8508b66db9983dedf0d3b0f73878d7aa0a9df3ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/graphaware/neo4j-php-client/zipball/5e745a6ceb369082fbe10b2a25b2e1e6fb44b149",
-                "reference": "5e745a6ceb369082fbe10b2a25b2e1e6fb44b149",
+                "url": "https://api.github.com/repos/graphaware/neo4j-php-client/zipball/8508b66db9983dedf0d3b0f73878d7aa0a9df3ba",
+                "reference": "8508b66db9983dedf0d3b0f73878d7aa0a9df3ba",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
                 "http",
                 "neo4j"
             ],
-            "time": "2016-06-30 22:20:24"
+            "time": "2016-07-05 09:13:15"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -411,6 +411,42 @@
                 "enum"
             ],
             "time": "2015-07-22 16:14:03"
+        },
+        {
+            "name": "nicmart/tree",
+            "version": "v0.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nicmart/Tree.git",
+                "reference": "0616b54bb49938e1a816141d7943db48ebf76938"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nicmart/Tree/zipball/0616b54bb49938e1a816141d7943db48ebf76938",
+                "reference": "0616b54bb49938e1a816141d7943db48ebf76938",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tree\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolò Martini",
+                    "email": "nicmartnic@gmail.com"
+                }
+            ],
+            "description": "A basic but flexible php tree data structure and a fluent tree builder implementation.",
+            "time": "2015-08-20 20:50:35"
         },
         {
             "name": "psr/http-message",

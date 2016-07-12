@@ -6,6 +6,7 @@ application/logs/
 application/config/config.php
 application/config/database.php
 node_modules/
+vendor/
 
 # Compiled source #
 ###################

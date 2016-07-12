@@ -37,8 +37,4 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/css/list.css" media="screen" />
 		
 	</div>
-	<script>
-		var coucou = new Module.List();
-		coucou.test();
-	</script>
 </div>

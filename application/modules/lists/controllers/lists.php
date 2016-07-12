@@ -1,11 +1,11 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Lists extends TNK_Controller {
+class Lists extends Neo4j_controller {
 
 	public function index(){
 		$this->load->model('Kana/Kana_model','model');
 		$lists = $this->model->get_kana_lists();
-		
+
 		if($lists){
 			//load the library that generates tables from arrays of data
 			$this->load->library('View_generator');
@@ -21,9 +21,12 @@ class Lists extends TNK_Controller {
 			$button	= $this->new_list_button_widget();
 			$listnames	= $this->list_names_widget();
 			
+			$gListNames	= $this->list_array_widget();
+			
 			$this->add_block($view,self::CENTER_BLOCK);
 			$this->add_block($button,self::CENTER_BLOCK);
 			$this->add_block($listnames,self::CENTER_BLOCK);
+			$this->add_block($gListNames,self::CENTER_BLOCK);
 		}
 		else{
 		//output warning or something
@@ -41,6 +44,11 @@ class Lists extends TNK_Controller {
 	//load the views
 		//TODO : displayList_widget is deprecated : to remove
 		$character_list_view	= $this->display_list_widget($list_name);
+		
+		//echo $character_list_view;
+		
+		
+		
 		//remove call to function above
 		$list 					= $this->get_list_items_widget($list_name);
 		$update_view			= $this->update_list_widget();
@@ -51,7 +59,7 @@ class Lists extends TNK_Controller {
 		$this->add_block($list					,self::CENTER_BLOCK);
 		$this->add_block($update_view			,self::CENTER_BLOCK);
 		$this->add_block($update_view2			,self::CENTER_BLOCK);
-	
+		
 	//Generate the html page
 		$this->generate_page();
 	}
@@ -76,7 +84,7 @@ class Lists extends TNK_Controller {
 	public function list_names_widget(){
 		//Load models and libraries
 		$this->load->library('View_generator','generator');
-		$this->load->model('lists//lists_model','list');
+		$this->load->model('lists/lists_model','list');
 		//Load list data
 		$real_lists = $this->list->get_lists();
 		
@@ -88,6 +96,31 @@ class Lists extends TNK_Controller {
 		
 		return $widget;
 	}
+	
+	public function list_array_widget(){
+		$this->load->model('lists/lists_model_graph','glist');
+		$this->load->library('View_generator','generator');
+	
+		$glists	= $this->glist->get_all_list_names();
+		
+		//create links
+		$prefix = base_url().'lists';
+		//Need to create a new array to hold the listnames used for the links
+		//because they'll be different from the names displayed if we need to
+		//replace spaces by underscores
+		$listNames = array();
+		foreach($glists as $elt){
+			$listNames['Name']	= 	str_replace(' ', '_',$elt['Name']);
+		}
+		
+		//generate the links to put in the html table
+		$links	= $this->view_generator->create_row_link(array(),1,array(1),$prefix);
+		
+		$widget	= $this->view_generator->generate_array($glists,null,$links);
+		
+		return $widget;
+	}
+	
 	public function new_list_button_widget(){
 		$this->load->library('View_generator');
 
@@ -121,16 +154,17 @@ class Lists extends TNK_Controller {
 	}
 
 	public function display_list_widget($list_name){
+		//Turn back the underscore into spaces
+		$list_name = str_replace('_', ' ', $list_name);
 	//TODO : this is legacy. It just offers the list title now. TO remove when i have some time
-		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => array()));
-	
-	$this->load->model('lists/lists_model','list');
+		$this->load->model('lists/lists_model_graph','glist');
 	//1 : load data from the list module (not the kana)
-	$data	= $this->list->load_list_items($list_name);
+		//$data	= $this->glist->get_list_content($list_name);
+		$data = $this->glist->get_kana_list_content($list_name);
 	//2 : generate the html array
 	
 	//3 : return the html array
-	
+		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $data));
 	}
 
 
