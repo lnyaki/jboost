@@ -3,34 +3,17 @@
 class Lists extends Neo4j_controller {
 
 	public function index(){
-		$this->load->model('Kana/Kana_model','model');
-		$lists = $this->model->get_kana_lists();
-
-		if($lists){
-			//load the library that generates tables from arrays of data
-			$this->load->library('View_generator');
-			
-			$prefix = base_url().'lists';
-						
-			//set the links for the fields of the array
-			$links = array();
-			$links = $this->view_generator->create_row_link($links,2,array(2),$prefix);
-			$links = $this->view_generator->create_row_link($links,1,array(1),$prefix);
-
-			$view 	= $this->view_generator->generate_array($lists[1],null,$links);
-			$button	= $this->new_list_button_widget();
-			$listnames	= $this->list_names_widget();
-			
-			$gListNames	= $this->list_array_widget();
-			
-			$this->add_block($view,self::CENTER_BLOCK);
-			$this->add_block($button,self::CENTER_BLOCK);
-			$this->add_block($listnames,self::CENTER_BLOCK);
-			$this->add_block($gListNames,self::CENTER_BLOCK);
-		}
-		else{
-		//output warning or something
-		}
+		//$view 	= $this->view_generator->generate_array($lists[1],null,$links);
+		$button	= $this->new_list_button_widget();
+		$listnames	= $this->list_names_widget();
+		
+		$gListNames	= $this->list_array_widget();
+		
+		//$this->add_block($view,self::CENTER_BLOCK);
+		$this->add_block($button,self::CENTER_BLOCK);
+		$this->add_block($listnames,self::CENTER_BLOCK);
+		$this->add_block($gListNames,self::CENTER_BLOCK);
+		
 		$this->generate_page();
 	}
 
@@ -156,7 +139,7 @@ class Lists extends Neo4j_controller {
 	public function display_list_widget($list_name){
 		//Turn back the underscore into spaces
 		$list_name = str_replace('_', ' ', $list_name);
-	//TODO : this is legacy. It just offers the list title now. TO remove when i have some time
+
 		$this->load->model('lists/lists_model_graph','glist');
 	//1 : load data from the list module (not the kana)
 		//$data	= $this->glist->get_list_content($list_name);

@@ -58,7 +58,8 @@ Quizz.prototype	= (function () {
 			
 		//the BASE_URL is used to prevent an issue with the handling of the url
 		//with Ajax. See http://stackoverflow.com/questions/27420759/codeigniter-base-url-not-working-properly-for-ajax
-			path          = BASE_URL + 'ajax/quizz/load_items2',
+			//path          = BASE_URL + 'ajax/quizz/load_items',
+			path          = BASE_URL + 'ajax/quizz/load_items',
 			data          = {'list_name' : listname};
 			
 		//function for handling the list returned from the database
@@ -66,13 +67,13 @@ Quizz.prototype	= (function () {
         	console.log('--Database response --');
             console.log(msg);
 			var parsed = JSON.parse(msg);
-		
+			//var parsed = msg;
 			//If the returned (parsed) content is an empty array
 			if(parsed.length > 0){
 				set_list_items(parsed);
 				console.log("THIS");
 				console.log(get_this());
-				after_loading_items(_self);
+				after_loading_items(self);
 				list_loaded = true;
 				console.log("LIST OK!");
 				console.log(parsed);
@@ -87,12 +88,11 @@ Quizz.prototype	= (function () {
         };
 		
 		console.log('loading the items for list '+listname);
+		ajax.setError(function(){console.log('Une erreur ajax s est produite');});
 		ajax.ajaxPostRequest(path,data,responseHandler);
     };
 		
 	var after_loading_items	= function(itself){
-		console.log(Quizz);
-		console._self;
 		console.log("XXXXXXXX This : XXXXXX");
 		console.log(itself);
 		initialize_flashcard(itself);
@@ -100,8 +100,8 @@ Quizz.prototype	= (function () {
 
 	var initialize		= function(){
 	//load items from db
-	//console.log("THIS : ");
-	//console.log(this);
+	console.log("THIS : ");
+	console.log(this);
 		self = this;
 		
 		//initialize things that need to be reset to zero
@@ -121,13 +121,12 @@ Quizz.prototype	= (function () {
     };
 
 	var get_this				= function(){
-		return Quizz;
+		return self;
 	};
 
 	var initialize_quizz_variables	= function(){
 		self.current_card		= new Flashcard(HTML_FLASHCARD);
-		/*
-		var self = get_this();
+		
         self.item_index 		= 0;
         self.points				= 0;
         self.input_method		= '';
@@ -135,7 +134,6 @@ Quizz.prototype	= (function () {
         self.response_time 		= 3;
         self.current_card		= new Flashcard(HTML_FLASHCARD);
         self.list_name			= '';
-        */
     };
 		
 	//TODO : use constants instead of hard coded values.
@@ -205,6 +203,7 @@ Quizz.prototype	= (function () {
 	};
 		
 	var initialize_flashcard	= function(quizz){
+		var current_card = quizz.current_card;
 		//set the quizz object in the card object
 		current_card.set_quizz(quizz);
 		
@@ -599,7 +598,7 @@ Quizz.prototype	= (function () {
 
 	var next_random_item	= function(){
 		if(remaining_elts > 0){
-			var tmp = current_card.get_multiple_answers_list(1,null);
+			var tmp = self.current_card.get_multiple_answers_list(1,null);
 			return tmp[0];
 		}
 		else{

@@ -52,6 +52,7 @@ $route['users/(:any)']			= "users/profile/$1";
  * *******************************************************************/
 $route['ajax/quizz/(:any)']				= 'quizz/ajax/$1';
 $route['ajax/roles/(:any)']				= 'roles/ajax/$1';
+$route['ajax/test/(:any)']				= 'test/ajax/$1';
 
 /*********************************************************************
  *                        Roles routes
@@ -78,7 +79,7 @@ $route['lists/(:any)']					= 'lists/display_list/$1';
 
 
 
-$route['default_controller'] 	= "quizz/quizz";
+$route['default_controller'] 	= "quizz";
 $route['404_override'] 			= 'page_not_found_404';
 
 

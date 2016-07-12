@@ -15,16 +15,15 @@ class Test extends Neo4j_controller {
 	
 	//Do something or remove function below
 	private function load_items2($post){
-		echo "INFO: in load_items2. Should now call some Neo4J";
+		echo "{name:'toto'}";
 	}
 
+	public function json(){echo "hahaahlfkfjazkf";}
 	
 	public function ajax($elt,$elt2 = "arg2"){
 		
 		switch($elt){
-			case 'quizz' :
-				echo "ERR: Shouldn't come here. Argument should be 'load_items'";
-				break;
+			case 'json' : $this->json(); break;
 
 			case 'load_items' 	:
 				$this->load_items($this->input->post(null,true));
@@ -32,6 +31,8 @@ class Test extends Neo4j_controller {
 			
 			case 'load_items2'	:
 				$this->load_items2($this->input->post(null,true));
+				break;
+
 			case 'add_stats'	:
 				//only execute if there is a session id (if the user is logged)
 				if(isset($_SESSION['id'])){

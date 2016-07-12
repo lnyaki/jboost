@@ -518,8 +518,6 @@ var test = function(){
 		//load the items that will be used in the quizz
 		var load_items		= function(options){
 			var ajax 		= new Ajax();
-			//var path		= 'ajax/quizz/load_items';
-			//var path 		= 'http://localhost/codeigniter/ajax/quizz/load_items';
 			
 			//the BASE_URL is used to prevent an issue with the handling of the url
 			//with Ajax. See http://stackoverflow.com/questions/27420759/codeigniter-base-url-not-working-properly-for-ajax
@@ -530,13 +528,13 @@ var test = function(){
 			//function for handling the list returned from the database
 			var responseHandler	= function(msg){
 				console.log('--Database response --');
-				console.log(msg);
+				console.log(msg+'<br/>');
 				var parsed = JSON.parse(msg);
 			//	console.log(parsed[0].kana);
 				set_list_items(parsed);
 				after_loading_items(self);
 			};
-			console.log('loading the kana');
+			console.log('[load_items]loading the items.');
 			ajax.ajaxPostRequest(path,data,responseHandler);
 		};
 		
@@ -548,8 +546,6 @@ var test = function(){
 		
 		var initialize		= function(){
 		//load items from db
-		console.log("THIS : ");
-		console.log(this);
 			self = this;
 			load_items({'list' : 'hiragana'});
 			

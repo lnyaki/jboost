@@ -52,8 +52,10 @@
 		//Initializing quizz based on options. Loading a list of items
 		quizz.initialize();
 		
+		
+		//Careful there : there is a callback involved, which means that the execution is parallel
 		//Check if the list was loaded correctly (not empty list).
-		if(quizz.list_loaded === true){
+		/*if(quizz.list_loaded === true){
 			$(card).show('slide');
 			$(card_view).show('slide');
 		}
@@ -62,7 +64,9 @@
 			console.log("LIST NOT LOADED");
 			$(card).show('slide');
 		}
-		
+		*/
+		$(card).show('slide');
+		$(card_view).show('slide');
 	};
 	
 	//set the click option for radio buttons, depending on radio button group
