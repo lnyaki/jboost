@@ -65,18 +65,18 @@ Quizz.prototype	= (function () {
 		//function for handling the list returned from the database
 		var responseHandler	= function(msg){
         	console.log('--Database response --');
-            console.log(msg);
+           // console.log(msg);
 			var parsed = JSON.parse(msg);
 			//var parsed = msg;
 			//If the returned (parsed) content is an empty array
 			if(parsed.length > 0){
 				set_list_items(parsed);
-				console.log("THIS");
-				console.log(get_this());
+				//console.log("THIS");
+				///console.log(get_this());
 				after_loading_items(self);
 				list_loaded = true;
 				console.log("LIST OK!");
-				console.log(parsed);
+				//console.log(parsed);
 			}
 			//If the list recieved is empty
 			else{
@@ -93,8 +93,8 @@ Quizz.prototype	= (function () {
     };
 		
 	var after_loading_items	= function(itself){
-		console.log("XXXXXXXX This : XXXXXX");
-		console.log(itself);
+		//console.log("XXXXXXXX This : XXXXXX");
+		//console.log(itself);
 		initialize_flashcard(itself);
 	};
 

@@ -34,8 +34,15 @@ class Lists_model_graph extends TNK_Model{
 	public function get_kana_list_content($listname){
 		$db = $this->neo4j->get_db();
 		
-		$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(kana:item)-[:romaji]->(romaji:item) where list.name =~ '(?i)".$listname."'";
-		$query .= " return kana.value as kana, romaji.value as romaji ORDER BY kana asc";
+	//	$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(kana:item)-[:romaji]->(romaji:item) where list.name =~ '(?i)".$listname."'";
+		//$query .= " return kana.value, romaji.value  ORDER BY kana asc";
+		
+		//$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(kana:item)-[:romaji]->(romaji:item) where list.name =~'(?i)Hiragana'";
+		//$query .= "return kana.value as kana, romaji.value as answer  ORDER BY kana asc";
+		
+		$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(character:item)-[:romaji]->(romaji:item) where list.name =~ '(?i)Hiragana'";
+		$query .= "return character.value as item, romaji.value as answer";
+		
 		
 		$result = $db->run($query);
 		return $this->extract_results_g($result);

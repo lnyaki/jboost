@@ -135,6 +135,7 @@
 			//console.log('DEBUG : item list size : '+ list.length);
 			//console.log('DEBUG : required quantity : '+quantity);
 			//console.log(list);
+			
 			while(quantity_count>0){
 				//get random elt between 0 and max_random, excluded
 				i = (Math.floor(Math.random() * (max_random)));
@@ -201,7 +202,7 @@
 			while(!sortie){
 
 				elt = list[i];
-				
+
 				if(elt.item == element.item){
 					sortie = true;
 					answer = true;
