@@ -88,6 +88,7 @@ Quizz.prototype	= (function () {
         };
 		
 		console.log('loading the items for list '+listname);
+		console.log(data);
 		ajax.setError(function(){console.log('Une erreur ajax s est produite');});
 		ajax.ajaxPostRequest(path,data,responseHandler);
     };
@@ -312,7 +313,7 @@ Quizz.prototype	= (function () {
 			if(elt.item == item){
 				//we compare answers
 				//if(elt.answer == answer){
-				if(current_card.validate(answer)){
+				if(self.current_card.validate(answer)){
 					exit 		= true;
 					answer_ok	= true;
 				}
@@ -350,42 +351,42 @@ Quizz.prototype	= (function () {
 		console.log("****************  Quizz.validate  ******************");
 		console.log("* Next element     : " + item_index);
 		console.log("* Remaining elts   : " + remaining_elts);
-		console.log("* Element courant  : " + current_card.get_item().item);
-		console.log("* Input type   	: " + current_card.get_input_method());
+		console.log("* Element courant  : " + self.current_card.get_item().item);
+		console.log("* Input type   	: " + self.current_card.get_input_method());
 		console.log("****************************************************");
 		var answer_elt	= '';
-		var tmp 		= current_card.get_input_method();
+		var tmp 		= self.current_card.get_input_method();
 		var answer		= null;
 		var item		= null;
 			
 		//fetch the right element
-		if(current_card.get_input_method() == current_card.DIRECT_INPUT){
-			answer_elt	= '#'+current_card.DIRECT_INPUT_ID;
+		if(self.current_card.get_input_method() == self.current_card.DIRECT_INPUT){
+			answer_elt	= '#'+self.current_card.DIRECT_INPUT_ID;
 			
-			console.log("* "+current_card.DIRECT_INPUT);
+			console.log("* "+self.current_card.DIRECT_INPUT);
 			
 			//var quizz	= new Quizz();
 			answer		= $.trim($(answer_elt1).val());
 			item		= $.trim($(item).text());
 		}
-		else if(current_card.get_input_method() == current_card.MULTIPLE_ANSWERS){
-			console.log("* Quizz.validate : multiple answers : "+current_card.get_input_method());
-			console.log("* "+current_card.MULTIPLE_ANSWERS);
+		else if(self.current_card.get_input_method() == self.current_card.MULTIPLE_ANSWERS){
+			console.log("* Quizz.validate : multiple answers : "+self.current_card.get_input_method());
+			console.log("* "+self.current_card.MULTIPLE_ANSWERS);
 			answer = answer_elt1;
 			console.log("* answer : "+answer);
 		}
 		else{
-			console.log("* Quizz.validate : unknown input method : "+current_card.get_input_method());
+			console.log("* Quizz.validate : unknown input method : "+self.current_card.get_input_method());
 			console.log("* tmp (input method) "+tmp);
 		}
 
 		console.log('quizz.validate. Answer : '+answer);
 		//TODO : use constants instead of hardcoded values.
 		//validate the answer
-		var validated	= current_card.validate(answer);
+		var validated	= self.current_card.validate(answer);
 			
 		console.log('** Validated : '+ validated);
-		var current_item	= current_card.get_item();
+		var current_item	= self.current_card.get_item();
 	    var answer 			= $('#answer_label');
 	    var points_elt		= $('#points');
 		    
@@ -396,12 +397,12 @@ Quizz.prototype	= (function () {
 			add_stats(current_item.id,current_item.item,true);
 			add_points(calculate_points());
 		
-			current_card.set_answer_result('Right');
-			current_card.set_points(points);
+			self.current_card.set_answer_result('Right');
+			self.current_card.set_points(points);
 		}
 		else{
 			add_stats(current_item.id,current_item.item,false);
-			current_card.set_answer_result('Wrong');
+			self.current_card.set_answer_result('Wrong');
 		}	
 			
 			
@@ -415,9 +416,9 @@ Quizz.prototype	= (function () {
 			var buttons;
 			var shuffled_list;
 				
-			if(input_method === current_card.MULTIPLE_ANSWERS){
+			if(input_method === self.current_card.MULTIPLE_ANSWERS){
 				//get new random answer set
-				var random_answers 	= current_card.get_multiple_answers_list(answer_quantity-1, new Array(random_elt));
+				var random_answers 	= self.current_card.get_multiple_answers_list(answer_quantity-1, new Array(random_elt));
 				//add the answer element to the random elements
 				random_answers.push(random_elt);
 				
@@ -427,14 +428,14 @@ Quizz.prototype	= (function () {
 				console.log(random_answers);
 				console.log(shuffled_list);
 				//get the existing buttons, to reinitialize them
-				buttons 		= current_card.get_existing_buttons();
+				buttons 		= self.current_card.get_existing_buttons();
 				
 				//initialize buttons
-				current_card.initialize_validation_button(buttons,shuffled_list);
+				self.current_card.initialize_validation_button(buttons,shuffled_list);
 			}		
 			else if(input_method === current_card.DIRECT_INPUT){
 				//empty the text input element
-				current_card.empty_input_element();
+				self.current_card.empty_input_element();
 				
 				//get button element
 					
@@ -577,7 +578,7 @@ Quizz.prototype	= (function () {
 		
 	//display the next item by giving the dom parent element
 	var set_next_item	= function(item){
-		current_card.set_item(item);
+		self.current_card.set_item(item);
 		remaining_elts --;
 		console.log('********************* Next random Item : '+item.item);
 		console.log('********************* Remaining elements : '+remaining_elts);

@@ -40,7 +40,7 @@ class Lists_model_graph extends TNK_Model{
 		//$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(kana:item)-[:romaji]->(romaji:item) where list.name =~'(?i)Hiragana'";
 		//$query .= "return kana.value as kana, romaji.value as answer  ORDER BY kana asc";
 		
-		$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(character:item)-[:romaji]->(romaji:item) where list.name =~ '(?i)Hiragana'";
+		$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(character:item)-[:romaji]->(romaji:item) where list.name =~ '(?i)".$listname."'";
 		$query .= "return character.value as item, romaji.value as answer";
 		
 		
