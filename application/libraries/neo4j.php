@@ -10,7 +10,7 @@ class Neo4j {
     	//load CI to access config files 
     	$CI = & get_instance();
 		
-    	//I'll get these from config file later one
+    	//Get database details from the config file
     	$user 		= $CI->config->item('username');
 		$password	= $CI->config->item('password');
 		$host		= $CI->config->item('hostname');

@@ -1,6 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class Lists_model_graph extends TNK_Model{
+	//These constants define the possible types of list elements
+	const KANATYPE 	= "kana";
+	const KANJITYPE	= "Kanji";
+	const DICOTYPE	= "Dictionary";
+	const QUIZZTYPE	= "Quizz";
 	
 	//Return all sublists of list $list
 	public function get_sublists($list){
@@ -14,20 +19,91 @@ class Lists_model_graph extends TNK_Model{
 	
 	public function get_all_list_names(){
 		$db 	= $this->neo4j->get_db();
-		$query	= "match (n:item_list{name:'Lists'})-[:sub_list*]->(list:item_list{public:true}) return list.name as Name order by list.name";
+		$query	= "match (n:item_list{name:'Lists'})-[:sub_list*]->(list:item_list{public:true}) return list.name as Name, list.type as Type order by list.name";
 		$result	= $db->run($query);
 		return $this->extract_results_g($result);
 	}
 	
-	//Return all the elements of that list (including elements from sublists)
-	public function get_list_content($listname, $sublist_content = true){
-		$db = $this->neo4j->get_db();
+	//Return the type of the list (hiragana,katakana,kanji,dico,question/answer)
+	public function get_list_type($listname){
+		$db		= $this->neo4j->get_db();
+		$query	= 'match(n:item_list{name: "'.$listname.'"}) return n.type as type';
+		$result	= $db->run($query);
 		
-		$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(item:item) where list.name =~ '(?i)".$listname."'";
-		$query .= " return item.value as value";
+		return $this->extract_results_g($result);
+	}
+	
+	//Return all the elements of that list (including elements from sublists)
+	public function get_list_content($listname,$type = self::KANJITYPE){
+		$db = $this->neo4j->get_db();
+		$query	= '';
+
+		switch($type){
+			case self::KANATYPE 	:
+				$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(character:item)-[:romaji]->(romaji:item) where list.name =~ '(?i)".$listname."'";
+				$query .= " return character.value as Kana, romaji.value as Romaji order by character.value";
+				break;
+			
+			//Return the kanji with its onyomi and kunyomi
+			case self::KANJITYPE	:
+				$query  = "match(list:item_list{name:'".$listname."'})-[:list_item]->(kanji:item) with kanji ";
+				$query .= "optional match (kanji)-[:kun_yomi]->(kunyomi:item)-[:romaji]->(r1:item) with kanji,kunyomi,r1 ";
+				$query .= "optional match (kanji)-[:on_yomi]->(onyomi:item)-[:romaji]->(r2:item) ";
+				$query .= "with kanji.value as kanji, collect(distinct([kunyomi.value,r1.value])) as tmpKunyomi, ";
+				$query .= "collect(distinct([onyomi.value,r2.value])) as tmpOnyomi ";
+				$query .= "return kanji,";
+				$query .= "case tmpKunyomi when [[null,null]] then null else tmpKunyomi END as kunyomi, ";
+				$query .= "case tmpOnyomi when [[null,null]] then null else tmpOnyomi END as onyomi";
+				break;
+
+
+
+			case self::DICOTYPE		:
+				break;
+			
+			case self::QUIZZTYPE	:
+				break;
+				
+			default : echo "PROBLEM in list type $type";	
+		}
+		
+		
 		
 		$result = $db->run($query);
 		return $this->extract_results_g($result);
+	}
+	
+	//Return all the elements that belong strictly to that list. It doesn't return the elements from sublists.
+	public function get_strict_list_content($listname, $type){
+		$db = $this->neo4j->get_db();
+		
+		$query	= '';
+
+		switch($type){
+			case self::KANATYPE 	:
+				$query  = "match(list:item_list)-[:list_item]->(character:item)-[:romaji]->(romaji:item) ";
+				$query .= "where list.name =~ '(?i)".$listname."' and list.type = '".$type."'";
+				$query .= " return character.value as Kana, romaji.value as Romaji";
+				break;
+			
+			case self::KANJITYPE	:
+				break;
+				
+			case self::DICOTYPE		:
+				break;
+			
+			case self::QUIZZTYPE	:
+				break;
+				
+			default : ;	
+		}
+		
+		
+		$query  = "match(list:item_list)-[:list_item]->(item:item) where list.name =~ '(?i)".$listname."'";
+		$query .= " return item.value as value";
+		
+		$result = $db->run($query);
+		return $this->extract_results_g($result);	
 	}
 	
 	//Returns list of kana elements (kana --> romaji)

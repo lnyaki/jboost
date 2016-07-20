@@ -114,6 +114,14 @@ class View_generator{
 		return $result;
 	}
 	
+	//Generate a table without <thead> element. Can be used for inner tables
+	public function generate_headless_table($rows){
+		//Transform the raw link data into real links		
+		$links = $this->generate_links($rows, array());
+
+		return "<table>".$this->generate_table_body($rows,null,$links)."</table>";
+	}
+	
 	//This function creates an array that contains data about the title that will
 	//be used to illustrate other data such as html array or forms.
 	public function initialize_array_title($title,$title_row = '',$prefix ='',$postfix = ''){
@@ -357,7 +365,7 @@ class View_generator{
 	
 	
 	//generates the '<tbody>' tab, which is the body of the table
-	private function generate_table_body($rows,$toIgnore,$links,$classes = array(),$formData = null){
+	private function generate_table_body($rows,$toIgnore = array(),$links = array(),$classes = array(),$formData = null){
 		//if the row is empty, we return directly
 		if(count($rows) == 0){
 			return "<p>Empty array table element.</p>";
@@ -392,6 +400,17 @@ class View_generator{
 			$ignore_field = $this->toIgnore($toIgnore,$rowIndex);
 			
 			//if this field must be taken into account
+			if(!$toIgnore){
+				if($table_part == self::THEAD){
+					$html_row .= $this->generate_table_header($key);	
+				}
+				else{
+					$html_row .= $this->generate_table_division($value,$rowIndex,$links);
+				}
+			}
+			
+			/*
+			//if this field must be taken into account
 			if(!$ignore_field){
 				//echo "Is not set, index: ".strval($rowIndex).'<br/>';
 				if($table_part == self::THEAD){
@@ -399,11 +418,18 @@ class View_generator{
 				}
 				//if it is a part of the body, we need to test for links
 				else{
-					if($links != null and isset($links[strval($rowIndex)])){
-						$html_row .= '<td><a href="'.$links[strval($rowIndex)].'">'.$value.'</a></td>';
+					//We need to test if the $value to display is an array or not.
+					if(!is_array($value)){
+						if($links != null and isset($links[strval($rowIndex)])){
+							$html_row .= '<td><a href="'.$links[strval($rowIndex)].'">'.$value.'</a></td>';
+						}
+						else{
+							$html_row .= '<td>'.$value.'</td>';
+						}
 					}
+					//If the value is an array, we display information differently
 					else{
-						$html_row .= '<td>'.$value.'</td>';
+						echo "";
 					}
 				}
 				
@@ -411,6 +437,7 @@ class View_generator{
 			else{
 				//echo "Is set, index: ".strval($rowIndex).'<br/>';
 			}
+			*/
 			$rowIndex++;
 		}//end of for loop
 		
@@ -424,6 +451,50 @@ class View_generator{
 		return '<tr class="'.$rowClass.'">'.$html_row.'</tr>';
 	}//end of generate_row
 
+	//Generate a single table header
+	private function generate_table_header($key){
+		return '<th>'.$key.'</th>';
+	}
+	
+	//generate a single table division (<td> or <th>)
+	private function generate_table_division($value,$rowIndex,$links){
+		$html_division	= '';
+
+		//if it is a part of the body, we need to test for links
+				
+		//We need to test if the $value to display is an array or not.
+		if(!is_array($value)){
+			if($links != null and isset($links[strval($rowIndex)])){
+				$html_division	= '<td><a href="'.$links[strval($rowIndex)].'">'.$value.'</a></td>';
+			}
+			else{
+				$html_division	= '<td>'.$value.'</td>';
+			}
+		}
+		//If the value is an array, we display information differently
+		else{
+			$html_division = '<td>'.$this->generate_headless_table($value).'</td>';
+/*
+			$list = "<ul>";
+
+			foreach($value as $elt){
+				print_r($elt);
+				$list .= '<li>'.$elt.'</li>';
+			}
+			
+			$list .= "</ul>";
+			
+			$html_division = "<td>".$list."</td>";
+ * */
+		}
+
+		return $html_division;
+	}
+	
+	
+	
+	
+	
 	//generate a <td> or <th> cell, with a html form element inside
 	private function generate_form_table_cell($row,$config,$tablePart){
 		$elt ='';
@@ -474,8 +545,14 @@ class View_generator{
 	private function toIgnore($fields_to_ignore,$field_index){
 		$exit 	= false;
 		$i		= 0;
-		$length	= count($fields_to_ignore);
-		$keys	= array_keys($fields_to_ignore);
+		
+		if($fields_to_ignore != null){
+			$length	= count($fields_to_ignore);
+			$keys	= array_keys($fields_to_ignore);
+		}
+		else{
+			$length = 0;
+		}
 
 //we loop on the array
 		while(!$exit && $i<$length){

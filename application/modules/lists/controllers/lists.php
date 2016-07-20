@@ -25,21 +25,16 @@ class Lists extends Neo4j_controller {
 		$this->add_js('assets/js/test-page.js');
 		$this->add_js('assets/js/html_lists.js',true);
 	//load the views
-		//TODO : displayList_widget is deprecated : to remove
 		$character_list_view	= $this->display_list_widget($list_name);
-		
-		//echo $character_list_view;
-		
 		
 		
 		//remove call to function above
-		$list 					= $this->get_list_items_widget($list_name);
 		$update_view			= $this->update_list_widget();
 		$update_view2			= $this->update_list_widget2();
 		
 	//add the content of the views to the page
 		$this->add_block($character_list_view	,self::CENTER_BLOCK);
-		$this->add_block($list					,self::CENTER_BLOCK);
+		//$this->add_block($list					,self::CENTER_BLOCK);
 		$this->add_block($update_view			,self::CENTER_BLOCK);
 		$this->add_block($update_view2			,self::CENTER_BLOCK);
 		
@@ -56,7 +51,10 @@ class Lists extends Neo4j_controller {
 		//Load models and libraries
 		$this->load->library('View_generator','generator');
 		$this->load->model('lists/lists_model','list');
-		$list_items	= $this->list->get_list_items($listname);
+	
+		
+		//print_r($list_type);
+		$list_items	= $this->list->get_list_items($listname,$list_type);
 		
 		$view = $this->view_generator->generate_array($list_items,null);
 		
@@ -141,12 +139,15 @@ class Lists extends Neo4j_controller {
 		$list_name = str_replace('_', ' ', $list_name);
 
 		$this->load->model('lists/lists_model_graph','glist');
-	//1 : load data from the list module (not the kana)
-		//$data	= $this->glist->get_list_content($list_name);
-		$data = $this->glist->get_kana_list_content($list_name);
-	//2 : generate the html array
-	
-	//3 : return the html array
+
+	//1 : get the list type
+		$list_type_array	= $this->glist->get_list_type($list_name);
+		//Extract the type from its array
+		$list_type = $list_type_array[0]['type'];
+
+	//2 : load data from the list model (not the kana)
+		$data	= $this->glist->get_list_content($list_name,$list_type);	
+	//3 : generate and return the html array in the view
 		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $data));
 	}
 
