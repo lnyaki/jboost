@@ -1,3 +1,21 @@
+/*
+ Setting the font size based on percent in the body, to then use em.
+ http://kyleschaeffer.com/development/css-font-size-em-vs-px-vs-pt-vs/
+ */
+body{
+	font-size: 62.5%; 
+}
+
+/*          --= Code for opacity on modal background =--
+ http://stackoverflow.com/questions/28096346/how-to-change-background-opacity-when-bootstrap-modal-is-open
+ If the '!important' is removed, the modal shifts the content of the page to the left, and returns it to normal
+ on close. So keep the !important there. It's important.                                        :-D.
+ * */
+.modal-backdrop.in{
+	opacity 		: .5 !important;
+}
+
+/*
 .customAlert{
 	position: absolute;
  	top: 50%;
@@ -6,3 +24,4 @@
    	width: 500px;	
    	-webkit-transform: translate(-50%, -50%);
 }
+*/

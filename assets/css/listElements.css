@@ -1,0 +1,71 @@
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.kanjiData{
+	display 		: inline-block;
+	border 			: .1em solid grey;
+	width			: 15em;
+	height			: 17em;
+	margin-top		: 1em;
+	margin-right	: 1em;
+	
+	vertical-align 	: text-top;
+	
+	position 		: relative;
+}
+
+.kanjiElement{
+	float 			: left;
+	font-size 		: 5em;
+	color  			: orange;
+	padding-top		: .5em;
+}
+
+.kanjiTitles{
+	
+	font-size		: .8em;
+}
+
+.kanjiRightSide{
+	display 		: inline-block
+	vertical-align	: super;
+	/*
+	position		: absolute;
+	top				: 1em;
+	*/
+	position		: absolute;
+/*	top				: -1em;*/
+	left			: 6em;
+}
+
+.yomiListDiv{
+	margin-top		: 1em;
+}
+
+.strokesDiv{
+	position 		: absolute;
+	top				: 6em;
+	left			: 1em;
+}
+
+.strokes{
+	display 		: block;
+	width 			: 50%;
+	margin			: 0 auto;
+	font-size		: 2em;
+}
+
+.romaji{
+	font-size		: x-small;	
+}
+
+.yomi{
+	font-size		: 1.5em;
+}
+
+.yomiList{
+	margin-left		: 2em;
+}

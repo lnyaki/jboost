@@ -37,6 +37,7 @@ class TNK_Controller extends MX_Controller{
 	const LEFT_SIDE		= 2;	// left side and center
 	const RIGHT_SIDE	= 3;  	// right side and center
 	const CENTER_ONLY	= 4;	// just one big center
+	const BLANK_PAGE	= 5;	//Page with no header, or footer. Just center content
 	
 //--------- Block types constants -----------
 	const HEADER_BLOCK	= 10;
@@ -76,50 +77,113 @@ class TNK_Controller extends MX_Controller{
 			default : 
 				$this->add_block($block,self::CENTER_BLOCK);
 		}
-	}
+	}	
 	
 //Generate the final HTML code  of the page
 //This function takes the data added by the controller to this object, and
 //uses this data (scripts, views, arrays, strings) to generate the final HTML page.
-	public function generate_page($page_style = ''){
+	public function generate_page($page_style = self::NORMAL_PAGE){
 	//get the template of the page (side elements, center only, etc)
-		//$template_path = $get_appropriate_template();
-		$template_path = 'templates/content';
-	//add the css files used by this page to a css object
-		$this->add_default_css();
+		$template_path = $this->get_content_template_path($page_style);
+		//$template_path = 'templates/content';
 		
-	//add the js files used by this page to a js object
-		$this->add_default_js();
+	//We load the css, js and script files (initializing $this->html_header (css) and $this->html_scripts (js))
+		$this->load_external_files($page_style);
+
+	//We generate all the page content into a final array of data
+		$data	= $this->generate_page_elements($page_style);
+	
+		$page_path = '';
+	//We generate the web page to the user.
+		switch($page_style){
+			case self::BLANK_PAGE:
+				$page_path	= 'templates/blank_page';	
+				break;
+			
+			default : 
+				$page_path	= 'templates/normal_page';
+		}
+		$this->load->view($page_path, $data);	
+		//$this->load->view('templates/normal_page',$data);
+	}
+	
+	//We load all the required css, js and scripts provided by the user
+	private function load_external_files($page_style = self::NORMAL_PAGE){
+		//We add the default css and js to pages if they are not of type BLANK_PAGE
+		if($page_style !== self::BLANK_PAGE){
+			//add the default css files used by this page to a css object
+			$this->add_default_css();
 		
-	//generate the html code for the import of css files
+			//add the default js files used by this page to a js object
+			$this->add_default_js();
+		}
+		
+		//We add user specified css (assets), js (assets) and scripts (application/views/scripts)
+		
+		//generate the html code for the import of css files
 		$this->html_header  = $this->import_css2($this->default_css);
 		$this->html_header .= $this->import_css2($this->css);
 		
-		
-	//generate the html code for the import of js files
+		//generate the html code for the import of js files
 		$this->html_scripts  = $this->import_js2($this->default_js);
 		$this->html_scripts .= $this->import_js2($this->js);
 		
-	//import the scripts (local html containing js, defined as views (might need to change that))
+		//import the scripts (local html containing js, defined as views (might need to change that))
 		$this->html_scripts .= $this->import_scripts($this->script);
 		
-	//generate the page header
-		$this->page_header 	= $this->load->view('templates/header',null,TRUE);//shouldn't this be at higher level?
+	}
 	
-	//generate the whole content of the page
+	//We generate the various subparts of the page (header,footer,content) into an array (data) that we return.
+	private function generate_page_elements($page_style = self::NORMAL_PAGE){
+		$template_path = '';
+		
+		//If we are not with a blank page, we generate header and footer (the blank page doesn't need those).
+		if($page_style !== self::BLANK_PAGE){
+			//generate the page header
+			$this->page_header 	= $this->load->view('templates/header',null,TRUE);
+	
+			//generate the page footer
+			$this->footer		= $this->load->view('templates/footer',null,TRUE);
+		}
+		
+		//Set the correct content view based on the page style
+		switch($page_style){
+			case self::NORMAL_PAGE	:
+				$template_path	= 'templates/content_normal';
+				break;
+			
+			case self::BLANK_PAGE	:
+				$template_path	= 'templates/content_center_only';
+				break;
+			
+			case self::LEFT_SIDE	:
+				$template_path	= 'templates/content_left_center';
+				break;
+			
+			case self::RIGHT_SIDE	:
+				$template_path	= 'templates/content_right_center';
+				break;
+			
+			case self::CENTER_ONLY	:
+				$template_path	= 'templates/content_center_only';
+				break;
+
+			default:
+				$template_path	= 'templates/content_normal';
+		}
+		
+		//generate the whole content of the page
 		$total_content 		= $this->generate_content($template_path,$this->left,$this->center,$this->right);
-	
-	//generate the page footer
-		$this->footer		= $this->load->view('templates/footer','',TRUE);
-	
-		//$data['content']		= $this->load->view('templates/content.php',$data2,true);
+
+		//Create an array with all the data (header, footer,content, etc) required to hydrate the Page view file.
 		$data = $this->generate_data_array($this->html_header,
 											$this->title,
 											$this->page_header,
 											$total_content,
 											$this->footer,
 											$this->html_scripts);
-		$this->load->view('templates/blank_page',$data);
+
+		return $data;
 	}
 	
 	private function generate_data_array($html_header, $title,$header,$content,$footer,$scripts){
@@ -131,6 +195,34 @@ class TNK_Controller extends MX_Controller{
 					'_scripts'		=> $scripts);
 	}
 	
+	private function get_content_template_path($page_style){
+		$path = '';
+		
+		switch($page_style){
+			case self::NORMAL_PAGE :
+				$path	= 'templates/content_normal';
+				break;
+			
+			case self::LEFT_SIDE	:
+				$path	= 'templates/content_left_center';
+				break;
+				
+			case self::RIGHT_SIDE	:
+				$path	= 'templates/content_right_center';
+				break;
+			
+			case self::CENTER_ONLY	:
+				$path	= 'templates/content_center_only';
+				break;
+			
+			default					:
+				$path	= 'templates/content_normal';
+		}
+		
+		return $path;
+	}
+	
+	/*
 	public function create_page($data2){
 		$scripts['_js']		= $this->js;
 		$scripts['_css']	= $this->css;
@@ -138,14 +230,14 @@ class TNK_Controller extends MX_Controller{
 		$data['_title']		= $this->title;
 		//load html head
 		
-		/*********************************************************
+		/********************************************************
 		 *              add the default css
-		 *********************************************************/
+		/********************************************************* /
 		$this->add_default_css();
 		
 		/*********************************************************
 		 *              add the default javascript
-		 *********************************************************/
+		/********************************************************* /
 		$this->add_default_js();
 		
 		$default = TRUE;
@@ -163,7 +255,7 @@ class TNK_Controller extends MX_Controller{
 		$data['_footer']		= $this->load->view('templates/footer','',TRUE);
 		$this->load->view('templates/blank_page',$data);
 	}
-	
+*/
 	public function add_css($css, $default = FALSE){
 		$css = base_url().$css;
 		//if we must add to the default css array
@@ -213,7 +305,6 @@ class TNK_Controller extends MX_Controller{
 	}
 	
 	public function add_module_js($module,$file,$default = false){
-		echo "HEY, default = $default";
 		$this->add_js($module.'/assets/js/'.$file,$default);
 	}
 	
@@ -250,12 +341,12 @@ class TNK_Controller extends MX_Controller{
 	}
 	
 	
-	public function view($path,$data,$generate_html = TRUE){
+	public function view($path,$data = array(),$generate_html = TRUE){
 		return $this->load->view($path,$data,$generate_html);
 	}
 	
 	//generate the main content of the page (without header or footer)
-	private function generate_content($path = 'templates/content.php',$left_side = '',$center = '',$right_side = ''){
+	private function generate_content($path = 'templates/content_normal.php',$left_side = '',$center = '',$right_side = ''){
 		return $this->load->view($path
 								,array(	'_left_aside' 	=> $left_side,
 										'_content' 		=> $center,
@@ -307,6 +398,7 @@ class TNK_Controller extends MX_Controller{
 				$css_content .= ' <link rel="stylesheet" href="'.$css.'" />';
 			}	
 		}
+		
 		return $css_content;
 	}
 	

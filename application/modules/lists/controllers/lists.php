@@ -3,7 +3,6 @@
 class Lists extends Neo4j_controller {
 
 	public function index(){
-		//$view 	= $this->view_generator->generate_array($lists[1],null,$links);
 		$button	= $this->new_list_button_widget();
 		$listnames	= $this->list_names_widget();
 		
@@ -14,7 +13,9 @@ class Lists extends Neo4j_controller {
 		$this->add_block($listnames,self::CENTER_BLOCK);
 		$this->add_block($gListNames,self::CENTER_BLOCK);
 		
-		$this->generate_page();
+		
+		//$this->generate_page();
+		$this->generate_page(self::CENTER_ONLY);
 	}
 
 	public function display_list($list_name){

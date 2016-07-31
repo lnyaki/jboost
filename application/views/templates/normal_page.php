@@ -9,12 +9,15 @@
     	var BASE_URL = "<?php echo base_url();?>";
 	</script>
 </head>
+
 <body>
 	
 <?php 
-	//With the blank page, we only load the main content (and scripts)
+	echo isset($_site_header)?$_site_header:'';
 	echo isset($_content)?$_content:'';
 	echo isset($_scripts)?$_scripts:'';
+	echo isset($_footer)?$_footer:'';
+	
 ?>
 </body>
 </html>

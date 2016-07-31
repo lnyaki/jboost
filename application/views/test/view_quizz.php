@@ -3,7 +3,7 @@
 	<?php
 		$this->load->helper('form');
 	?>
-	<h3>Test du quizz</h3>
+	<h3>Joost Quizz</h3>
 
 	<div id="quizz_options" class="panel panel-default" style="width : 45%;margin-left: auto;margin-right: auto;">
 		<h1>Quizz options</h1>

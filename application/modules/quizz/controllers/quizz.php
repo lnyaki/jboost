@@ -17,7 +17,7 @@ class Quizz extends TNK_Controller {
 		//center block
 		$this->add_block($quizz,self::CENTER_BLOCK);
 		
-		$this->generate_page();
+		$this->generate_page(self::CENTER_ONLY);
 	}
 
 	/**************************************************************/
