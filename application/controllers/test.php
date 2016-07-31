@@ -156,6 +156,23 @@ class Test extends Neo4j_controller {
 		
 		
 	}
+	
+	public function list_update(){
+	//load css files
+		$this->add_css('assets/css/listElements.css');
+	//load the views
+		$list_update_div	= $this->list_update_widget();
+		
+	//add the content of the views to the page
+		$this->add_block($list_update_div	,self::CENTER_BLOCK);
+		
+	//Generate the html page
+		$this->generate_page();
+	}
+	
+	public function list_update_widget(){
+		return $this->view('lists/list_update_div',null);
+	}
 }
 
 

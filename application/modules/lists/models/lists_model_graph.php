@@ -47,11 +47,11 @@ class Lists_model_graph extends TNK_Model{
 			//Return the kanji with its onyomi and kunyomi
 			case self::KANJITYPE	:
 				$query  = "match(list:item_list{name:'".$listname."'})-[:list_item]->(kanji:item) with kanji ";
-				$query .= "optional match (kanji)-[:kun_yomi]->(kunyomi:item)-[:romaji]->(r1:item) with kanji,kunyomi,r1 ";
-				$query .= "optional match (kanji)-[:on_yomi]->(onyomi:item)-[:romaji]->(r2:item) ";
-				$query .= "with kanji.value as kanji, collect(distinct([kunyomi.value,r1.value])) as tmpKunyomi, ";
+				$query .= "optional match (kanji)-[:reading{type : 'kunyomi'}]->(kunyomi:item)-[:romaji]->(r1:item) with kanji,kunyomi,r1 ";
+				$query .= "optional match (kanji)-[:reading{type : 'onyomi'}]->(onyomi:item)-[:romaji]->(r2:item) ";
+				$query .= "with kanji.value as kanji, kanji.strokes as strokes, collect(distinct([kunyomi.value,r1.value])) as tmpKunyomi, ";
 				$query .= "collect(distinct([onyomi.value,r2.value])) as tmpOnyomi ";
-				$query .= "return kanji,";
+				$query .= "return kanji, strokes,";
 				$query .= "case tmpKunyomi when [[null,null]] then null else tmpKunyomi END as kunyomi, ";
 				$query .= "case tmpOnyomi when [[null,null]] then null else tmpOnyomi END as onyomi";
 				break;

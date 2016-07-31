@@ -390,6 +390,11 @@ Quizz.prototype	= (function () {
 	    var answer 			= $('#answer_label');
 	    var points_elt		= $('#points');
 		    
+/************************************************************************
+ * 
+ *  Write this more properly.
+ * 
+ ***********************************************************************/
 	    console.log("-------------- SIZE OF STATS : "+stats.length);
 	    console.log(stats);
 		if(validated){
@@ -424,9 +429,7 @@ Quizz.prototype	= (function () {
 				
 				//randomize the array of answers
 				shuffled_list = _.shuffle(random_answers);
-				console.log("shuffle :");
-				console.log(random_answers);
-				console.log(shuffled_list);
+
 				//get the existing buttons, to reinitialize them
 				buttons 		= self.current_card.get_existing_buttons();
 				
@@ -444,7 +447,7 @@ Quizz.prototype	= (function () {
 
 			set_next_item(random_elt);
 		}
-		//END of the game, last screen
+		//If there is no more remaining elements : END of the game, last screen
 		else{
 		//TODO : display end of game screen (result as charts and all)
 			var result = result_screen(stats);

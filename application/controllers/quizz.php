@@ -1,5 +1,5 @@
 <?php
-use Everyman\Neo4j;
+
 class Quizz extends TNK_Controller {
 	
 	public function quizz(){

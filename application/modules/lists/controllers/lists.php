@@ -24,6 +24,9 @@ class Lists extends Neo4j_controller {
 		$this->add_js('assets/js/module.js');
 		$this->add_js('assets/js/test-page.js');
 		$this->add_js('assets/js/html_lists.js',true);
+	
+	//load css files
+		$this->add_css('assets/css/listElements.css');
 	//load the views
 		$character_list_view	= $this->display_list_widget($list_name);
 		
@@ -146,9 +149,30 @@ class Lists extends Neo4j_controller {
 		$list_type = $list_type_array[0]['type'];
 
 	//2 : load data from the list model (not the kana)
-		$data	= $this->glist->get_list_content($list_name,$list_type);	
+		$data	= $this->glist->get_list_content($list_name,$list_type);
+
 	//3 : generate and return the html array in the view
-		return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $data));
+		$viewContent = '';
+		//Test the list type, and return the corresponding type of view
+		switch($list_type){
+			case Lists_model_graph::KANATYPE 	: 
+				break;
+			
+			case Lists_model_graph::KANJITYPE 	:
+				$viewContent	= $this->view('lists/kanjiList',array('_list_name' => $list_name, '_list' => $data));
+				break;
+			
+			case Lists_model_graph::DICOTYPE 	:
+				break;
+			
+			case Lists_model_graph::QUIZZTYPE	:
+				break;
+
+			default : echo "Hello, default";
+		}
+
+		//return $this->view('lists/character_list_view',array('_list_name' => $list_name, '_list' => $data));
+		return $viewContent;
 	}
 
 

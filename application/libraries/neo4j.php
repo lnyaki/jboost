@@ -9,13 +9,14 @@ class Neo4j {
     public function connect(){
     	//load CI to access config files 
     	$CI = & get_instance();
-		
+
     	//Get database details from the config file
     	$user 		= $CI->config->item('username');
 		$password	= $CI->config->item('password');
 		$host		= $CI->config->item('hostname');
 		$port		= $CI->config->item('port');
-		$database	= $CI->config->item('database');
+		//$database	= $CI->config->item('database');
+		
 		
 		//build connect to db
 		$client = ClientBuilder::create()
