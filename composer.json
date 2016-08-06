@@ -2,6 +2,7 @@
     "require": {
         "monolog/monolog": "1.0.*",
         "graphaware/neo4j-php-client": "^4.4",
-		"nicmart/tree": "~0.2"
+		"nicmart/tree": "~0.2",
+        "Celc/ciunit": "dev-master"
     }
 }

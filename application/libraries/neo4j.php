@@ -33,4 +33,4 @@ class Neo4j {
 	}
 }
 
-/* End of file Someclass.php */
+/* End of file Neo4j.php */

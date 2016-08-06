@@ -1,9 +1,14 @@
+* {
+   margin: 0px;
+   padding: 0px;
+}
+
 /*
  Setting the font size based on percent in the body, to then use em.
  http://kyleschaeffer.com/development/css-font-size-em-vs-px-vs-pt-vs/
  */
 body{
-	font-size: 62.5%; 
+/*	font-size: 62.5%;*/ 
 }
 
 /*          --= Code for opacity on modal background =--

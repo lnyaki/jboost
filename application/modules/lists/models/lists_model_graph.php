@@ -7,6 +7,14 @@ class Lists_model_graph extends TNK_Model{
 	const DICOTYPE	= "Dictionary";
 	const QUIZZTYPE	= "Quizz";
 	
+	/* The constants below describe the type of list display. We consider 3 values,
+	 * corresponding to the level of details returned by each query : light, normal,full.
+	*/
+	const DETAIL_LIGHT 	= "light";		//The bare minimum information.
+	const DETAIL_MEDIUM	= "medium";		//Some pretty complete information
+	const DETAIL_FULL	= "full";		//All the relevant information we can find.
+	
+	
 	//Return all sublists of list $list
 	public function get_sublists($list){
 		$db = $this->neo4j->get_db();
@@ -34,34 +42,73 @@ class Lists_model_graph extends TNK_Model{
 	}
 	
 	//Return all the elements of that list (including elements from sublists)
-	public function get_list_content($listname,$type = self::KANJITYPE){
+	public function get_list_content($listname,$type = self::KANJITYPE,$detail = self::DETAIL_MEDIUM){
 		$db = $this->neo4j->get_db();
 		$query	= '';
-
+		/*
+		 * For each type of list, we identify 3 details level, which determine how much data
+		 * we should return. Light is just the bare minimum. Medium is some relatively complete information.
+		 * Full is all the information that we can possibly return. 
+		 */
 		switch($type){
 			case self::KANATYPE 	:
-				$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(character:item)-[:romaji]->(romaji:item) where list.name =~ '(?i)".$listname."'";
-				$query .= " return character.value as Kana, romaji.value as Romaji order by character.value";
+				if($detail === self::DETAIL_LIGHT){
+					$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(character:item)-[:romaji]->(romaji:item) where list.name =~ '(?i)".$listname."'";
+					$query .= " return character.value as Kana, romaji.value as Romaji order by character.value";
+				}
+				//Return hiragana (or katakana)from a list, as well as the corresponding romaji, and corresponding value from katakana (or hiragana)
+				else if($detail === self::DETAIL_MEDIUM){
+					$query  = "match(list:item_list)-[:sub_list*0..]->(sublist)-[:list_item]->(character:item)-[r:romaji]->(romaji:item) where list.name =~ '(?i)$listname'";
+					$query .= " with character,r,romaji optional match (character)-[r]->(romaji)<-[:romaji]-(kana:item)<-[:list_item]-(kanaList:item_list{type : 'kana'})";
+					$query .= " return character.value as kana1, romaji.value as romaji, kana.value as kana2 order by character.value";
+				}
+				else if ($detail === self::DETAIL_FULL){
+					
+				}
 				break;
 			
 			//Return the kanji with its onyomi and kunyomi
-			case self::KANJITYPE	:
-				$query  = "match(list:item_list{name:'".$listname."'})-[:list_item]->(kanji:item) with kanji ";
-				$query .= "optional match (kanji)-[:reading{type : 'kunyomi'}]->(kunyomi:item)-[:romaji]->(r1:item) with kanji,kunyomi,r1 ";
-				$query .= "optional match (kanji)-[:reading{type : 'onyomi'}]->(onyomi:item)-[:romaji]->(r2:item) ";
-				$query .= "with kanji.value as kanji, kanji.strokes as strokes, collect(distinct([kunyomi.value,r1.value])) as tmpKunyomi, ";
-				$query .= "collect(distinct([onyomi.value,r2.value])) as tmpOnyomi ";
-				$query .= "return kanji, strokes,";
-				$query .= "case tmpKunyomi when [[null,null]] then null else tmpKunyomi END as kunyomi, ";
-				$query .= "case tmpOnyomi when [[null,null]] then null else tmpOnyomi END as onyomi";
+			case self::KANJITYPE	:				
+				if($detail === self::DETAIL_LIGHT){
+					
+				}
+				else if($detail === self::DETAIL_MEDIUM){
+					$query  = "match(list:item_list{name:'".$listname."'})-[:list_item]->(kanji:item) with kanji ";
+					$query .= "optional match (kanji)-[:reading{type : 'kunyomi'}]->(kunyomi:item)-[:romaji]->(r1:item) with kanji,kunyomi,r1 ";
+					$query .= "optional match (kanji)-[:reading{type : 'onyomi'}]->(onyomi:item)-[:romaji]->(r2:item) ";
+					$query .= "with kanji.value as kanji, kanji.strokes as strokes, collect(distinct([kunyomi.value,r1.value])) as tmpKunyomi, ";
+					$query .= "collect(distinct([onyomi.value,r2.value])) as tmpOnyomi ";
+					$query .= "return kanji, strokes,";
+					$query .= "case tmpKunyomi when [[null,null]] then null else tmpKunyomi END as kunyomi, ";
+					$query .= "case tmpOnyomi when [[null,null]] then null else tmpOnyomi END as onyomi";
+				}
+				else if ($detail === self::DETAIL_FULL){
+					
+				}
 				break;
 
-
-
 			case self::DICOTYPE		:
+				if($detail === self::DETAIL_LIGHT){
+					
+				}
+				else if($detail === self::DETAIL_MEDIUM){
+					
+				}
+				else if ($detail === self::DETAIL_FULL){
+					
+				}
 				break;
 			
 			case self::QUIZZTYPE	:
+				if($detail === self::DETAIL_LIGHT){
+					
+				}
+				else if($detail === self::DETAIL_MEDIUM){
+					
+				}
+				else if ($detail === self::DETAIL_FULL){
+					
+				}
 				break;
 				
 			default : echo "PROBLEM in list type $type";	

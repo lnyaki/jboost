@@ -28,6 +28,11 @@ class Lists extends Neo4j_controller {
 	
 	//load css files
 		$this->add_css('assets/css/listElements.css');
+		
+	//load the model
+	//Loading this here instead of inside the widget, otherwise i can't call Lists_model_graph::DETAIL_MEDIUM
+	//from display_list_widget (when i try to call it in the function parameters)
+		$this->load->model('lists/lists_model_graph','glist');
 	//load the views
 		$character_list_view	= $this->display_list_widget($list_name);
 		
@@ -138,11 +143,14 @@ class Lists extends Neo4j_controller {
 		return $this->view('lists/update_list_view2',null);
 	}
 
-	public function display_list_widget($list_name){
+	//Take the list name and desired detail, and return list elements, with specified detail level.
+	public function display_list_widget($list_name, $detail = Lists_model_graph::DETAIL_MEDIUM){
+		
+		          
 		//Turn back the underscore into spaces
 		$list_name = str_replace('_', ' ', $list_name);
 
-		$this->load->model('lists/lists_model_graph','glist');
+		//$this->load->model('lists/lists_model_graph','glist');
 
 	//1 : get the list type
 		$list_type_array	= $this->glist->get_list_type($list_name);
@@ -157,16 +165,19 @@ class Lists extends Neo4j_controller {
 		//Test the list type, and return the corresponding type of view
 		switch($list_type){
 			case Lists_model_graph::KANATYPE 	: 
+				$viewContent	= $this->view('lists/kanaList',array('_list_name'	=> $list_name, '_list' => $data, '_detail' => $detail));
 				break;
 			
 			case Lists_model_graph::KANJITYPE 	:
-				$viewContent	= $this->view('lists/kanjiList',array('_list_name' => $list_name, '_list' => $data));
+				$viewContent	= $this->view('lists/kanjiList',array('_list_name' => $list_name, '_list' => $data,  '_detail' => $detail));
 				break;
 			
 			case Lists_model_graph::DICOTYPE 	:
+				//$viewContent	= $this->view('lists/kanaList',array('_list_name'	=> $list_name, '_list' => $data,  '_detail' => $detail));
 				break;
 			
 			case Lists_model_graph::QUIZZTYPE	:
+				//$viewContent	= $this->view('lists/kanaList',array('_list_name'	=> $list_name, '_list' => $data,  '_detail' => $detail));
 				break;
 
 			default : echo "Hello, default";

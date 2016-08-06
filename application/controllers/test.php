@@ -5,6 +5,7 @@ use GraphAware\Neo4j\Client\ClientBuilder;
 //class Test extends TNK_Controller {
 class Test extends Neo4j_controller {
 
+	public function index(){echo "Hello worlds";}
 	//Get quizz items from the db.
 	private function load_items($post){
 		$this->load->model('kana/kana_model');
@@ -160,6 +161,7 @@ class Test extends Neo4j_controller {
 	public function list_update(){
 	//load css files
 		$this->add_css('assets/css/listElements.css');
+		$this->add_css('assets/css/website.css');
 	//load the views
 		$list_update_div	= $this->list_update_widget();
 		
