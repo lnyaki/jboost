@@ -16,8 +16,9 @@
  */
 
 
-class Toast_all extends Controller
+class Toast_all extends MX_Controller
 {
+	const TEST_DIR =  "/modules/test/";
 	// The folder INSIDE /controllers/ where the test classes are located
 	// TODO: autoset
 	var $test_dir = '/test/';
@@ -25,7 +26,11 @@ class Toast_all extends Controller
 	// Files to skip (ie. non-test classes) inside the test dir
 	var $skip = array(
 		'Toast.php',
-		'Toast_all.php'
+		'Toast_all.php',
+		//LNY -->
+		'controllers',
+		'views'
+		//<--
 	);
 
 	// CURL multithreaded mode (only set to true if you are sure your tests
@@ -34,7 +39,8 @@ class Toast_all extends Controller
 
 	function Toast_all()
 	{
-		parent::Controller();
+		//LNY
+	//	parent::Controller();
 	}
 
 	function index()
@@ -51,7 +57,16 @@ class Toast_all extends Controller
 		{
 			$test_urls[] = site_url($this->test_dir . $file . '/show_results');
 		}
-
+		
+		//LNY -->
+		/*
+		echo "Test files <br/>";
+		print_r($test_files);
+		echo "<br/><br/>";
+		echo "Test urls <br/>";
+		print_r($test_urls);
+		*/
+		//<--
 		// Load header
 		$output .= $this->load->view('test/header', NULL, TRUE);
 
@@ -67,7 +82,10 @@ class Toast_all extends Controller
 
 		// Load footer
 		$output .= $this->load->view('test/footer', NULL, TRUE);
-		
+		/*
+		 * echo "OUTPUT <br/>";
+		print_r($output)
+		 * */
 		// Send to display
 		echo $output;
 	}
@@ -81,7 +99,14 @@ class Toast_all extends Controller
 	{
 		$files = array();
 
-		$handle=opendir(APPPATH . '/controllers' . $this->test_dir);
+		//LNY -->
+		//$handle=opendir(APPPATH . '/controllers' . $this->test_dir);
+		$directory = APPPATH . self::TEST_DIR."/controllers";
+		//$directory = APPPATH . self::TEST_DIR;
+		$handle=opendir($directory);
+		
+		//echo "Open directory : $directory <br/>";
+		//<--
 		while (false!==($file = readdir($handle)))
 		{
 			// Skip hidden/system files and the files in the skip[] array
