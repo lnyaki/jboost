@@ -19,6 +19,10 @@ $lang['ut_object']			= 'Object';
 $lang['ut_resource']		= 'Resource';
 $lang['ut_null']			= 'Null';
 $lang['ut_notes']			= 'Notes';
+//LNY -->
+$lang['ut_expected']		= 'Expected value';
+$lang['ut_obtained']		= 'Value obtained';
+//<--
 
 
 /* End of file unit_test_lang.php */

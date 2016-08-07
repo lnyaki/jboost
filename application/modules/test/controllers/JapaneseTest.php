@@ -50,11 +50,14 @@ class JapaneseTest extends Toast
 	}
 	
 	function test_isRomaji(){
-		
+		$this->_fail("Function has not been implemented yet");	
 	}
 	
 	function test_size(){
-		$this->_fail("Function has not been implemented yet");	
+		$string = "さすが";
+		$size 	= "3";
+		$result	= $this->japanese->size($string);
+		$this->_assert_equals_strict($size, $result);		
 	}
 	
 	function test_kana2romaji(){

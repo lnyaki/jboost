@@ -30,6 +30,10 @@ abstract class Toast extends MX_Controller
 	var $message;
 	var $messages;
 	var $asserts;
+	//LNY-->
+	var $expected;
+	var $obtained;
+	//<--
 
 	function Toast($name)
 	{

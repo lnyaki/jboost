@@ -116,6 +116,10 @@ class CI_Unit_test {
 							'file'				=> $back['file'],
 							'line'				=> $back['line'],
 							'notes'				=> $notes
+							//LNY -->
+							,'expected'			=> $expected
+							,'obtained'			=> $test
+							//<--
 						);
 
 		$this->results[] = $report;

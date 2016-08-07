@@ -26,17 +26,17 @@ class Japanese {
 	public function isRomaji(){
 		return false;
 	}
-	
-	public function size($japString){
-		return 0;
-	}
-	
+
 	public function kana2romaji($kana){
 		return "";
 	}
 	
 	public function romaji2kana($romaji){
 		return "";
+	}
+	
+	public function size($string){
+		return mb_strlen($string);
 	}
 	
 	public function test(){
