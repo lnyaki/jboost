@@ -77,8 +77,14 @@ $route['lists/update']					= 'lists/update_list';
 $route['lists/process/create']			= 'lists/creation_form';
 $route['lists/(:any)']					= 'lists/display_list/$1';
 
+ /*********************************************************************
+ *                        Unit tests routes
+ * *******************************************************************/
 
-
+ 
+  /*********************************************************************
+ *                        Default routes
+ * *******************************************************************/
 $route['default_controller'] 	= "quizz";
 $route['404_override'] 			= 'page_not_found_404';
 

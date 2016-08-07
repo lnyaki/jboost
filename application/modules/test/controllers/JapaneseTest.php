@@ -18,7 +18,9 @@ class JapaneseTest extends Toast
 	 * OPTIONAL; Anything in this function will be run before each test
 	 * Good for doing cleanup: resetting sessions, renewing objects, etc.
 	 */
-	function _pre() {}
+	function _pre() {
+		$this->load->library("Japanese");
+	}
 
 	/**
 	 * OPTIONAL; Anything in this function will be run after each test
@@ -47,8 +49,24 @@ class JapaneseTest extends Toast
 		$this->_fail("Function has not been implemented yet");
 	}
 	
+	function test_isRomaji(){
+		
+	}
+	
 	function test_size(){
 		$this->_fail("Function has not been implemented yet");	
+	}
+	
+	function test_kana2romaji(){
+		$this->_fail("Function has not been implemented yet");
+	}
+	
+	function test_romaji2kana(){
+		$this->_fail("Function has not been implemented yet");
+	}
+	
+	function test_test(){
+		$this->_assert_equals_strict(true, $this->japanese->test());
 	}
 	
 	function test_some_actiddddon()

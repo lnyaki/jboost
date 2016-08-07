@@ -7,9 +7,40 @@ require_once 'vendor/autoload.php';
  * **********************************************************/
 class Japanese {
 	
-	public function isHiragana($kana){
-		return true;
+	public function isHiragana($string){
+		return false;
 	}
 	
+	public function isKatakana($string){
+		return false;
+	}
+	
+	public function isKana($string){
+		return $this->isHiragana($string) or $this->isKatakana($string);
+	}
+	
+	public function isKanji($string){
+		return false;
+	}
+	
+	public function isRomaji(){
+		return false;
+	}
+	
+	public function size($japString){
+		return 0;
+	}
+	
+	public function kana2romaji($kana){
+		return "";
+	}
+	
+	public function romaji2kana($romaji){
+		return "";
+	}
+	
+	public function test(){
+		return true;
+	}
 }
 /*End of Japanese.php*/
