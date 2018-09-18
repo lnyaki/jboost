@@ -3,7 +3,11 @@ pipeline {
   stages {
     stage('Test stage 1') {
       steps {
-        sh './testScript.sh'
+        sh '''echo "*********************"
+echo "from :"
+pwd
+./testScript.sh
+echo "*********************"'''
       }
     }
   }
