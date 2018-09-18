@@ -6,7 +6,7 @@ pipeline {
         sh '''echo "*********************"
 echo "from :"
 pwd
-./testScript.sh
+./scripts/testScript.sh
 echo "*********************"'''
       }
     }
